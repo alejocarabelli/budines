@@ -431,10 +431,7 @@ function vistaForm() {
       }).join('')}
     </div>
 
-    <div class="row2">
-      <label class="f"><span>Precio por budín</span><input type="number" inputmode="numeric" min="0" step="1" data-f="precio" value="${f.precio}"></label>
-      <label class="f"><span>Lo hace</span><select data-f="hace">${opts(aj.vendedores, f.hace, 'Sin asignar')}</select></label>
-    </div>
+    <label class="f"><span>Precio por budín</span><input type="number" inputmode="numeric" min="0" step="1" data-f="precio" value="${f.precio}"></label>
     <div class="total"><span id="tUnid">${unidadesForm()} budines</span><b id="tTotal">${pesos(unidadesForm() * (Number(f.precio) || 0))}</b></div>
 
     <label class="switch"><input type="checkbox" data-f="pagado" ${f.pagado ? 'checked' : ''}> Ya está pagado</label>
@@ -469,7 +466,7 @@ function vistaLista() {
       (S.filtro === 'sinentregar' && !e.entregado) ||
       (S.filtro === 'sabado' && e.dia === 'Sábado') ||
       (S.filtro === 'domingo' && e.dia === 'Domingo')) &&
-    (!S.fVend || e.vendedor === S.fVend || e.hace === S.fVend) &&
+    (!S.fVend || e.vendedor === S.fVend) &&
     (!q || (e.cliente + ' ' + e.telefono + ' ' + e.notas).toLowerCase().includes(q))
   ).sort((a, b) => a.dia.localeCompare(b.dia) * -1 || a.cliente.localeCompare(b.cliente));
 
@@ -500,7 +497,7 @@ function tarjeta(e) {
   return `<article class="card enc">
     <div class="l1"><span class="cli">${esc(e.cliente)}</span><span class="monto">${pesos(e.total)}</span></div>
     <div class="pills">${Object.entries(e.cantidades).map(([s, q]) => `<span class="pill">${dot(s)}<b>${q}</b> ${esc(s)}</span>`).join('')}</div>
-    <div class="meta">${e.dia}${tel} · vendió ${esc(e.vendedor || '—')}${e.hace ? ' · lo hace ' + esc(e.hace) : ''}${e.pagado && e.medio ? ' · pagó por ' + esc(e.medio.toLowerCase()) : ''}</div>
+    <div class="meta">${e.dia}${tel} · vendió ${esc(e.vendedor || '—')}${e.pagado && e.medio ? ' · pagó por ' + esc(e.medio.toLowerCase()) : ''}</div>
     ${e.notas ? `<div class="meta" style="margin-top:4px">📝 ${esc(e.notas)}</div>` : ''}
     <div class="bot">
       <button class="tog ${e.pagado ? 'si' : 'no-pago'}" data-act="pagado" data-id="${e.id}">${e.pagado ? '✓ Pagado' : 'Sin pagar'}</button>
@@ -522,10 +519,9 @@ function vistaResumen() {
   const personas = [...new Set([...S.data.ajustes.vendedores, ...es.map(e => e.vendedor).filter(Boolean)])];
   const porVend = personas.map(p => {
     const l = es.filter(e => e.vendedor === p);
-    return { p, n: suma(l, e => e.unidades), v: suma(l, e => e.total), c: suma(l.filter(e => e.pagado), e => e.total), h: suma(es.filter(e => e.hace === p), e => e.unidades) };
-  }).filter(x => x.n || x.h);
+    return { p, n: suma(l, e => e.unidades), v: suma(l, e => e.total), c: suma(l.filter(e => e.pagado), e => e.total) };
+  }).filter(x => x.n);
 
-  const sinAsignar = suma(es.filter(e => !e.hace), e => e.unidades);
   const deudores = es.filter(e => !e.pagado).sort((a, b) => b.total - a.total);
   const pct = vendido ? Math.round(cobrado / vendido * 100) : 0;
 
@@ -547,12 +543,11 @@ function vistaResumen() {
     <tbody>${sabores.map(s => `<tr><td><span class="sab">${dot(s)}${esc(s)}</span></td><td>${cant('Sábado', s) || '–'}</td><td>${cant('Domingo', s) || '–'}</td><td><b>${cant('', s)}</b></td></tr>`).join('')}</tbody>
     <tfoot><tr><td>Total</td><td>${suma(es.filter(e => e.dia === 'Sábado'), e => e.unidades)}</td><td>${suma(es.filter(e => e.dia === 'Domingo'), e => e.unidades)}</td><td>${unidades}</td></tr></tfoot>
   </table></div>
-  ${sinAsignar ? `<p class="hint" style="margin:8px 2px 0">${sinAsignar === 1 ? '1 budín todavía no tiene' : sinAsignar + ' budines todavía no tienen'} quién lo${sinAsignar === 1 ? '' : 's'} haga.</p>` : ''}
 
   <h3>Por persona</h3>
   <div class="card"><table>
-    <thead><tr><th>Persona</th><th>Vendió</th><th>$</th><th>Cobró</th><th>Hace</th></tr></thead>
-    <tbody>${porVend.map(x => `<tr><td>${esc(x.p)}</td><td>${x.n || '–'}</td><td>${x.v ? pesos(x.v) : '–'}</td><td>${x.v ? pesos(x.c) : '–'}</td><td>${x.h || '–'}</td></tr>`).join('')}</tbody>
+    <thead><tr><th>Persona</th><th>Vendió</th><th>$</th><th>Cobró</th></tr></thead>
+    <tbody>${porVend.map(x => `<tr><td>${esc(x.p)}</td><td>${x.n || '–'}</td><td>${x.v ? pesos(x.v) : '–'}</td><td>${x.v ? pesos(x.c) : '–'}</td></tr>`).join('')}</tbody>
   </table></div>
 
   <h3>Falta cobrar (${deudores.length})</h3>
