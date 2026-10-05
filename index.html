@@ -328,6 +328,7 @@ async function cargar(silencioso) {
 }
 function setDatos(d) {
   S.data = d;
+  store.set('datos', JSON.stringify(d));
   if (!S.form) S.form = formNuevo();
   const editando = S.tab === 'nuevo' || S.tab === 'ajustes' || (S.tab === 'caja' && S.gasto);
   if (!editando) render();
@@ -852,6 +853,8 @@ const MOCK = (() => {
   };
 })();
 
+// Muestra al instante lo último que se vio mientras Google responde (tarda unos segundos).
+try { const c = JSON.parse(store.get('datos')); if (c && c.ajustes) { S.data = c; S.form = formNuevo(); renderFindes(); } } catch (e) {}
 render();
 cargar();
 </script>
