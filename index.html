@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-title" content="Budines">
+<meta name="theme-color" content="#faf5ec">
+<title>Budines</title>
+<style>
+  :root {
+    --bg: #faf5ec; --surface: #ffffff; --surface-2: #f4ecdf; --ink: #2b2118; --muted: #7a6a58;
+    --line: #eadfcc; --accent: #c9761a; --accent-ink: #ffffff; --accent-soft: #fbe9d0;
+    --ok: #2c7a4b; --ok-bg: #e2f2e7; --warn: #b0431c; --warn-bg: #fbe5da;
+    --shadow: 0 1px 2px rgba(60, 40, 10, .06), 0 4px 14px rgba(60, 40, 10, .05);
+    --radius: 14px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17130f; --surface: #221c16; --surface-2: #2b241d; --ink: #f3e9dc; --muted: #b3a28d;
+      --line: #392f25; --accent: #f0a43a; --accent-ink: #1b1510; --accent-soft: #3a2b18;
+      --ok: #82d3a0; --ok-bg: #1d3226; --warn: #f2957d; --warn-bg: #3b231b;
+      --shadow: none; color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+
+  /* Encabezado */
+  header { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .top { display: flex; align-items: center; gap: 12px; padding-top: 12px; padding-bottom: 12px; }
+  .brand { font-family: Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+  .brand span { color: var(--accent); }
+  .finde { margin-left: auto; min-width: 0; }
+  .finde select { max-width: 100%; }
+  .sync { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+  /* Navegación inferior */
+  nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 6;
+    background: var(--surface); border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav .wrap { display: grid; grid-template-columns: repeat(5, 1fr); }
+  nav button {
+    border: 0; background: none; padding: 10px 4px 12px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 12px; color: var(--muted);
+  }
+  nav button svg { width: 22px; height: 22px; }
+  nav button[aria-current="true"] { color: var(--accent); font-weight: 600; }
+
+  h2 { font-size: 20px; margin: 20px 0 12px; }
+  h3 { font-size: 15px; margin: 22px 0 8px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+  .pad { padding: 16px; }
+
+  /* Formularios */
+  label.f { display: block; margin-bottom: 14px; }
+  label.f > span { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  input[type=text], input[type=tel], input[type=number], select, textarea {
+    width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface); min-height: 44px;
+  }
+  textarea { resize: vertical; min-height: 64px; }
+  input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .seg { display: flex; background: var(--surface-2); border-radius: 10px; padding: 3px; gap: 3px; }
+  .seg button {
+    flex: 1; border: 0; background: none; border-radius: 8px; padding: 9px 6px; cursor: pointer; min-height: 40px;
+    color: var(--muted); font-weight: 600;
+  }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+
+  .sabores { display: grid; gap: 8px; margin-bottom: 14px; }
+  .sabor { display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .sabor.on { border-color: var(--accent); background: var(--accent-soft); }
+  .sabor .n { flex: 1; font-weight: 600; }
+  .step { display: flex; align-items: center; gap: 4px; }
+  .step button {
+    width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface);
+    font-size: 20px; line-height: 1; cursor: pointer;
+  }
+  .step output { min-width: 30px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .total { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 0; border-top: 1px dashed var(--line); margin-top: 4px; }
+  .total b { font-size: 24px; font-variant-numeric: tabular-nums; }
+
+  .switch { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px 0 14px; font-weight: 600; }
+  .switch input { width: 22px; height: 22px; accent-color: var(--ok); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    border: 1px solid var(--line); background: var(--surface); border-radius: 10px;
+    padding: 10px 14px; min-height: 44px; cursor: pointer; font-weight: 600; text-decoration: none; color: var(--ink);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); width: 100%; font-size: 17px; }
+  .btn.danger { color: var(--warn); }
+  .btn.ghost { border-color: transparent; background: none; }
+  .btn[disabled] { opacity: .55; cursor: default; }
+  .acciones { display: flex; gap: 8px; margin-top: 10px; }
+  .acciones .btn { flex: 1; }
+
+  /* Lista */
+  .filtros { display: grid; gap: 10px; margin-bottom: 14px; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .chip {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 13px;
+    font-size: 14px; cursor: pointer; white-space: nowrap; font-weight: 600; color: var(--muted);
+  }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .lista { display: grid; gap: 10px; }
+  .enc { padding: 14px; }
+  .enc .l1 { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .enc .cli { font-weight: 700; font-size: 17px; }
+  .enc .monto { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .enc .det { margin: 4px 0 2px; }
+  .enc .meta { font-size: 13px; color: var(--muted); }
+  .enc .meta a { color: inherit; }
+  .enc .bot { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .tog {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 12px;
+    font-size: 14px; font-weight: 600; cursor: pointer; min-height: 38px; color: var(--muted);
+  }
+  .tog.no-pago { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+  .tog.si { background: var(--ok-bg); color: var(--ok); border-color: transparent; }
+  .tog.edit { margin-left: auto; }
+  .vacio { text-align: center; color: var(--muted); padding: 40px 16px; }
+
+  /* Resumen */
+  .kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 640px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+  .kpi { padding: 14px; }
+  .kpi .k { font-size: 13px; color: var(--muted); font-weight: 600; }
+  .kpi .v { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .kpi.warn .v { color: var(--warn); }
+  .kpi.ok .v { color: var(--ok); }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+  tr:last-child td { border-bottom: 0; }
+  .card:has(> table) { overflow-x: auto; }
+  @media (max-width: 480px) { th, td { padding: 10px 8px; } th { font-size: 11px; } }
+  tfoot td { font-weight: 700; border-top: 2px solid var(--line); }
+  .bar { height: 6px; border-radius: 3px; background: var(--surface-2); margin-top: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--ok); border-radius: 3px; }
+
+  /* Caja */
+  .cajahead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 20px 0 12px; }
+  .cajahead h2 { margin: 0; }
+  .cajahead .seg { min-width: 200px; }
+  .kpis.k3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 480px) { .kpis.k3 { grid-template-columns: 1fr 1fr; } .kpis.k3 .kpi:last-child { grid-column: span 2; } }
+  .kpi .s { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .gasto { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .gasto:last-child { border-bottom: 0; }
+  .gasto .gi { flex: 1; min-width: 0; }
+  .gasto .gd { font-weight: 600; }
+  .gasto .gm { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .deuda { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .deuda:last-child { border-bottom: 0; }
+  .deuda .l1 { display: flex; justify-content: space-between; font-weight: 700; }
+  .deuda .it { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); margin-top: 8px; }
+  .deuda .it span { flex: 1; }
+
+  /* Ajustes */
+  .aviso { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; margin: 14px 0; font-size: 14px; }
+  .aviso a { color: inherit; font-weight: 700; }
+  .lsab { display: grid; gap: 6px; margin-bottom: 10px; }
+  .lsab label { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; }
+  .lsab input { width: 20px; height: 20px; accent-color: var(--accent); }
+  .add { display: flex; gap: 8px; }
+  .hint { font-size: 13px; color: var(--muted); margin: -6px 0 14px; }
+  .links { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* Estado */
+  #toast {
+    position: fixed; left: 50%; bottom: calc(86px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: .2s; z-index: 10; max-width: calc(100% - 32px);
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.err { background: var(--warn); color: #fff; }
+  .cargando { text-align: center; padding: 80px 16px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <div class="brand">Budi<span>nes</span></div>
+    <div class="finde"><select id="selFinde" aria-label="Fin de semana"></select></div>
+  </div>
+</header>
+
+<main class="wrap" id="app"><div class="cargando">Cargando…</div></main>
+
+<nav aria-label="Secciones">
+  <div class="wrap">
+    <button data-tab="nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo</button>
+    <button data-tab="lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Encargos</button>
+    <button data-tab="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Resumen</button>
+    <button data-tab="caja"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M16 15h2M6 6V4h12v2"/></svg>Caja</button>
+    <button data-tab="ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ajustes</button>
+  </div>
+</nav>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Conexión con la planilla ---------- */
+// URL de la implementación de Apps Script (termina en /exec).
+const API_URL = 'https://script.google.com/macros/s/AKfycbxroO5LfbKxHWbyM65b1OeN7POichVdyLQSQwl5d11Ok19vDIqjz7KQ3feDK2NNT61F/exec';
+
+// Alojada afuera (GitHub Pages) habla con la API por fetch, sin cookies de Google;
+// dentro de Apps Script usa google.script.run; abierta como localhost usa datos de prueba (MOCK, al final).
+async function apiFetch(fn, args) {
+  const r = await fetch(API_URL, {
+    method: 'POST',
+    // text/plain evita el preflight CORS, que Apps Script no responde.
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ fn, args }),
+    credentials: 'omit',
+  });
+  const res = await r.json();
+  if (!res.ok) throw new Error(res.error);
+  return res.data;
+}
+function api(fn, ...args) {
+  const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  if (!local && !(window.google && google.script && google.script.run)) return apiFetch(fn, args);
+  return new Promise((resolve, reject) => {
+    if (window.google && google.script && google.script.run) {
+      google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](...args);
+    } else {
+      setTimeout(() => { try { resolve(MOCK[fn](...args)); } catch (e) { reject(e); } }, 200);
+    }
+  });
+}
+
+/* ---------- Utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtPesos = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+const pesos = n => fmtPesos.format(n || 0);
+const ymd = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const parseYmd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const store = {
+  get(k) { try { return localStorage.getItem('budines.' + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem('budines.' + k, v); } catch (e) {} },
+};
+
+// Sábado del fin de semana al que pertenece una fecha (lun–sáb → próximo sábado; domingo → ayer).
+function sabadoDe(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const w = x.getDay();
+  x.setDate(x.getDate() + (w === 0 ? -1 : 6 - w));
+  return ymd(x);
+}
+function etiquetaFinde(s) {
+  const sab = parseYmd(s), dom = new Date(sab); dom.setDate(sab.getDate() + 1);
+  const f = x => x.getDate() + '/' + (x.getMonth() + 1);
+  return 'Finde ' + f(sab) + ' – ' + f(dom);
+}
+function findes() {
+  const set = new Set(S.data.encargos.map(e => e.finde).filter(Boolean));
+  const base = parseYmd(sabadoDe(new Date()));
+  for (let i = 0; i < 3; i++) { const d = new Date(base); d.setDate(base.getDate() + 7 * i); set.add(ymd(d)); }
+  return [...set].sort();
+}
+function detalle(e) {
+  return Object.entries(e.cantidades).map(([s, q]) => q + ' ' + s).join(' · ');
+}
+function saboresOrden() {
+  // Sabores activos primero, después cualquier sabor viejo que aparezca en encargos.
+  const lista = S.data.ajustes.sabores.map(s => s.nombre);
+  S.data.encargos.forEach(e => Object.keys(e.cantidades).forEach(s => { if (!lista.includes(s)) lista.push(s); }));
+  return lista;
+}
+
+let toastT;
+function toast(msg, err) {
+  const t = $('#toast');
+  t.textContent = msg; t.className = 'show' + (err ? ' err' : '');
+  clearTimeout(toastT); toastT = setTimeout(() => (t.className = ''), err ? 4500 : 2200);
+}
+const errMsg = e => (e && e.message ? e.message : String(e)).replace(/^Error:\s*/, '');
+
+/* ---------- Estado ---------- */
+const S = {
+  data: null,
+  finde: sabadoDe(new Date()),
+  tab: 'nuevo',
+  filtro: 'todos',
+  fVend: '',
+  q: '',
+  form: null,
+  ajustes: null,
+  gasto: null,
+  alcance: 'finde',
+  ocupado: false,
+};
+
+function formNuevo() {
+  return {
+    id: null, finde: S.finde, dia: new Date().getDay() === 0 ? 'Domingo' : 'Sábado',
+    vendedor: store.get('vendedor') || '', cliente: '', telefono: '', cantidades: {},
+    precio: S.data.ajustes.precio, pagado: false, medio: '', entregado: false, hace: '', notas: '',
+  };
+}
+
+async function cargar(silencioso) {
+  try {
+    setDatos(await api('obtenerDatos'));
+  } catch (e) {
+    if (!silencioso) toast('No se pudo cargar: ' + errMsg(e), true);
+  }
+}
+function setDatos(d) {
+  S.data = d;
+  if (!S.form) S.form = formNuevo();
+  const editando = S.tab === 'nuevo' || S.tab === 'ajustes' || (S.tab === 'caja' && S.gasto);
+  if (!editando) render();
+  else if (!document.querySelector('[data-vista]')) render();
+  renderFindes();
+}
+
+/* ---------- Render ---------- */
+function renderFindes() {
+  $('#selFinde').innerHTML = findes().map(f => `<option value="${f}" ${f === S.finde ? 'selected' : ''}>${etiquetaFinde(f)}</option>`).join('');
+}
+function render() {
+  document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === S.tab));
+  if (!S.data) return;
+  const vistas = { nuevo: vistaForm, lista: vistaLista, resumen: vistaResumen, caja: vistaCaja, ajustes: vistaAjustes };
+  $('#app').innerHTML = `<div data-vista="${S.tab}">${vistas[S.tab]()}</div>`;
+}
+
+function vistaForm() {
+  const f = S.form, aj = S.data.ajustes;
+  const sabores = aj.sabores.filter(s => s.activo).map(s => s.nombre);
+  Object.keys(f.cantidades).forEach(s => { if (!sabores.includes(s)) sabores.push(s); });
+  const opts = (lista, sel, vacio) => (vacio ? `<option value="">${vacio}</option>` : '') +
+    lista.map(v => `<option ${v === sel ? 'selected' : ''}>${esc(v)}</option>`).join('');
+  const vendedores = aj.vendedores.includes(f.vendedor) || !f.vendedor ? aj.vendedores : [f.vendedor, ...aj.vendedores];
+  const sinPrecio = !aj.precio ? `<div class="aviso">Todavía no hay precio cargado. Ponelo en <a href="#" data-tab="ajustes">Ajustes</a>.</div>` : '';
+
+  return `
+  <h2>${f.id ? 'Editar encargo' : 'Nuevo encargo'}</h2>
+  ${sinPrecio}
+  <form id="form" class="card pad" autocomplete="off">
+    <div class="row2">
+      <label class="f"><span>Fin de semana</span>
+        <select data-f="finde">${findes().map(x => `<option value="${x}" ${x === f.finde ? 'selected' : ''}>${etiquetaFinde(x)}</option>`).join('')}</select>
+      </label>
+      <div class="f" style="margin-bottom:14px"><span style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px">Entrega</span>
+        <div class="seg">${['Sábado', 'Domingo'].map(d => `<button type="button" data-dia="${d}" aria-pressed="${f.dia === d}">${d}</button>`).join('')}</div>
+      </div>
+    </div>
+    <label class="f"><span>Cliente</span><input type="text" data-f="cliente" value="${esc(f.cliente)}" placeholder="Nombre y apellido" required></label>
+    <div class="row2">
+      <label class="f"><span>Teléfono</span><input type="tel" data-f="telefono" value="${esc(f.telefono)}" placeholder="Opcional"></label>
+      <label class="f"><span>Lo vendió</span><select data-f="vendedor">${opts(vendedores, f.vendedor, 'Elegir…')}</select></label>
+    </div>
+
+    <span style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px">Budines</span>
+    <div class="sabores">
+      ${sabores.map(s => {
+        const q = f.cantidades[s] || 0;
+        return `<div class="sabor ${q ? 'on' : ''}" data-sabor="${esc(s)}">
+          <span class="n">${esc(s)}</span>
+          <div class="step">
+            <button type="button" data-step="-1" aria-label="Uno menos de ${esc(s)}">−</button>
+            <output>${q}</output>
+            <button type="button" data-step="1" aria-label="Uno más de ${esc(s)}">+</button>
+          </div></div>`;
+      }).join('')}
+    </div>
+
+    <div class="row2">
+      <label class="f"><span>Precio por budín</span><input type="number" inputmode="numeric" min="0" step="1" data-f="precio" value="${f.precio}"></label>
+      <label class="f"><span>Lo hace</span><select data-f="hace">${opts(aj.vendedores, f.hace, 'Sin asignar')}</select></label>
+    </div>
+    <div class="total"><span id="tUnid">${unidadesForm()} budines</span><b id="tTotal">${pesos(unidadesForm() * (Number(f.precio) || 0))}</b></div>
+
+    <label class="switch"><input type="checkbox" data-f="pagado" ${f.pagado ? 'checked' : ''}> Ya está pagado</label>
+    ${f.pagado ? `<label class="f"><span>Medio de pago</span>
+      <div class="seg">${['Efectivo', 'Transferencia'].map(m => `<button type="button" data-medio="${m}" aria-pressed="${f.medio === m}">${m}</button>`).join('')}</div></label>` : ''}
+    ${f.id ? `<label class="switch"><input type="checkbox" data-f="entregado" ${f.entregado ? 'checked' : ''}> Ya se entregó</label>` : ''}
+    <label class="f"><span>Notas</span><textarea data-f="notas" placeholder="Dirección, horario, aclaraciones…">${esc(f.notas)}</textarea></label>
+
+    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : f.id ? 'Guardar cambios' : 'Guardar encargo'}</button>
+    ${f.id ? `<div class="acciones">
+      <button type="button" class="btn" data-act="cancelar">Cancelar</button>
+      <button type="button" class="btn danger" data-act="borrar">Eliminar</button></div>` : ''}
+  </form>`;
+}
+const unidadesForm = () => Object.values(S.form.cantidades).reduce((a, b) => a + b, 0);
+function actualizarTotal() {
+  const u = unidadesForm();
+  $('#tUnid').textContent = u + (u === 1 ? ' budín' : ' budines');
+  $('#tTotal').textContent = pesos(u * (Number(S.form.precio) || 0));
+}
+
+function encargosFinde() {
+  return S.data.encargos.filter(e => e.finde === S.finde);
+}
+
+function vistaLista() {
+  const todos = encargosFinde();
+  const q = S.q.trim().toLowerCase();
+  const lista = todos.filter(e =>
+    (S.filtro === 'todos' ||
+      (S.filtro === 'sinpagar' && !e.pagado) ||
+      (S.filtro === 'sinentregar' && !e.entregado) ||
+      (S.filtro === 'sabado' && e.dia === 'Sábado') ||
+      (S.filtro === 'domingo' && e.dia === 'Domingo')) &&
+    (!S.fVend || e.vendedor === S.fVend || e.hace === S.fVend) &&
+    (!q || (e.cliente + ' ' + e.telefono + ' ' + e.notas).toLowerCase().includes(q))
+  ).sort((a, b) => a.dia.localeCompare(b.dia) * -1 || a.cliente.localeCompare(b.cliente));
+
+  const cuenta = f => todos.filter(f).length;
+  const chips = [
+    ['todos', 'Todos', todos.length],
+    ['sinpagar', 'Sin pagar', cuenta(e => !e.pagado)],
+    ['sinentregar', 'Sin entregar', cuenta(e => !e.entregado)],
+    ['sabado', 'Sábado', cuenta(e => e.dia === 'Sábado')],
+    ['domingo', 'Domingo', cuenta(e => e.dia === 'Domingo')],
+  ];
+
+  return `
+  <h2>Encargos</h2>
+  <div class="filtros">
+    <div class="chips">${chips.map(([k, t, n]) => `<button class="chip" data-filtro="${k}" aria-pressed="${S.filtro === k}">${t} ${n}</button>`).join('')}</div>
+    <div class="row2">
+      <input type="text" id="buscar" placeholder="Buscar cliente…" value="${esc(S.q)}" aria-label="Buscar">
+      <select id="fVend" aria-label="Filtrar por persona"><option value="">Todo el equipo</option>${S.data.ajustes.vendedores.map(v => `<option ${v === S.fVend ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>
+    </div>
+  </div>
+  <div class="lista">
+    ${lista.length ? lista.map(tarjeta).join('') : `<div class="vacio card">${todos.length ? 'Nada con esos filtros.' : 'Todavía no hay encargos para este finde.'}</div>`}
+  </div>`;
+}
+function tarjeta(e) {
+  const tel = e.telefono ? ` · <a href="tel:${esc(e.telefono.replace(/[^\d+]/g, ''))}">${esc(e.telefono)}</a>` : '';
+  return `<article class="card enc">
+    <div class="l1"><span class="cli">${esc(e.cliente)}</span><span class="monto">${pesos(e.total)}</span></div>
+    <div class="det">${esc(detalle(e))}</div>
+    <div class="meta">${e.dia}${tel} · vendió ${esc(e.vendedor || '—')}${e.hace ? ' · lo hace ' + esc(e.hace) : ''}${e.pagado && e.medio ? ' · pagó por ' + esc(e.medio.toLowerCase()) : ''}</div>
+    ${e.notas ? `<div class="meta" style="margin-top:4px">📝 ${esc(e.notas)}</div>` : ''}
+    <div class="bot">
+      <button class="tog ${e.pagado ? 'si' : 'no-pago'}" data-act="pagado" data-id="${e.id}">${e.pagado ? '✓ Pagado' : 'Sin pagar'}</button>
+      <button class="tog ${e.entregado ? 'si' : ''}" data-act="entregado" data-id="${e.id}">${e.entregado ? '✓ Entregado' : 'Sin entregar'}</button>
+      <button class="tog edit" data-act="editar" data-id="${e.id}">Editar</button>
+    </div>
+  </article>`;
+}
+
+function vistaResumen() {
+  const es = encargosFinde();
+  const suma = (l, f) => l.reduce((a, e) => a + f(e), 0);
+  const vendido = suma(es, e => e.total), cobrado = suma(es.filter(e => e.pagado), e => e.total);
+  const unidades = suma(es, e => e.unidades), entregados = es.filter(e => e.entregado).length;
+
+  const sabores = saboresOrden().filter(s => es.some(e => e.cantidades[s]));
+  const cant = (dia, s) => suma(es.filter(e => !dia || e.dia === dia), e => e.cantidades[s] || 0);
+
+  const personas = [...new Set([...S.data.ajustes.vendedores, ...es.map(e => e.vendedor).filter(Boolean)])];
+  const porVend = personas.map(p => {
+    const l = es.filter(e => e.vendedor === p);
+    return { p, n: suma(l, e => e.unidades), v: suma(l, e => e.total), c: suma(l.filter(e => e.pagado), e => e.total), h: suma(es.filter(e => e.hace === p), e => e.unidades) };
+  }).filter(x => x.n || x.h);
+
+  const sinAsignar = suma(es.filter(e => !e.hace), e => e.unidades);
+  const deudores = es.filter(e => !e.pagado).sort((a, b) => b.total - a.total);
+  const pct = vendido ? Math.round(cobrado / vendido * 100) : 0;
+
+  if (!es.length) return `<h2>Resumen</h2><div class="vacio card">Todavía no hay encargos para este finde.</div>`;
+
+  return `
+  <h2>Resumen · ${etiquetaFinde(S.finde).replace('Finde ', '')}</h2>
+  <div class="kpis">
+    <div class="card kpi"><div class="k">Budines</div><div class="v">${unidades}</div></div>
+    <div class="card kpi"><div class="k">Vendido</div><div class="v">${pesos(vendido)}</div></div>
+    <div class="card kpi ok"><div class="k">Cobrado</div><div class="v">${pesos(cobrado)}</div><div class="bar"><i style="width:${pct}%"></i></div></div>
+    <div class="card kpi warn"><div class="k">Por cobrar</div><div class="v">${pesos(vendido - cobrado)}</div></div>
+  </div>
+  <p class="meta" style="color:var(--muted);font-size:14px;margin:10px 2px 0">${es.length} encargos · ${entregados} entregados · ${pct}% cobrado</p>
+
+  <h3>Para hornear</h3>
+  <div class="card"><table>
+    <thead><tr><th>Sabor</th><th>Sábado</th><th>Domingo</th><th>Total</th></tr></thead>
+    <tbody>${sabores.map(s => `<tr><td>${esc(s)}</td><td>${cant('Sábado', s) || '–'}</td><td>${cant('Domingo', s) || '–'}</td><td><b>${cant('', s)}</b></td></tr>`).join('')}</tbody>
+    <tfoot><tr><td>Total</td><td>${suma(es.filter(e => e.dia === 'Sábado'), e => e.unidades)}</td><td>${suma(es.filter(e => e.dia === 'Domingo'), e => e.unidades)}</td><td>${unidades}</td></tr></tfoot>
+  </table></div>
+  ${sinAsignar ? `<p class="hint" style="margin:8px 2px 0">${sinAsignar === 1 ? '1 budín todavía no tiene' : sinAsignar + ' budines todavía no tienen'} quién lo${sinAsignar === 1 ? '' : 's'} haga.</p>` : ''}
+
+  <h3>Por persona</h3>
+  <div class="card"><table>
+    <thead><tr><th>Persona</th><th>Vendió</th><th>$</th><th>Cobró</th><th>Hace</th></tr></thead>
+    <tbody>${porVend.map(x => `<tr><td>${esc(x.p)}</td><td>${x.n || '–'}</td><td>${x.v ? pesos(x.v) : '–'}</td><td>${x.v ? pesos(x.c) : '–'}</td><td>${x.h || '–'}</td></tr>`).join('')}</tbody>
+  </table></div>
+
+  <h3>Falta cobrar (${deudores.length})</h3>
+  ${deudores.length ? `<div class="card"><table><tbody>${deudores.map(e => `<tr>
+      <td>${esc(e.cliente)}<div style="font-size:13px;color:var(--muted)">${e.dia} · ${esc(e.vendedor || '—')}${e.telefono ? ' · <a style="color:inherit" href="tel:' + esc(e.telefono.replace(/[^\d+]/g, '')) + '">' + esc(e.telefono) + '</a>' : ''}</div></td>
+      <td><b>${pesos(e.total)}</b></td></tr>`).join('')}</tbody></table></div>`
+    : `<div class="vacio card">🎉 Está todo cobrado.</div>`}`;
+}
+
+function vistaCaja() {
+  const todo = S.alcance === 'todo';
+  const encs = todo ? S.data.encargos : encargosFinde();
+  const gastos = (todo ? S.data.gastos : S.data.gastos.filter(g => g.finde === S.finde))
+    .slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
+  const suma = (l, f) => l.reduce((a, x) => a + f(x), 0);
+  const cobrado = suma(encs.filter(e => e.pagado), e => e.total);
+  const porCobrar = suma(encs.filter(e => !e.pagado), e => e.total);
+  const gastado = suma(gastos, g => g.monto);
+  const ganancia = cobrado - gastado;
+
+  // Lo que alguien puso de su bolsillo y todavía no se le devolvió (siempre de todos los findes).
+  const deben = {};
+  S.data.gastos.filter(g => g.plata === 'Bolsillo' && !g.devuelto).forEach(g => (deben[g.pago] = deben[g.pago] || []).push(g));
+  const personas = Object.keys(deben).sort();
+
+  const fechaCorta = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.getDate() + '/' + (d.getMonth() + 1); };
+  const filaGasto = g => `<div class="gasto">
+      <div class="gi">
+        <div class="gd">${esc(g.detalle)}</div>
+        <div class="meta" style="font-size:13px;color:var(--muted)">${fechaCorta(g.fecha)}${todo ? ' · ' + etiquetaFinde(g.finde).replace('Finde ', 'finde ') : ''} · ${g.plata === 'Caja' ? 'plata de la caja' + (g.pago ? ' (' + esc(g.pago) + ')' : '') : 'puso ' + esc(g.pago) + (g.devuelto ? ' · ✓ devuelto' : ' · falta devolver')}${g.notas ? ' · ' + esc(g.notas) : ''}</div>
+      </div>
+      <span class="gm">${pesos(g.monto)}</span>
+      <button class="tog" data-act="editarGasto" data-id="${g.id}">Editar</button>
+    </div>`;
+
+  const porFinde = todo ? [...new Set([...S.data.encargos.map(e => e.finde), ...S.data.gastos.map(g => g.finde)])].sort().reverse()
+    .map(f => {
+      const c = suma(S.data.encargos.filter(e => e.finde === f && e.pagado), e => e.total);
+      const g = suma(S.data.gastos.filter(x => x.finde === f), x => x.monto);
+      return { f, c, g };
+    }).filter(x => x.c || x.g) : [];
+
+  return `
+  <div class="cajahead">
+    <h2>Caja</h2>
+    <div class="seg">${[['finde', 'Este finde'], ['todo', 'Todo']].map(([k, t]) => `<button type="button" data-alcance="${k}" aria-pressed="${S.alcance === k}">${t}</button>`).join('')}</div>
+  </div>
+  <div class="kpis k3">
+    <div class="card kpi ok"><div class="k">Entró (cobrado)</div><div class="v">${pesos(cobrado)}</div>${porCobrar ? `<div class="s">+ ${pesos(porCobrar)} por cobrar</div>` : ''}</div>
+    <div class="card kpi warn"><div class="k">Salió (gastos)</div><div class="v">${pesos(gastado)}</div></div>
+    <div class="card kpi"><div class="k">Ganancia</div><div class="v" style="color:${ganancia >= 0 ? 'var(--ok)' : 'var(--warn)'}">${pesos(ganancia)}</div><div class="s">cobrado − gastos</div></div>
+  </div>
+
+  <div style="margin-top:14px">${S.gasto ? formGasto() : `<button class="btn primary" data-act="nuevoGasto">+ Cargar un gasto</button>`}</div>
+
+  ${personas.length ? `<h3>Hay que devolverle</h3>
+  <div class="card">${personas.map(p => `<div class="deuda">
+      <div class="l1"><span>${esc(p)}</span><span>${pesos(suma(deben[p], g => g.monto))}</span></div>
+      ${deben[p].map(g => `<div class="it"><span>${esc(g.detalle)} · ${pesos(g.monto)}</span><button class="tog" data-act="devuelto" data-id="${g.id}">Ya se le devolvió</button></div>`).join('')}
+    </div>`).join('')}</div>` : ''}
+
+  ${todo && porFinde.length ? `<h3>Por fin de semana</h3>
+  <div class="card"><table>
+    <thead><tr><th>Finde</th><th>Entró</th><th>Salió</th><th>Ganancia</th></tr></thead>
+    <tbody>${porFinde.map(x => `<tr><td>${etiquetaFinde(x.f).replace('Finde ', '')}</td><td>${pesos(x.c)}</td><td>${pesos(x.g)}</td><td><b>${pesos(x.c - x.g)}</b></td></tr>`).join('')}</tbody>
+  </table></div>` : ''}
+
+  <h3>Gastos (${gastos.length})</h3>
+  ${gastos.length ? `<div class="card">${gastos.map(filaGasto).join('')}</div>`
+    : `<div class="vacio card">No hay gastos cargados${todo ? '' : ' para este finde'}.</div>`}`;
+}
+
+function formGasto() {
+  const g = S.gasto, vend = S.data.ajustes.vendedores;
+  return `<form id="formGasto" class="card pad" autocomplete="off">
+    <h3 style="margin-top:0">${g.id ? 'Editar gasto' : 'Nuevo gasto'}</h3>
+    <label class="f"><span>¿Qué se compró?</span><input type="text" data-g="detalle" value="${esc(g.detalle)}" placeholder="Ej: harina, huevos y manteca" required></label>
+    <div class="row2">
+      <label class="f"><span>Monto</span><input type="number" inputmode="numeric" min="0" step="1" data-g="monto" value="${g.monto || ''}" placeholder="$" required></label>
+      <label class="f"><span>Fin de semana</span><select data-g="finde">${findes().map(x => `<option value="${x}" ${x === g.finde ? 'selected' : ''}>${etiquetaFinde(x)}</option>`).join('')}</select></label>
+    </div>
+    <label class="f"><span>¿Con qué plata se pagó?</span>
+      <div class="seg">${[['Caja', 'De la caja'], ['Bolsillo', 'De su bolsillo']].map(([k, t]) => `<button type="button" data-plata="${k}" aria-pressed="${g.plata === k}">${t}</button>`).join('')}</div>
+    </label>
+    <label class="f"><span>${g.plata === 'Bolsillo' ? '¿Quién lo puso?' : '¿Quién hizo la compra?'}</span>
+      <select data-g="pago"><option value="">${g.plata === 'Bolsillo' ? 'Elegir…' : 'Opcional'}</option>${vend.map(v => `<option ${v === g.pago ? 'selected' : ''}>${esc(v)}</option>`).join('')}</select>
+    </label>
+    ${g.plata === 'Bolsillo' ? `<p class="hint">Va a aparecer en "Hay que devolverle" hasta que se le devuelva.</p>` : ''}
+    <label class="f"><span>Notas</span><input type="text" data-g="notas" value="${esc(g.notas)}" placeholder="Opcional"></label>
+    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : 'Guardar gasto'}</button>
+    <div class="acciones">
+      <button type="button" class="btn" data-act="cancelarGasto">Cancelar</button>
+      ${g.id ? `<button type="button" class="btn danger" data-act="borrarGasto">Eliminar</button>` : ''}
+    </div>
+  </form>`;
+}
+
+function vistaAjustes() {
+  if (!S.ajustes) {
+    const a = S.data.ajustes;
+    S.ajustes = { precio: a.precio, sabores: a.sabores.map(s => ({ ...s })), vendedores: a.vendedores.join('\n') };
+  }
+  const a = S.ajustes, d = S.data.ajustes;
+  return `
+  <h2>Ajustes</h2>
+  <form id="formAjustes" class="card pad">
+    <label class="f"><span>Precio por budín</span><input type="number" inputmode="numeric" min="0" step="1" id="aPrecio" value="${a.precio}"></label>
+    <p class="hint">Se usa para los encargos nuevos. Los que ya están cargados mantienen su precio (se puede cambiar editándolos).</p>
+
+    <span style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px">Sabores</span>
+    <div class="lsab">${a.sabores.map((s, i) => `<label><input type="checkbox" data-sab="${i}" ${s.activo ? 'checked' : ''}> ${esc(s.nombre)}</label>`).join('')}</div>
+    <p class="hint">Destildá un sabor para que no aparezca al cargar encargos nuevos.</p>
+    <div class="add" style="margin-bottom:18px"><input type="text" id="nuevoSabor" placeholder="Nuevo sabor"><button type="button" class="btn" data-act="addSabor">Agregar</button></div>
+
+    <label class="f"><span>Equipo (uno por línea)</span><textarea id="aVend" rows="8">${esc(a.vendedores)}</textarea></label>
+
+    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : 'Guardar ajustes'}</button>
+  </form>
+
+  <h3>Planilla</h3>
+  <div class="card pad">
+    <p style="margin:0 0 12px">Todo lo que se carga acá queda en la Google Sheet. Desde ahí también se puede descargar como Excel.</p>
+    <div class="links">
+      <a class="btn" href="${esc(d.urlPlanilla)}" target="_blank" rel="noopener">Abrir planilla</a>
+      <a class="btn" href="${esc(d.urlExcel)}" target="_blank" rel="noopener">Descargar Excel</a>
+      <button class="btn ghost" data-act="recargar">Actualizar datos</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- Acciones ---------- */
+async function guardarForm() {
+  const f = S.form;
+  if (!f.cliente.trim()) return toast('Falta el nombre del cliente', true);
+  if (!unidadesForm()) return toast('Agregá al menos un budín', true);
+  if (!f.vendedor) return toast('Elegí quién lo vendió', true);
+  S.ocupado = true; render();
+  try {
+    const editando = !!f.id;
+    setDatos(await api('guardarEncargo', { ...f, precio: Number(f.precio) || 0 }));
+    S.finde = f.finde;
+    const prox = formNuevo(); prox.finde = f.finde; prox.dia = f.dia;
+    S.form = prox;
+    toast(editando ? 'Cambios guardados' : 'Encargo guardado ✓');
+    if (editando) S.tab = 'lista';
+  } catch (e) {
+    toast(errMsg(e), true);
+  }
+  S.ocupado = false; renderFindes(); render();
+}
+
+async function toggle(id, campo) {
+  const e = S.data.encargos.find(x => x.id === id);
+  if (!e) return;
+  const valor = !e[campo];
+  e[campo] = valor; render(); // optimista
+  try {
+    setDatos(await api('actualizarCampo', id, campo, valor));
+  } catch (err) {
+    e[campo] = !valor; render();
+    toast(errMsg(err), true);
+  }
+}
+
+async function borrar() {
+  if (!confirm('¿Eliminar el encargo de ' + S.form.cliente + '? No se puede deshacer.')) return;
+  S.ocupado = true;
+  try {
+    setDatos(await api('borrarEncargo', S.form.id));
+    S.form = formNuevo(); S.tab = 'lista';
+    toast('Encargo eliminado');
+  } catch (e) { toast(errMsg(e), true); }
+  S.ocupado = false; render();
+}
+
+async function guardarAjustesForm() {
+  const a = S.ajustes;
+  a.precio = Number($('#aPrecio').value) || 0;
+  a.vendedores = $('#aVend').value;
+  S.ocupado = true; render();
+  try {
+    setDatos(await api('guardarAjustes', {
+      precio: a.precio, sabores: a.sabores, vendedores: a.vendedores.split('\n'),
+    }));
+    S.ajustes = null;
+    if (!S.form.id) S.form.precio = S.data.ajustes.precio;
+    toast('Ajustes guardados ✓');
+  } catch (e) { toast(errMsg(e), true); }
+  S.ocupado = false; render();
+}
+
+async function guardarGastoForm() {
+  const g = S.gasto;
+  if (!g.detalle.trim()) return toast('Falta qué se compró', true);
+  if (!(Number(g.monto) > 0)) return toast('Poné el monto', true);
+  if (g.plata === 'Bolsillo' && !g.pago) return toast('Elegí quién puso la plata', true);
+  S.ocupado = true; render();
+  try {
+    const nuevo = !g.id;
+    setDatos(await api('guardarGasto', { ...g, monto: Number(g.monto) }));
+    S.gasto = null;
+    toast(nuevo ? 'Gasto cargado ✓' : 'Cambios guardados');
+  } catch (e) { toast(errMsg(e), true); }
+  S.ocupado = false; render();
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener('click', ev => {
+  const t = ev.target.closest('button, a[data-tab]');
+  if (!t) return;
+  if (t.dataset.tab) {
+    ev.preventDefault();
+    if (S.tab === 'ajustes' && t.dataset.tab !== 'ajustes') S.ajustes = null;
+    if (t.dataset.tab !== 'caja') S.gasto = null;
+    S.tab = t.dataset.tab; render(); window.scrollTo(0, 0); return;
+  }
+  if (t.dataset.step) {
+    const s = t.closest('[data-sabor]').dataset.sabor;
+    const q = Math.max(0, (S.form.cantidades[s] || 0) + Number(t.dataset.step));
+    if (q) S.form.cantidades[s] = q; else delete S.form.cantidades[s];
+    const row = t.closest('.sabor');
+    row.querySelector('output').textContent = q; row.classList.toggle('on', q > 0);
+    actualizarTotal(); return;
+  }
+  if (t.dataset.dia) { S.form.dia = t.dataset.dia; render(); return; }
+  if (t.dataset.medio) { S.form.medio = S.form.medio === t.dataset.medio ? '' : t.dataset.medio; render(); return; }
+  if (t.dataset.filtro) { S.filtro = t.dataset.filtro; render(); return; }
+  if (t.dataset.alcance) { S.alcance = t.dataset.alcance; render(); return; }
+  if (t.dataset.plata) { S.gasto.plata = t.dataset.plata; render(); return; }
+  const act = t.dataset.act;
+  if (act === 'pagado' || act === 'entregado') toggle(t.dataset.id, act);
+  else if (act === 'editar') {
+    const e = S.data.encargos.find(x => x.id === t.dataset.id);
+    S.form = JSON.parse(JSON.stringify(e)); S.tab = 'nuevo'; render(); window.scrollTo(0, 0);
+  }
+  else if (act === 'cancelar') { S.form = formNuevo(); S.tab = 'lista'; render(); }
+  else if (act === 'borrar') borrar();
+  else if (act === 'nuevoGasto') {
+    S.gasto = { id: null, detalle: '', monto: '', finde: S.finde, plata: 'Caja', pago: store.get('vendedor') || '', devuelto: false, notas: '' };
+    render();
+  }
+  else if (act === 'editarGasto') { S.gasto = { ...S.data.gastos.find(x => x.id === t.dataset.id) }; render(); }
+  else if (act === 'cancelarGasto') { S.gasto = null; render(); }
+  else if (act === 'borrarGasto') {
+    if (!confirm('¿Eliminar el gasto "' + S.gasto.detalle + '"?')) return;
+    api('borrarGasto', S.gasto.id).then(d => { S.gasto = null; setDatos(d); render(); toast('Gasto eliminado'); })
+      .catch(e => toast(errMsg(e), true));
+  }
+  else if (act === 'devuelto') {
+    api('marcarDevuelto', t.dataset.id, true).then(d => { setDatos(d); toast('Marcado como devuelto ✓'); })
+      .catch(e => toast(errMsg(e), true));
+  }
+  else if (act === 'recargar') { cargar().then(() => toast('Datos actualizados')); }
+  else if (act === 'addSabor') {
+    const inp = $('#nuevoSabor'), n = inp.value.trim();
+    if (!n) return;
+    if (S.ajustes.sabores.some(s => s.nombre.toLowerCase() === n.toLowerCase())) return toast('Ese sabor ya está', true);
+    S.ajustes.precio = $('#aPrecio').value; S.ajustes.vendedores = $('#aVend').value;
+    S.ajustes.sabores.push({ nombre: n, activo: true }); render();
+  }
+});
+
+document.addEventListener('input', ev => {
+  const t = ev.target;
+  if (t.dataset.f && S.form) {
+    const k = t.dataset.f;
+    if (t.type === 'checkbox') { S.form[k] = t.checked; if (k === 'pagado') render(); return; }
+    S.form[k] = t.value;
+    if (k === 'precio') actualizarTotal();
+    if (k === 'vendedor') store.set('vendedor', t.value);
+    return;
+  }
+  if (t.dataset.g && S.gasto) { S.gasto[t.dataset.g] = t.value; return; }
+  if (t.dataset.sab != null) { S.ajustes.sabores[t.dataset.sab].activo = t.checked; return; }
+  if (t.id === 'buscar') {
+    S.q = t.value; render();
+    const b = $('#buscar'); b.focus(); b.setSelectionRange(b.value.length, b.value.length);
+  }
+});
+document.addEventListener('change', ev => {
+  if (ev.target.id === 'fVend') { S.fVend = ev.target.value; render(); }
+  if (ev.target.id === 'selFinde') { S.finde = ev.target.value; if (!S.form.id) S.form.finde = S.finde; render(); }
+});
+document.addEventListener('submit', ev => {
+  ev.preventDefault();
+  if (ev.target.id === 'form') guardarForm();
+  if (ev.target.id === 'formAjustes') guardarAjustesForm();
+  if (ev.target.id === 'formGasto') guardarGastoForm();
+});
+
+// Trae lo que cargaron los demás cada 45 s (y al volver a la pestaña).
+setInterval(() => { if (document.visibilityState === 'visible' && !S.ocupado) cargar(true); }, 45000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') cargar(true); });
+
+/* ---------- Datos de prueba (solo fuera de Apps Script) ---------- */
+const MOCK = (() => {
+  const sab = sabadoDe(new Date());
+  const db = {
+    ajustes: {
+      precio: 8000,
+      sabores: ['Limón', 'Chips', 'Chocolate', 'Naranja'].map(nombre => ({ nombre, activo: true })),
+      vendedores: ['Alejo', 'Martina', 'Juli', 'Tomi', 'Sofi', 'Nico', 'Cami', 'Fede'],
+      urlPlanilla: '#', urlExcel: '#',
+    },
+    encargos: [
+      { id: 'a1', finde: sab, dia: 'Sábado', vendedor: 'Alejo', cliente: 'Laura Pérez', telefono: '11 5555-1234', cantidades: { 'Limón': 2, 'Chocolate': 1 }, precio: 8000, pagado: true, medio: 'Transferencia', entregado: false, hace: 'Martina', notas: '' },
+      { id: 'a2', finde: sab, dia: 'Domingo', vendedor: 'Juli', cliente: 'Abuela de Tomi', telefono: '', cantidades: { 'Naranja': 1 }, precio: 8000, pagado: false, medio: '', entregado: false, hace: '', notas: 'Pasa a buscar después de las 17' },
+      { id: 'a3', finde: sab, dia: 'Sábado', vendedor: 'Martina', cliente: 'Club de running', telefono: '11 4444-9876', cantidades: { 'Chips': 3, 'Limón': 1 }, precio: 7500, pagado: false, medio: '', entregado: false, hace: 'Alejo', notas: 'Precio especial por cantidad' },
+    ],
+    gastos: [
+      { id: 'g1', fecha: new Date().toISOString(), finde: sab, detalle: 'Harina, azúcar y huevos', monto: 18500, pago: 'Alejo', plata: 'Bolsillo', devuelto: false, notas: '' },
+      { id: 'g2', fecha: new Date().toISOString(), finde: sab, detalle: 'Limones y naranjas', monto: 4200, pago: 'Martina', plata: 'Caja', devuelto: false, notas: '' },
+    ],
+  };
+  const calc = e => { e.unidades = Object.values(e.cantidades).reduce((a, b) => a + b, 0); e.total = e.unidades * e.precio; return e; };
+  db.encargos.forEach(calc);
+  const copia = () => JSON.parse(JSON.stringify(db));
+  return {
+    obtenerDatos: copia,
+    guardarEncargo(e) {
+      const n = calc(JSON.parse(JSON.stringify(e)));
+      if (n.id) db.encargos[db.encargos.findIndex(x => x.id === n.id)] = n;
+      else { n.id = Math.random().toString(36).slice(2, 10); db.encargos.push(n); }
+      return copia();
+    },
+    actualizarCampo(id, campo, valor) { db.encargos.find(x => x.id === id)[campo] = valor; return copia(); },
+    borrarEncargo(id) { db.encargos = db.encargos.filter(x => x.id !== id); return copia(); },
+    guardarGasto(g) {
+      const n = JSON.parse(JSON.stringify(g));
+      if (n.plata !== 'Bolsillo') n.devuelto = false;
+      if (n.id) db.gastos[db.gastos.findIndex(x => x.id === n.id)] = n;
+      else { n.id = Math.random().toString(36).slice(2, 10); n.fecha = new Date().toISOString(); db.gastos.push(n); }
+      return copia();
+    },
+    marcarDevuelto(id, v) { db.gastos.find(x => x.id === id).devuelto = v; return copia(); },
+    borrarGasto(id) { db.gastos = db.gastos.filter(x => x.id !== id); return copia(); },
+    guardarAjustes(a) {
+      db.ajustes.precio = a.precio; db.ajustes.sabores = a.sabores;
+      db.ajustes.vendedores = a.vendedores.map(v => v.trim()).filter(Boolean); return copia();
+    },
+  };
+})();
+
+render();
+cargar();
+</script>
+</body>
+</html>
