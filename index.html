@@ -24,6 +24,9 @@
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; }
+  /* Evita el zoom por doble toque al apretar rápido (+, −, chips); el zoom con dos dedos sigue funcionando. */
+  html, button, a, label, input, select, textarea { touch-action: manipulation; }
+  button { -webkit-user-select: none; user-select: none; }
   body {
     background: var(--bg); color: var(--ink);
     font: 16px/1.45 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
