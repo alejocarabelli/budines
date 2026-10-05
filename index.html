@@ -60,13 +60,13 @@
     border-top: 1px solid var(--line);
     padding-bottom: env(safe-area-inset-bottom);
   }
-  nav .wrap { display: grid; grid-template-columns: repeat(5, 1fr); padding-top: 6px; padding-bottom: 6px; }
+  nav .wrap { display: grid; grid-template-columns: repeat(6, 1fr); padding-top: 6px; padding-bottom: 6px; }
   nav button {
     border: 0; background: none; padding: 6px 2px; cursor: pointer;
     display: flex; flex-direction: column; align-items: center; gap: 3px;
     font-size: 11.5px; font-weight: 500; color: var(--muted);
   }
-  nav button svg { width: 22px; height: 22px; stroke-width: 1.6; padding: 3px 14px; box-sizing: content-box; border-radius: 999px; }
+  nav button svg { width: 22px; height: 22px; stroke-width: 1.6; padding: 3px 12px; box-sizing: content-box; border-radius: 999px; }
   nav button[aria-current="true"] { color: var(--cocoa); font-weight: 700; }
   nav button[aria-current="true"] svg { background: var(--accent-soft); color: var(--accent); }
 
@@ -113,7 +113,7 @@
     width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface);
     font-size: 19px; line-height: 1; cursor: pointer; color: var(--cocoa);
   }
-  .step button[data-step="1"] { background: var(--cocoa); color: var(--cocoa-ink); border-color: var(--cocoa); }
+  .step button[data-step="1"], .step button.mas { background: var(--cocoa); color: var(--cocoa-ink); border-color: var(--cocoa); }
   .step output { min-width: 26px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
 
   .total { display: flex; align-items: baseline; justify-content: space-between; padding: 16px 0; border-top: 1px solid var(--line); margin: 4px 0 6px; color: var(--muted); }
@@ -193,6 +193,20 @@
   .pill b { font-family: var(--display); font-weight: 800; }
   td .sab { display: inline-flex; align-items: center; gap: 8px; }
 
+  /* Compras */
+  .cant { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .cant .step button { width: 46px; height: 46px; font-size: 22px; }
+  .cant input { width: 84px; text-align: center; font-family: var(--display); font-size: 30px; font-weight: 800; padding: 4px; min-height: 52px; letter-spacing: -.02em; }
+  .fuente { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  .item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .item:last-child { border-bottom: 0; }
+  .item input { width: 22px; height: 22px; accent-color: var(--ok); flex: none; margin: 0; }
+  .item .in { flex: 1; min-width: 0; }
+  .item .nom { font-weight: 600; }
+  .item .det { font-size: 13px; color: var(--muted); }
+  .item .q { font-family: var(--display); font-weight: 700; font-size: 17px; white-space: nowrap; letter-spacing: -.01em; }
+  .item.ok .nom, .item.ok .q { text-decoration: line-through; color: var(--muted); }
+
   /* Caja */
   .cajahead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 26px 0 16px; }
   .cajahead h2 { margin: 0; }
@@ -246,6 +260,7 @@
     <button data-tab="nuevo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo</button>
     <button data-tab="lista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Encargos</button>
     <button data-tab="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Resumen</button>
+    <button data-tab="compras"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h8.9a1 1 0 0 0 1-.8L20 8H6.2"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>Compras</button>
     <button data-tab="caja"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20M16 15h2M6 6V4h12v2"/></svg>Caja</button>
     <button data-tab="ajustes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Ajustes</button>
   </div>
@@ -354,6 +369,7 @@ const S = {
   ajustes: null,
   gasto: null,
   alcance: 'finde',
+  compras: null, // cantidad elegida a mano; null = la de los encargos del finde
   ocupado: false,
 };
 
@@ -389,7 +405,7 @@ function renderFindes() {
 function render() {
   document.querySelectorAll('nav button').forEach(b => b.setAttribute('aria-current', b.dataset.tab === S.tab));
   if (!S.data) return;
-  const vistas = { nuevo: vistaForm, lista: vistaLista, resumen: vistaResumen, caja: vistaCaja, ajustes: vistaAjustes };
+  const vistas = { nuevo: vistaForm, lista: vistaLista, resumen: vistaResumen, compras: vistaCompras, caja: vistaCaja, ajustes: vistaAjustes };
   $('#app').innerHTML = `<div data-vista="${S.tab}">${vistas[S.tab]()}</div>`;
 }
 
@@ -558,6 +574,108 @@ function vistaResumen() {
       <td>${esc(e.cliente)}<div style="font-size:13px;color:var(--muted)">${e.dia} · ${esc(e.vendedor || '—')}${e.telefono ? ' · <a style="color:inherit" href="tel:' + esc(e.telefono.replace(/[^\d+]/g, '')) + '">' + esc(e.telefono) + '</a>' : ''}</div></td>
       <td><b>${pesos(e.total)}</b></td></tr>`).join('')}</tbody></table></div>`
     : `<div class="vacio card">🎉 Está todo cobrado.</div>`}`;
+}
+
+/* ---------- Lista de compras ---------- */
+// Receta base: 12 budines con la masa dividida en 4 partes (3 de cada sabor).
+// Lo común (masa, moldes) escala por el total; lo de cada sabor, por los budines de ese sabor.
+const RECETA_BASE = 12, POR_SABOR = 3;
+const RECETA = [
+  { grupo: 'Almacén y secos', items: [
+    { n: 'Harina leudante', q: 1000, u: 'g' },
+    { n: 'Azúcar común', q: 500, u: 'g' },
+    { n: 'Azúcar impalpable', q: [250, 500], u: 'g', d: 'Para los glaseados y espolvorear' },
+    { n: 'Aceite neutro', q: 400, u: 'ml', d: 'Girasol o maíz' },
+    { n: 'Esencia de vainilla', q: 3, u: 'cda' },
+    { n: 'Cacao amargo en polvo', q: [2, 3], u: 'cda', sabor: 'Chocolate' },
+    { n: 'Chips de chocolate', q: [150, 200], u: 'g', d: 'Relleno y un puñadito para arriba', sabor: 'Chips' },
+  ] },
+  { grupo: 'Frescos y lácteos', items: [
+    { n: 'Huevos', q: 6, u: 'u' },
+    { n: 'Leche', q: 1000, u: 'ml', d: 'Masa y un chorrito para el cacao' },
+    { n: 'Limones', q: 4, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Limón' },
+    { n: 'Naranjas', q: 4, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Naranja' },
+  ] },
+  { grupo: 'Descartables', items: [
+    { n: 'Moldes descartables para budín', q: 12, u: 'u', d: 'Tamaño 250 g' },
+  ] },
+];
+const fmtNum = n => String(Math.round(n * 100) / 100).replace('.', ',');
+function cantidad(q, u, factor) {
+  const x = q * factor;
+  if (u === 'g') { const g = Math.ceil(x / 50) * 50; return g >= 1000 ? { v: g / 1000, u: 'kg' } : { v: g, u: 'g' }; }
+  if (u === 'ml') { const ml = Math.ceil(x / 50) * 50; return ml >= 1000 ? { v: ml / 1000, u: 'L' } : { v: ml, u: 'ml' }; }
+  return { v: Math.ceil(x), u };
+}
+// Cuántos budines de cada sabor: los de los encargos, o repartidos en partes iguales si se eligió a mano.
+const norm = x => x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function porSabor() {
+  if (S.compras != null) return null;
+  const c = {};
+  encargosFinde().forEach(e => Object.entries(e.cantidades).forEach(([s, q]) => (c[norm(s)] = (c[norm(s)] || 0) + q)));
+  return c;
+}
+function factorItem(it) {
+  const n = budinesCompras();
+  if (!it.sabor) return n / RECETA_BASE;
+  const c = porSabor();
+  return (c ? c[norm(it.sabor)] || 0 : n / 4) / POR_SABOR;
+}
+function textoCantidad(it) {
+  const f = factorItem(it);
+  const unidad = (c) => c.u === 'u' ? '' : c.u === 'cda' ? (c.v === 1 ? ' cucharada' : ' cucharadas') : ' ' + c.u;
+  if (!f) return '—';
+  if (Array.isArray(it.q)) {
+    const a = cantidad(it.q[0], it.u, f), b = cantidad(it.q[1], it.u, f);
+    if (a.u === b.u) return a.v === b.v ? fmtNum(a.v) + unidad(a) : fmtNum(a.v) + ' a ' + fmtNum(b.v) + unidad(b);
+    return fmtNum(a.v) + unidad(a) + ' a ' + fmtNum(b.v) + unidad(b);
+  }
+  const c = cantidad(it.q, it.u, f);
+  return fmtNum(c.v) + unidad(c);
+}
+const budinesFinde = () => encargosFinde().reduce((a, e) => a + e.unidades, 0);
+const budinesCompras = () => (S.compras == null ? budinesFinde() : S.compras);
+function tildados() { try { return JSON.parse(store.get('compras.ok')) || {}; } catch (e) { return {}; } }
+
+function vistaCompras() {
+  const n = budinesCompras(), auto = budinesFinde(), ok = tildados();
+  const c = porSabor();
+  const tbd = c ? c['a definir'] || 0 : 0;
+  const reparto = c
+    ? `<div class="pills" style="margin:12px 0 0">${saboresOrden().filter(x => c[norm(x)]).map(x => `<span class="pill">${dot(x)}<b>${c[norm(x)]}</b> ${esc(x)}</span>`).join('')}</div>`
+    : '<p class="hint" style="margin:12px 0 0">Repartidos en partes iguales entre los 4 sabores.</p>';
+  return `
+  <h2>Lista de compras</h2>
+  <div class="card pad">
+    <span class="lbl">¿Para cuántos budines?</span>
+    <div class="cant">
+      <div class="step"><button type="button" data-act="cmpMenos" aria-label="Uno menos">−</button></div>
+      <input type="number" inputmode="numeric" min="0" step="1" id="cmpN" value="${n}" aria-label="Cantidad de budines">
+      <div class="step"><button type="button" class="mas" data-act="cmpMas" aria-label="Uno más">+</button></div>
+    </div>
+    <div class="fuente">
+      <span>${S.compras == null ? `Según los encargos del ${etiquetaFinde(S.finde).replace('Finde ', 'finde ')}` : `Los encargos del finde suman ${auto}`}</span>
+      ${S.compras == null ? '' : `<button type="button" class="tog" data-act="cmpAuto">Usar ${auto}</button>`}
+    </div>
+    ${reparto}
+  </div>
+  ${tbd ? `<div class="aviso" style="margin-top:12px">${tbd === 1 ? 'Hay 1 budín' : 'Hay ' + tbd + ' budines'} con sabor a definir: está${tbd === 1 ? '' : 'n'} sumado${tbd === 1 ? '' : 's'} en la masa y los moldes, pero no en los ingredientes de sabor.</div>` : ''}
+  <p class="hint" style="margin:10px 2px 0">Masa para ${RECETA_BASE} budines dividida en 4 sabores (receta de Gota de Azúcar), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
+  ${RECETA.map(g => `<h3>${g.grupo}</h3><div class="card">${g.items.map(it => `
+    <label class="item ${ok[it.n] ? 'ok' : ''}">
+      <input type="checkbox" data-chk="${esc(it.n)}" ${ok[it.n] ? 'checked' : ''}>
+      <span class="in"><span class="nom">${esc(it.n)}</span>${it.d ? `<div class="det">${esc(it.d)}</div>` : ''}</span>
+      <span class="q">${textoCantidad(it)}</span>
+    </label>`).join('')}</div>`).join('')}
+  <div class="acciones" style="margin-top:18px">
+    <button type="button" class="btn" data-act="desmarcar">Destildar todo</button>
+    <button type="button" class="btn" data-act="compartirLista" style="background:var(--cocoa);color:var(--cocoa-ink);border-color:var(--cocoa)">Compartir lista</button>
+  </div>`;
+}
+function textoLista() {
+  const n = budinesCompras();
+  return `🛒 Lista de compras para ${n} budines\n` + RECETA.map(g =>
+    `\n*${g.grupo}*\n` + g.items.map(it => `• ${it.n}: ${textoCantidad(it)}`).join('\n')).join('\n');
 }
 
 function vistaCaja() {
@@ -803,6 +921,16 @@ document.addEventListener('click', ev => {
     api('marcarDevuelto', t.dataset.id, true).then(d => { setDatos(d); toast('Marcado como devuelto ✓'); })
       .catch(e => toast(errMsg(e), true));
   }
+  else if (act === 'cmpMas' || act === 'cmpMenos') {
+    S.compras = Math.max(0, budinesCompras() + (act === 'cmpMas' ? 1 : -1)); render();
+  }
+  else if (act === 'cmpAuto') { S.compras = null; render(); }
+  else if (act === 'desmarcar') { store.set('compras.ok', '{}'); render(); }
+  else if (act === 'compartirLista') {
+    const txt = textoLista();
+    if (navigator.share) navigator.share({ text: txt }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Lista copiada ✓'), () => toast('No se pudo copiar', true));
+  }
   else if (act === 'recargar') { cargar().then(() => toast('Datos actualizados')); }
   else if (act === 'addSabor') {
     const inp = $('#nuevoSabor'), n = inp.value.trim();
@@ -824,6 +952,17 @@ document.addEventListener('input', ev => {
     return;
   }
   if (t.dataset.g && S.gasto) { S.gasto[t.dataset.g] = t.value; return; }
+  if (t.dataset.chk != null) {
+    const ok = tildados(); if (t.checked) ok[t.dataset.chk] = true; else delete ok[t.dataset.chk];
+    store.set('compras.ok', JSON.stringify(ok)); t.closest('.item').classList.toggle('ok', t.checked); return;
+  }
+  if (t.id === 'cmpN') {
+    S.compras = Math.max(0, Math.floor(Number(t.value) || 0));
+    document.querySelectorAll('.item').forEach((el, i) => {
+      const it = RECETA.flatMap(g => g.items)[i]; el.querySelector('.q').textContent = textoCantidad(it);
+    });
+    return;
+  }
   if (t.dataset.sab != null) { S.ajustes.sabores[t.dataset.sab].activo = t.checked; return; }
   if (t.id === 'buscar') {
     S.q = t.value; render();
@@ -831,6 +970,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
+  if (ev.target.id === 'cmpN') render();
   if (ev.target.id === 'fVend') { S.fVend = ev.target.value; render(); }
   if (ev.target.id === 'selFinde') { S.finde = ev.target.value; if (!S.form.id) S.form.finde = S.finde; render(); }
 });
