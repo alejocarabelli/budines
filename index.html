@@ -586,8 +586,8 @@ const RECETA = [
     { n: 'Azúcar común', q: 500, u: 'g' },
     { n: 'Azúcar impalpable', q: [250, 500], u: 'g', d: 'Para los glaseados y espolvorear' },
     { n: 'Aceite neutro', q: 400, u: 'ml', d: 'Girasol o maíz' },
-    { n: 'Esencia de vainilla', q: 3, u: 'cda' },
-    { n: 'Cacao amargo en polvo', q: [2, 3], u: 'cda', sabor: 'Chocolate' },
+    { n: 'Esencia de vainilla', q: 45, u: 'ml', paso: 5 }, // 3 cucharadas soperas ≈ 45 ml
+    { n: 'Cacao amargo en polvo', q: [14, 21], u: 'g', paso: 5, sabor: 'Chocolate' }, // 2 a 3 cucharadas ≈ 7 g c/u
     { n: 'Chips de chocolate', q: [150, 200], u: 'g', d: 'Relleno y un puñadito para arriba', sabor: 'Chips' },
   ] },
   { grupo: 'Frescos y lácteos', items: [
@@ -601,10 +601,10 @@ const RECETA = [
   ] },
 ];
 const fmtNum = n => String(Math.round(n * 100) / 100).replace('.', ',');
-function cantidad(q, u, factor) {
+function cantidad(q, u, factor, paso = 50) {
   const x = q * factor;
-  if (u === 'g') { const g = Math.ceil(x / 50) * 50; return g >= 1000 ? { v: g / 1000, u: 'kg' } : { v: g, u: 'g' }; }
-  if (u === 'ml') { const ml = Math.ceil(x / 50) * 50; return ml >= 1000 ? { v: ml / 1000, u: 'L' } : { v: ml, u: 'ml' }; }
+  if (u === 'g') { const g = Math.ceil(x / paso) * paso; return g >= 1000 ? { v: g / 1000, u: 'kg' } : { v: g, u: 'g' }; }
+  if (u === 'ml') { const ml = Math.ceil(x / paso) * paso; return ml >= 1000 ? { v: ml / 1000, u: 'L' } : { v: ml, u: 'ml' }; }
   return { v: Math.ceil(x), u };
 }
 // Cuántos budines de cada sabor: los de los encargos, o repartidos en partes iguales si se eligió a mano.
@@ -623,14 +623,14 @@ function factorItem(it) {
 }
 function textoCantidad(it) {
   const f = factorItem(it);
-  const unidad = (c) => c.u === 'u' ? '' : c.u === 'cda' ? (c.v === 1 ? ' cucharada' : ' cucharadas') : ' ' + c.u;
+  const unidad = (c) => c.u === 'u' ? '' : ' ' + c.u;
   if (!f) return '—';
   if (Array.isArray(it.q)) {
-    const a = cantidad(it.q[0], it.u, f), b = cantidad(it.q[1], it.u, f);
+    const a = cantidad(it.q[0], it.u, f, it.paso), b = cantidad(it.q[1], it.u, f, it.paso);
     if (a.u === b.u) return a.v === b.v ? fmtNum(a.v) + unidad(a) : fmtNum(a.v) + ' a ' + fmtNum(b.v) + unidad(b);
     return fmtNum(a.v) + unidad(a) + ' a ' + fmtNum(b.v) + unidad(b);
   }
-  const c = cantidad(it.q, it.u, f);
+  const c = cantidad(it.q, it.u, f, it.paso);
   return fmtNum(c.v) + unidad(c);
 }
 const budinesFinde = () => encargosFinde().reduce((a, e) => a + e.unidades, 0);
