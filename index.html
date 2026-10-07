@@ -275,19 +275,64 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbw1vYYoKZjwfHU5J6gz9Okr
 
 // Alojada afuera (GitHub Pages) habla con la API por fetch, sin cookies de Google;
 // dentro de Apps Script usa google.script.run; abierta como localhost usa datos de prueba (MOCK, al final).
+const API_ESPERA = 30000; // Apps Script a veces tarda >15 s; más allá de esto asumimos que la respuesta se perdió
 async function apiFetch(fn, args) {
-  const r = await fetch(API_URL, {
-    method: 'POST',
-    // text/plain evita el preflight CORS, que Apps Script no responde.
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ fn, args }),
-    credentials: 'omit',
-  });
-  const res = await r.json();
-  if (!res.ok) throw new Error(res.error);
-  return res.data;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), API_ESPERA);
+  try {
+    const r = await fetch(API_URL, {
+      method: 'POST',
+      // text/plain evita el preflight CORS, que Apps Script no responde.
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ fn, args }),
+      credentials: 'omit',
+      signal: ctrl.signal,
+    });
+    const res = await r.json();
+    // Error de validación del servidor (ej. "Falta el nombre"): es definitivo, no hay que reintentar.
+    if (!res.ok) throw Object.assign(new Error(res.error), { servidor: true });
+    return res.data;
+  } finally {
+    clearTimeout(t);
+  }
 }
-function api(fn, ...args) {
+async function api(fn, ...args) {
+  // Solo para pruebas: window.__falla = 'antes' (no llega) o 'despues' (llega pero se pierde la respuesta).
+  const falla = fn !== 'obtenerDatos' && window.__falla;
+  if (falla === 'antes') throw new TypeError('Load failed (simulado)');
+  const d = await apiDirecta(fn, ...args);
+  if (falla === 'despues') throw new TypeError('Load failed (simulado)');
+  return d;
+}
+
+/**
+ * Guarda algo y, si la respuesta no llega (conexión lenta o cortada), relee la planilla
+ * para ver si el cambio se aplicó igual antes de dar error. Así nadie aprieta "Guardar"
+ * dos veces y duplica un encargo. seGuardo(datos) dice si el cambio ya está en la planilla.
+ */
+async function escribir(fn, args, seGuardo) {
+  const lento = setTimeout(() => toast('La conexión está lenta, esperá un momento…'), 8000);
+  try {
+    return await api(fn, ...args);
+  } catch (err) {
+    if (err && err.servidor) throw err;
+    toast('Comprobando si se guardó…');
+    for (const espera of [2000, 5000, 10000]) {
+      await new Promise(r => setTimeout(r, espera));
+      try {
+        const d = await api('obtenerDatos');
+        if (seGuardo(d)) return d;
+      } catch (e) { /* seguimos probando */ }
+    }
+    throw new Error('No se pudo guardar por la conexión. Fijate en Encargos si aparece antes de volver a cargarlo.');
+  } finally {
+    clearTimeout(lento);
+  }
+}
+const mismasCantidades = (a, b) => JSON.stringify(Object.entries(a).sort()) === JSON.stringify(Object.entries(b).sort());
+const idsDe = lista => new Set(lista.map(x => x.id));
+
+function apiDirecta(fn, ...args) {
   const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   if (!local && !(window.google && google.script && google.script.run)) return apiFetch(fn, args);
   return new Promise((resolve, reject) => {
@@ -451,7 +496,7 @@ function vistaForm() {
     </div>
 
     <label class="f"><span>Precio por budín</span><input type="number" inputmode="numeric" min="0" step="1" data-f="precio" value="${f.precio}"></label>
-    <div class="total"><span id="tUnid">${unidadesForm()} budines</span><b id="tTotal">${pesos(unidadesForm() * (Number(f.precio) || 0))}</b></div>
+    <div class="total"><span id="tUnid">${unidadesForm()} ${unidadesForm() === 1 ? 'budín' : 'budines'}</span><b id="tTotal">${pesos(unidadesForm() * (Number(f.precio) || 0))}</b></div>
 
     <label class="switch"><input type="checkbox" data-f="pagado" ${f.pagado ? 'checked' : ''}> Ya está pagado</label>
     ${f.pagado ? `<label class="f"><span>Medio de pago</span>
@@ -793,7 +838,7 @@ function vistaAjustes() {
     <p style="margin:0 0 12px">Todo lo que se carga acá queda en la Google Sheet. Desde ahí también se puede descargar como Excel.</p>
     <div class="links">
       <a class="btn" href="${esc(d.urlPlanilla)}" target="_blank" rel="noopener">Abrir planilla</a>
-      <a class="btn" href="${esc(d.urlExcel)}" target="_blank" rel="noopener">Descargar Excel</a>
+      <button class="btn" data-act="excel">Descargar Excel</button>
       <button class="btn ghost" data-act="recargar">Actualizar datos</button>
     </div>
   </div>`;
@@ -808,7 +853,11 @@ async function guardarForm() {
   S.ocupado = true; render();
   try {
     const editando = !!f.id;
-    setDatos(await api('guardarEncargo', { ...f, precio: Number(f.precio) || 0 }));
+    const antes = idsDe(S.data.encargos), cliente = f.cliente.trim(), precio = Number(f.precio) || 0;
+    const coincide = x => x.cliente === cliente && x.finde === f.finde && x.dia === f.dia &&
+      x.precio === precio && x.pagado === !!f.pagado && mismasCantidades(x.cantidades, f.cantidades);
+    setDatos(await escribir('guardarEncargo', [{ ...f, precio }], d =>
+      d.encargos.some(x => (editando ? x.id === f.id : !antes.has(x.id)) && coincide(x))));
     S.finde = f.finde;
     const prox = formNuevo(); prox.finde = f.finde; prox.dia = f.dia;
     S.form = prox;
@@ -826,7 +875,8 @@ async function toggle(id, campo) {
   const valor = !e[campo];
   e[campo] = valor; render(); // optimista
   try {
-    setDatos(await api('actualizarCampo', id, campo, valor));
+    setDatos(await escribir('actualizarCampo', [id, campo, valor], d =>
+      d.encargos.some(x => x.id === id && x[campo] === valor)));
   } catch (err) {
     e[campo] = !valor; render();
     toast(errMsg(err), true);
@@ -835,9 +885,10 @@ async function toggle(id, campo) {
 
 async function borrar() {
   if (!confirm('¿Eliminar el encargo de ' + S.form.cliente + '? No se puede deshacer.')) return;
-  S.ocupado = true;
+  S.ocupado = true; render();
   try {
-    setDatos(await api('borrarEncargo', S.form.id));
+    const id = S.form.id;
+    setDatos(await escribir('borrarEncargo', [id], d => !d.encargos.some(x => x.id === id)));
     S.form = formNuevo(); S.tab = 'lista';
     toast('Encargo eliminado');
   } catch (e) { toast(errMsg(e), true); }
@@ -850,9 +901,9 @@ async function guardarAjustesForm() {
   a.vendedores = $('#aVend').value;
   S.ocupado = true; render();
   try {
-    setDatos(await api('guardarAjustes', {
-      precio: a.precio, sabores: a.sabores, vendedores: a.vendedores.split('\n'),
-    }));
+    const vendedores = a.vendedores.split('\n').map(v => v.trim()).filter(Boolean);
+    setDatos(await escribir('guardarAjustes', [{ precio: a.precio, sabores: a.sabores, vendedores }], d =>
+      d.ajustes.precio === a.precio && JSON.stringify(d.ajustes.vendedores) === JSON.stringify(vendedores)));
     S.ajustes = null;
     if (!S.form.id) S.form.precio = S.data.ajustes.precio;
     toast('Ajustes guardados ✓');
@@ -868,7 +919,9 @@ async function guardarGastoForm() {
   S.ocupado = true; render();
   try {
     const nuevo = !g.id;
-    setDatos(await api('guardarGasto', { ...g, monto: Number(g.monto) }));
+    const antes = idsDe(S.data.gastos), monto = Number(g.monto), detalle = g.detalle.trim();
+    setDatos(await escribir('guardarGasto', [{ ...g, monto }], d =>
+      d.gastos.some(x => (nuevo ? !antes.has(x.id) : x.id === g.id) && x.detalle === detalle && x.monto === monto)));
     S.gasto = null;
     toast(nuevo ? 'Gasto cargado ✓' : 'Cambios guardados');
   } catch (e) { toast(errMsg(e), true); }
@@ -914,11 +967,15 @@ document.addEventListener('click', ev => {
   else if (act === 'cancelarGasto') { S.gasto = null; render(); }
   else if (act === 'borrarGasto') {
     if (!confirm('¿Eliminar el gasto "' + S.gasto.detalle + '"?')) return;
-    api('borrarGasto', S.gasto.id).then(d => { S.gasto = null; setDatos(d); render(); toast('Gasto eliminado'); })
+    const id = S.gasto.id;
+    escribir('borrarGasto', [id], d => !d.gastos.some(x => x.id === id))
+      .then(d => { S.gasto = null; setDatos(d); render(); toast('Gasto eliminado'); })
       .catch(e => toast(errMsg(e), true));
   }
   else if (act === 'devuelto') {
-    api('marcarDevuelto', t.dataset.id, true).then(d => { setDatos(d); toast('Marcado como devuelto ✓'); })
+    const id = t.dataset.id;
+    escribir('marcarDevuelto', [id, true], d => d.gastos.some(x => x.id === id && x.devuelto))
+      .then(d => { setDatos(d); toast('Marcado como devuelto ✓'); })
       .catch(e => toast(errMsg(e), true));
   }
   else if (act === 'cmpMas' || act === 'cmpMenos') {
@@ -930,6 +987,12 @@ document.addEventListener('click', ev => {
     const txt = textoLista();
     if (navigator.share) navigator.share({ text: txt }).catch(() => {});
     else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Lista copiada ✓'), () => toast('No se pudo copiar', true));
+  }
+  else if (act === 'excel') {
+    // La ventana se abre ya (si no, el celu la bloquea) y se le pone el link cuando el Resumen está al día.
+    const url = S.data.ajustes.urlExcel, w = window.open('', '_blank');
+    toast('Preparando el Excel…');
+    api('actualizarResumen').catch(() => {}).then(() => { if (w) w.location = url; else location.href = url; });
   }
   else if (act === 'recargar') { cargar().then(() => toast('Datos actualizados')); }
   else if (act === 'addSabor') {
@@ -1027,6 +1090,7 @@ const MOCK = (() => {
     },
     marcarDevuelto(id, v) { db.gastos.find(x => x.id === id).devuelto = v; return copia(); },
     borrarGasto(id) { db.gastos = db.gastos.filter(x => x.id !== id); return copia(); },
+    actualizarResumen() {},
     guardarAjustes(a) {
       db.ajustes.precio = a.precio; db.ajustes.sabores = a.sabores;
       db.ajustes.vendedores = a.vendedores.map(v => v.trim()).filter(Boolean); return copia();
