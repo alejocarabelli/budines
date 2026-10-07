@@ -235,6 +235,9 @@
   .links { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* Estado */
+  .sync { display: none; font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; margin-top: 4px; text-align: center; }
+  .sync.on { display: block; animation: latido 1.4s ease-in-out infinite; }
+  @keyframes latido { 50% { opacity: .35; } }
   #toast {
     position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
     background: var(--cocoa); color: var(--cocoa-ink); padding: 11px 18px; border-radius: 999px; font-weight: 600; font-size: 15px;
@@ -249,7 +252,7 @@
 <header>
   <div class="wrap top">
     <div class="brandwrap"><svg class="logo" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="13" fill="#FDE3D3"/><path d="M9 22h26v9.5a3.5 3.5 0 0 1-3.5 3.5h-19A3.5 3.5 0 0 1 9 31.5z" fill="#D9853F"/><path d="M9 23c0-6.6 5.8-11 13-11s13 4.4 13 11z" fill="#B8642B"/><path d="M10 21.5C10.6 16 15.6 13 22 13s11.4 3 12 8.5c0 1.8-1.6 2.6-2.6 1.2-.8-1.1-2.1-.9-2.4.6-.4 2-3 2-3.3 0-.3-1.6-2-1.8-2.8-.4-1 1.8-3.4 1.6-3.9-.4-.4-1.4-2-1.5-2.7-.2-.9 1.6-3.2 1.4-3.5-.4-.3-1.2-1.5-1.4-2.2-.5-.9 1.1-2.6.7-2.6-.4z" fill="#FFF8EC"/><circle cx="17" cy="16.5" r="1.1" fill="#F2784B"/><circle cx="24" cy="15.5" r="1.1" fill="#6B4231"/><circle cx="28.5" cy="18" r="1.1" fill="#F2784B"/><path d="M15 27v5M22 27v5M29 27v5" stroke="#B8642B" stroke-width="1.4" stroke-linecap="round" opacity=".45"/></svg><div class="brand">Budines<small>Encargos y caja</small></div></div>
-    <div class="finde"><select id="selFinde" aria-label="Fin de semana"></select></div>
+    <div class="finde"><select id="selFinde" aria-label="Fin de semana"></select><div class="sync on" id="sync">Actualizando…</div></div>
   </div>
 </header>
 
@@ -275,7 +278,7 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbw1vYYoKZjwfHU5J6gz9Okr
 
 // Alojada afuera (GitHub Pages) habla con la API por fetch, sin cookies de Google;
 // dentro de Apps Script usa google.script.run; abierta como localhost usa datos de prueba (MOCK, al final).
-const API_ESPERA = 30000; // Apps Script a veces tarda >15 s; más allá de esto asumimos que la respuesta se perdió
+const API_ESPERA = 45000; // Apps Script a veces tarda >15 s; más allá de esto asumimos que la respuesta se perdió
 async function apiFetch(fn, args) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), API_ESPERA);
@@ -429,6 +432,7 @@ function formNuevo() {
 async function cargar(silencioso) {
   try {
     setDatos(await api('obtenerDatos'));
+    $('#sync').classList.remove('on');
   } catch (e) {
     if (!silencioso) toast('No se pudo cargar: ' + errMsg(e), true);
   }
@@ -838,7 +842,7 @@ function vistaAjustes() {
     <p style="margin:0 0 12px">Todo lo que se carga acá queda en la Google Sheet. Desde ahí también se puede descargar como Excel.</p>
     <div class="links">
       <a class="btn" href="${esc(d.urlPlanilla)}" target="_blank" rel="noopener">Abrir planilla</a>
-      <button class="btn" data-act="excel">Descargar Excel</button>
+      <a class="btn" href="${esc(d.urlExcel)}" target="_blank" rel="noopener">Descargar Excel</a>
       <button class="btn ghost" data-act="recargar">Actualizar datos</button>
     </div>
   </div>`;
@@ -936,7 +940,10 @@ document.addEventListener('click', ev => {
     ev.preventDefault();
     if (S.tab === 'ajustes' && t.dataset.tab !== 'ajustes') S.ajustes = null;
     if (t.dataset.tab !== 'caja') S.gasto = null;
-    S.tab = t.dataset.tab; render(); window.scrollTo(0, 0); return;
+    S.tab = t.dataset.tab; render(); window.scrollTo(0, 0);
+    // Deja la hoja Resumen al día para cuando bajen el Excel (si el código de Google ya lo tiene).
+    if (S.tab === 'ajustes') api('actualizarResumen').catch(() => {});
+    return;
   }
   if (t.dataset.step) {
     const s = t.closest('[data-sabor]').dataset.sabor;
@@ -987,12 +994,6 @@ document.addEventListener('click', ev => {
     const txt = textoLista();
     if (navigator.share) navigator.share({ text: txt }).catch(() => {});
     else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Lista copiada ✓'), () => toast('No se pudo copiar', true));
-  }
-  else if (act === 'excel') {
-    // La ventana se abre ya (si no, el celu la bloquea) y se le pone el link cuando el Resumen está al día.
-    const url = S.data.ajustes.urlExcel, w = window.open('', '_blank');
-    toast('Preparando el Excel…');
-    api('actualizarResumen').catch(() => {}).then(() => { if (w) w.location = url; else location.href = url; });
   }
   else if (act === 'recargar') { cargar().then(() => toast('Datos actualizados')); }
   else if (act === 'addSabor') {
