@@ -235,8 +235,9 @@
   .links { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* Estado */
-  .sync { display: none; font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; margin-top: 4px; text-align: center; }
+  .sync { display: none; font-size: 12px; font-weight: 600; color: var(--accent); white-space: nowrap; margin-top: 4px; padding: 3px 0; text-align: center; cursor: pointer; }
   .sync.on { display: block; animation: latido 1.4s ease-in-out infinite; }
+  .sync.off { animation: none; color: var(--warn); opacity: .8; }
   @keyframes latido { 50% { opacity: .35; } }
   #toast {
     position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px);
@@ -252,7 +253,7 @@
 <header>
   <div class="wrap top">
     <div class="brandwrap"><svg class="logo" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="13" fill="#FDE3D3"/><path d="M9 22h26v9.5a3.5 3.5 0 0 1-3.5 3.5h-19A3.5 3.5 0 0 1 9 31.5z" fill="#D9853F"/><path d="M9 23c0-6.6 5.8-11 13-11s13 4.4 13 11z" fill="#B8642B"/><path d="M10 21.5C10.6 16 15.6 13 22 13s11.4 3 12 8.5c0 1.8-1.6 2.6-2.6 1.2-.8-1.1-2.1-.9-2.4.6-.4 2-3 2-3.3 0-.3-1.6-2-1.8-2.8-.4-1 1.8-3.4 1.6-3.9-.4-.4-1.4-2-1.5-2.7-.2-.9 1.6-3.2 1.4-3.5-.4-.3-1.2-1.5-1.4-2.2-.5-.9 1.1-2.6.7-2.6-.4z" fill="#FFF8EC"/><circle cx="17" cy="16.5" r="1.1" fill="#F2784B"/><circle cx="24" cy="15.5" r="1.1" fill="#6B4231"/><circle cx="28.5" cy="18" r="1.1" fill="#F2784B"/><path d="M15 27v5M22 27v5M29 27v5" stroke="#B8642B" stroke-width="1.4" stroke-linecap="round" opacity=".45"/></svg><div class="brand">Budines<small>Encargos y caja</small></div></div>
-    <div class="finde"><select id="selFinde" aria-label="Fin de semana"></select><div class="sync on" id="sync">Actualizando…</div></div>
+    <div class="finde"><select id="selFinde" aria-label="Fin de semana"></select><div class="sync on" id="sync" role="button">Actualizando…</div></div>
   </div>
 </header>
 
@@ -278,7 +279,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbw1vYYoKZjwfHU5J6gz9Okr
 
 // Alojada afuera (GitHub Pages) habla con la API por fetch, sin cookies de Google;
 // dentro de Apps Script usa google.script.run; abierta como localhost usa datos de prueba (MOCK, al final).
-const API_ESPERA = 45000; // Apps Script a veces tarda >15 s; más allá de esto asumimos que la respuesta se perdió
+const API_ESPERA = 70000; // Apps Script a veces tarda mucho; más allá de esto asumimos que se perdió la respuesta (los envíos se pueden repetir)
+const enMock = () => /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && !(window.google && google.script && google.script.run);
+const enGoogle = () => !!(window.google && google.script && google.script.run);
+const cuerpoApi = (fn, args) => JSON.stringify({ fn, args });
+
 async function apiFetch(fn, args) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), API_ESPERA);
@@ -287,62 +292,35 @@ async function apiFetch(fn, args) {
       method: 'POST',
       // text/plain evita el preflight CORS, que Apps Script no responde.
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ fn, args }),
+      body: cuerpoApi(fn, args),
       credentials: 'omit',
       signal: ctrl.signal,
     });
     const res = await r.json();
-    // Error de validación del servidor (ej. "Falta el nombre"): es definitivo, no hay que reintentar.
+    // Error del servidor (ej. "Función desconocida"): no es de red, lo marcamos para distinguirlo.
     if (!res.ok) throw Object.assign(new Error(res.error), { servidor: true });
     return res.data;
   } finally {
     clearTimeout(t);
   }
 }
-async function api(fn, ...args) {
-  // Solo para pruebas: window.__falla = 'antes' (no llega) o 'despues' (llega pero se pierde la respuesta).
-  const falla = fn !== 'obtenerDatos' && window.__falla;
-  if (falla === 'antes') throw new TypeError('Load failed (simulado)');
-  const d = await apiDirecta(fn, ...args);
-  if (falla === 'despues') throw new TypeError('Load failed (simulado)');
-  return d;
-}
-
-/**
- * Guarda algo y, si la respuesta no llega (conexión lenta o cortada), relee la planilla
- * para ver si el cambio se aplicó igual antes de dar error. Así nadie aprieta "Guardar"
- * dos veces y duplica un encargo. seGuardo(datos) dice si el cambio ya está en la planilla.
- */
-async function escribir(fn, args, seGuardo) {
-  const lento = setTimeout(() => toast('La conexión está lenta, esperá un momento…'), 8000);
-  try {
-    return await api(fn, ...args);
-  } catch (err) {
-    if (err && err.servidor) throw err;
-    toast('Comprobando si se guardó…');
-    for (const espera of [2000, 5000, 10000]) {
-      await new Promise(r => setTimeout(r, espera));
-      try {
-        const d = await api('obtenerDatos');
-        if (seGuardo(d)) return d;
-      } catch (e) { /* seguimos probando */ }
-    }
-    throw new Error('No se pudo guardar por la conexión. Fijate en Encargos si aparece antes de volver a cargarlo.');
-  } finally {
-    clearTimeout(lento);
-  }
-}
-const mismasCantidades = (a, b) => JSON.stringify(Object.entries(a).sort()) === JSON.stringify(Object.entries(b).sort());
-const idsDe = lista => new Set(lista.map(x => x.id));
-
-function apiDirecta(fn, ...args) {
-  const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-  if (!local && !(window.google && google.script && google.script.run)) return apiFetch(fn, args);
+function api(fn, ...args) {
+  if (!enMock() && !enGoogle()) return apiFetch(fn, args);
   return new Promise((resolve, reject) => {
-    if (window.google && google.script && google.script.run) {
+    if (enGoogle()) {
       google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[fn](...args);
     } else {
-      setTimeout(() => { try { resolve(MOCK[fn](...args)); } catch (e) { reject(e); } }, 200);
+      // Solo para pruebas locales: window.__lento = ms suma demora; window.__falla = 'red' (nada llega)
+      // o 'respuesta' (el lote se aplica pero se pierde la respuesta).
+      setTimeout(() => {
+        try {
+          const falla = window.__falla;
+          if (falla === 'red') throw new TypeError('Load failed (simulado)');
+          const r = MOCK[fn](...args);
+          if (falla === 'respuesta' && fn === 'lote') throw new TypeError('Load failed (simulado)');
+          resolve(r);
+        } catch (e) { reject(e); }
+      }, 200 + (window.__lento || 0));
     }
   });
 }
@@ -403,11 +381,128 @@ function toast(msg, err) {
   t.textContent = msg; t.className = 'show' + (err ? ' err' : '');
   clearTimeout(toastT); toastT = setTimeout(() => (t.className = ''), err ? 4500 : 2200);
 }
-const errMsg = e => (e && e.message ? e.message : String(e)).replace(/^Error:\s*/, '');
+
+/* ---------- Operaciones (lógica pura) ---------- */
+// Cada cambio del usuario es una operación {opId, fn, args}. aplicarOp la aplica sobre
+// {ajustes, encargos, gastos} igual que Code.gs (y tira los mismos errores), sin tocar el original.
+const clonar = x => JSON.parse(JSON.stringify(x));
+const nuevoId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+function aplicarOp(datos, op) {
+  const d = clonar(datos);
+  const a = op.args || [];
+  const fecha = new Date(op.ts || Date.now()).toISOString();
+  const buscar = (lista, id) => lista.findIndex(x => x.id === String(id));
+  switch (op.fn) {
+    case 'guardarEncargo': {
+      const e = a[0] || {};
+      const cliente = String(e.cliente || '').trim();
+      if (!cliente) throw new Error('Falta el nombre del cliente');
+      if (!['Sábado', 'Domingo'].includes(e.dia)) throw new Error('Día inválido');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(e.finde || '')) throw new Error('Fin de semana inválido');
+      const cantidades = {};
+      Object.keys(e.cantidades || {}).forEach(s => {
+        const q = Math.floor(Number(e.cantidades[s]) || 0);
+        if (q > 0) cantidades[s] = q;
+      });
+      const unidades = Object.values(cantidades).reduce((x, y) => x + y, 0);
+      if (!unidades) throw new Error('El encargo no tiene budines');
+      const precio = Number(e.precio);
+      if (!(precio >= 0)) throw new Error('Precio inválido');
+      const i = e.id ? buscar(d.encargos, e.id) : -1;
+      if (e.id && i < 0 && e.nuevo !== true) throw new Error('Ese encargo ya no existe (¿lo borró alguien?)');
+      const pagado = !!e.pagado;
+      const n = {
+        id: e.id ? String(e.id) : 'c' + op.opId,
+        creado: i >= 0 ? d.encargos[i].creado : fecha,
+        finde: e.finde, dia: e.dia,
+        vendedor: String(e.vendedor || '').trim(), cliente, telefono: String(e.telefono || '').trim(),
+        cantidades, unidades, precio, total: unidades * precio,
+        pagado, medio: pagado ? String(e.medio || '').trim() : '',
+        entregado: !!e.entregado, hace: String(e.hace || '').trim(), notas: String(e.notas || '').trim(),
+      };
+      if (i >= 0) d.encargos[i] = n; else d.encargos.push(n);
+      break;
+    }
+    case 'actualizarCampo': {
+      const [id, campo, valor] = a;
+      if (!['pagado', 'entregado', 'hace', 'medio'].includes(campo)) throw new Error('Campo inválido');
+      const i = buscar(d.encargos, id);
+      if (i < 0) throw new Error('Ese encargo ya no existe (¿lo borró alguien?)');
+      const e = d.encargos[i];
+      e[campo] = campo === 'pagado' || campo === 'entregado' ? !!valor : String(valor == null ? '' : valor).trim();
+      if (campo === 'pagado' && !e.pagado) e.medio = '';
+      break;
+    }
+    case 'borrarEncargo':
+      d.encargos = d.encargos.filter(x => x.id !== String(a[0]));
+      break;
+    case 'guardarGasto': {
+      const g = a[0] || {};
+      const detalle = String(g.detalle || '').trim();
+      if (!detalle) throw new Error('Falta qué se compró');
+      const monto = Number(g.monto);
+      if (!(monto > 0)) throw new Error('El monto tiene que ser mayor a 0');
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(g.finde || '')) throw new Error('Fin de semana inválido');
+      const plata = g.plata === 'Bolsillo' ? 'Bolsillo' : 'Caja';
+      if (plata === 'Bolsillo' && !String(g.pago || '').trim()) throw new Error('Falta quién lo pagó');
+      const i = g.id ? buscar(d.gastos, g.id) : -1;
+      if (g.id && i < 0 && g.nuevo !== true) throw new Error('Ese gasto ya no existe (¿lo borró alguien?)');
+      const n = {
+        id: g.id ? String(g.id) : 'c' + op.opId,
+        fecha: i >= 0 ? d.gastos[i].fecha : fecha,
+        finde: g.finde, detalle, monto, pago: String(g.pago || '').trim(), plata,
+        devuelto: plata === 'Bolsillo' && !!g.devuelto, notas: String(g.notas || '').trim(),
+      };
+      if (i >= 0) d.gastos[i] = n; else d.gastos.push(n);
+      break;
+    }
+    case 'marcarDevuelto': {
+      const i = buscar(d.gastos, a[0]);
+      if (i < 0) throw new Error('Ese gasto ya no existe (¿lo borró alguien?)');
+      d.gastos[i].devuelto = !!a[1];
+      break;
+    }
+    case 'borrarGasto':
+      d.gastos = d.gastos.filter(x => x.id !== String(a[0]));
+      break;
+    case 'guardarAjustes': {
+      const aj = a[0] || {};
+      const precio = Number(aj.precio);
+      if (!(precio >= 0)) throw new Error('Precio inválido');
+      const vistos = {};
+      const sabores = (aj.sabores || [])
+        .map(s => ({ nombre: String(s.nombre || '').trim(), activo: !!s.activo }))
+        .filter(s => s.nombre && !vistos[s.nombre.toLowerCase()] && (vistos[s.nombre.toLowerCase()] = true));
+      if (!sabores.some(s => s.activo)) throw new Error('Tiene que haber al menos un sabor activo');
+      d.ajustes.precio = precio;
+      d.ajustes.sabores = sabores;
+      d.ajustes.vendedores = (aj.vendedores || []).map(v => String(v || '').trim()).filter(Boolean);
+      break;
+    }
+    default:
+      throw new Error('Operación desconocida: ' + op.fn);
+  }
+  return d;
+}
+// En pantalla, una operación que el servidor va a rechazar simplemente no se nota.
+const aplicarOpSegura = (datos, op) => { try { return aplicarOp(datos, op); } catch (e) { return datos; } };
 
 /* ---------- Estado ---------- */
 const S = {
-  data: null,
+  data: null, // lo que se ve: base + pendientes
+  base: null, // última copia confirmada por el servidor
+  pend: [], // cola de operaciones sin confirmar (se guarda en localStorage)
+  fresco: false, // ya hubo una lectura/envío exitoso en esta sesión
+  enviando: false,
+  leyendo: null,
+  fallo: false, // el último intento de red falló
+  gen: 0, // sube con cada envío confirmado: descarta lecturas que salieron antes
+  intentos: 0,
+  intentosLec: 0,
+  lecturaT: null,
+  reintentoT: null,
+  ultimo: 0,
   finde: sabadoDe(new Date()),
   tab: 'nuevo',
   filtro: 'todos',
@@ -418,7 +513,6 @@ const S = {
   gasto: null,
   alcance: 'finde',
   compras: null, // cantidad elegida a mano; null = la de los encargos del finde
-  ocupado: false,
 };
 
 function formNuevo() {
@@ -429,23 +523,120 @@ function formNuevo() {
   };
 }
 
-async function cargar(silencioso) {
-  try {
-    setDatos(await api('obtenerDatos'));
-    $('#sync').classList.remove('on');
-  } catch (e) {
-    if (!silencioso) toast('No se pudo cargar: ' + errMsg(e), true);
+/* ---------- Sincronización ---------- */
+const ESPERAS = [3000, 6000, 12000, 20000];
+const esperaN = n => (n < ESPERAS.length ? ESPERAS[n] : 30000);
+
+function guardarPend() { store.set('pendientes', JSON.stringify(S.pend)); }
+function recalcular() { S.data = clonar(S.pend.reduce(aplicarOpSegura, S.base)); }
+
+// Texto bajo el selector de finde: solo aparece mientras haya algo sin sincronizar.
+function estado() {
+  const n = S.pend.length;
+  let txt = '', apagado = false;
+  if (n) {
+    if (S.fallo && !S.enviando) { txt = 'Sin conexión · se envía solo'; apagado = true; }
+    else txt = 'Guardando ' + n + '…';
+  } else if (!S.fresco) {
+    if (S.fallo) { txt = 'Sin conexión · reintentando'; apagado = true; }
+    else txt = 'Actualizando…';
   }
+  const el = $('#sync');
+  el.textContent = txt;
+  el.className = 'sync' + (txt ? ' on' : '') + (apagado ? ' off' : '');
+}
+
+// Anota un cambio del usuario, lo ve al instante y lo manda en segundo plano.
+function encolar(fn, args) {
+  S.pend.push({ opId: nuevoId(), fn, args: clonar(args), ts: Date.now() });
+  guardarPend();
+  recalcular();
+  estado();
+  enviar();
+}
+
+function programarReintento() {
+  clearTimeout(S.reintentoT);
+  S.reintentoT = setTimeout(enviar, esperaN(S.intentos++));
+}
+
+/**
+ * Manda todos los pendientes juntos. Si la respuesta se pierde se reenvían: el servidor
+ * crea con el id del cliente y borra/edita con valores absolutos, así que repetir no duplica.
+ */
+async function enviar() {
+  if (S.enviando || !S.pend.length) return;
+  clearTimeout(S.reintentoT);
+  S.enviando = true; estado();
+  const ops = S.pend.slice();
+  try {
+    const res = await api('lote', ops);
+    const vistos = new Set(res.resultados.map(r => r.opId));
+    const errores = [...new Set(res.resultados.filter(r => !r.ok).map(r => r.error))];
+    S.pend = S.pend.filter(o => !vistos.has(o.opId));
+    guardarPend();
+    S.gen++; S.fresco = true; S.fallo = false; S.intentos = 0;
+    setDatos(res.datos);
+    if (errores.length) toast('No se guardó: ' + errores.join(' · '), true);
+  } catch (e) {
+    // Sin red o sin respuesta: la cola queda como está y se reintenta sola.
+    S.fallo = true;
+    if (e && e.servidor) {
+      console.warn('Lote rechazado:', e.message);
+      if (!S.fresco) cargar(true);
+    }
+    programarReintento();
+  }
+  S.enviando = false; estado();
+  if (S.pend.length && !S.fallo) enviar();
+}
+
+// Al salir de la página manda lo que quede, por si el envío normal no llegó a salir.
+function enviarAlSalir() {
+  if (!S.pend.length || enMock() || enGoogle()) return;
+  const body = cuerpoApi('lote', S.pend);
+  if (body.length > 60000) return; // tope de keepalive
+  try {
+    fetch(API_URL, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body, credentials: 'omit' }).catch(() => {});
+  } catch (e) {}
+}
+
+function cargar(silencioso) {
+  if (S.leyendo) return S.leyendo;
+  const gen = S.gen;
+  S.leyendo = (async () => {
+    try {
+      const d = await api('obtenerDatos');
+      // Si mientras tanto se confirmó un envío, esta lectura puede ser más vieja: se descarta.
+      if (gen !== S.gen) return true;
+      S.fresco = true; S.fallo = false;
+      setDatos(d);
+      return true;
+    } catch (e) {
+      if (!S.fresco) {
+        S.fallo = true;
+        clearTimeout(S.lecturaT);
+        S.lecturaT = setTimeout(() => cargar(true), esperaN(S.intentosLec++));
+      }
+      return false;
+    } finally {
+      S.leyendo = null; estado();
+    }
+  })();
+  return S.leyendo;
 }
 function setDatos(d) {
-  S.data = d;
+  S.base = d;
   store.set('datos', JSON.stringify(d));
+  S.intentosLec = 0;
+  recalcular();
   if (!S.form) S.form = formNuevo();
   const editando = S.tab === 'nuevo' || S.tab === 'ajustes' || (S.tab === 'caja' && S.gasto);
   if (!editando) render();
   else if (!document.querySelector('[data-vista]')) render();
   renderFindes();
 }
+const esperar = () => toast('Esperá un segundo, se están actualizando los datos');
 
 /* ---------- Render ---------- */
 function renderFindes() {
@@ -508,7 +699,7 @@ function vistaForm() {
     ${f.id ? `<label class="switch"><input type="checkbox" data-f="entregado" ${f.entregado ? 'checked' : ''}> Ya se entregó</label>` : ''}
     <label class="f"><span>Notas</span><textarea data-f="notas" placeholder="Dirección, horario, aclaraciones…">${esc(f.notas)}</textarea></label>
 
-    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : f.id ? 'Guardar cambios' : 'Guardar encargo'}</button>
+    <button class="btn primary" type="submit">${f.id ? 'Guardar cambios' : 'Guardar encargo'}</button>
     ${f.id ? `<div class="acciones">
       <button type="button" class="btn" data-act="cancelar">Cancelar</button>
       <button type="button" class="btn danger" data-act="borrar">Eliminar</button></div>` : ''}
@@ -807,7 +998,7 @@ function formGasto() {
     </label>
     ${g.plata === 'Bolsillo' ? `<p class="hint">Va a aparecer en "Hay que devolverle" hasta que se le devuelva.</p>` : ''}
     <label class="f"><span>Notas</span><input type="text" data-g="notas" value="${esc(g.notas)}" placeholder="Opcional"></label>
-    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : 'Guardar gasto'}</button>
+    <button class="btn primary" type="submit">Guardar gasto</button>
     <div class="acciones">
       <button type="button" class="btn" data-act="cancelarGasto">Cancelar</button>
       ${g.id ? `<button type="button" class="btn danger" data-act="borrarGasto">Eliminar</button>` : ''}
@@ -834,7 +1025,7 @@ function vistaAjustes() {
 
     <label class="f"><span>Equipo (uno por línea)</span><textarea id="aVend" rows="8">${esc(a.vendedores)}</textarea></label>
 
-    <button class="btn primary" type="submit" ${S.ocupado ? 'disabled' : ''}>${S.ocupado ? 'Guardando…' : 'Guardar ajustes'}</button>
+    <button class="btn primary" type="submit">Guardar ajustes</button>
   </form>
 
   <h3>Planilla</h3>
@@ -849,87 +1040,81 @@ function vistaAjustes() {
 }
 
 /* ---------- Acciones ---------- */
-async function guardarForm() {
+// Un doble toque en "Guardar" no debe tirar un error de validación sobre el form ya vacío.
+const rebote = () => Date.now() - S.ultimo < 800;
+
+function guardarForm() {
+  if (rebote()) return;
   const f = S.form;
   if (!f.cliente.trim()) return toast('Falta el nombre del cliente', true);
   if (!unidadesForm()) return toast('Agregá al menos un budín', true);
   if (!f.vendedor) return toast('Elegí quién lo vendió', true);
-  S.ocupado = true; render();
-  try {
-    const editando = !!f.id;
-    const antes = idsDe(S.data.encargos), cliente = f.cliente.trim(), precio = Number(f.precio) || 0;
-    const coincide = x => x.cliente === cliente && x.finde === f.finde && x.dia === f.dia &&
-      x.precio === precio && x.pagado === !!f.pagado && mismasCantidades(x.cantidades, f.cantidades);
-    setDatos(await escribir('guardarEncargo', [{ ...f, precio }], d =>
-      d.encargos.some(x => (editando ? x.id === f.id : !antes.has(x.id)) && coincide(x))));
-    S.finde = f.finde;
-    const prox = formNuevo(); prox.finde = f.finde; prox.dia = f.dia;
-    S.form = prox;
-    toast(editando ? 'Cambios guardados' : 'Encargo guardado ✓');
-    if (editando) S.tab = 'lista';
-  } catch (e) {
-    toast(errMsg(e), true);
-  }
-  S.ocupado = false; renderFindes(); render();
+  if (f.id && !S.fresco) return esperar();
+  const editando = !!f.id;
+  const e = {
+    id: editando ? f.id : 'c' + nuevoId(), finde: f.finde, dia: f.dia, vendedor: f.vendedor,
+    cliente: f.cliente.trim(), telefono: f.telefono, cantidades: f.cantidades, precio: Number(f.precio) || 0,
+    pagado: !!f.pagado, medio: f.medio, entregado: !!f.entregado, hace: f.hace, notas: f.notas,
+  };
+  if (!editando) e.nuevo = true;
+  encolar('guardarEncargo', [e]);
+  S.ultimo = Date.now();
+  S.finde = f.finde;
+  const prox = formNuevo(); prox.finde = f.finde; prox.dia = f.dia;
+  S.form = prox;
+  toast(editando ? 'Cambios guardados' : 'Encargo guardado ✓');
+  if (editando) S.tab = 'lista';
+  renderFindes(); render();
 }
 
-async function toggle(id, campo) {
+function toggle(id, campo) {
+  if (!S.fresco) return esperar();
   const e = S.data.encargos.find(x => x.id === id);
   if (!e) return;
-  const valor = !e[campo];
-  e[campo] = valor; render(); // optimista
-  try {
-    setDatos(await escribir('actualizarCampo', [id, campo, valor], d =>
-      d.encargos.some(x => x.id === id && x[campo] === valor)));
-  } catch (err) {
-    e[campo] = !valor; render();
-    toast(errMsg(err), true);
-  }
+  encolar('actualizarCampo', [id, campo, !e[campo]]);
+  render();
 }
 
-async function borrar() {
+function borrar() {
+  if (!S.fresco) return esperar();
   if (!confirm('¿Eliminar el encargo de ' + S.form.cliente + '? No se puede deshacer.')) return;
-  S.ocupado = true; render();
-  try {
-    const id = S.form.id;
-    setDatos(await escribir('borrarEncargo', [id], d => !d.encargos.some(x => x.id === id)));
-    S.form = formNuevo(); S.tab = 'lista';
-    toast('Encargo eliminado');
-  } catch (e) { toast(errMsg(e), true); }
-  S.ocupado = false; render();
+  encolar('borrarEncargo', [S.form.id]);
+  S.form = formNuevo(); S.tab = 'lista';
+  toast('Encargo eliminado');
+  renderFindes(); render();
 }
 
-async function guardarAjustesForm() {
+function guardarAjustesForm() {
+  if (!S.fresco) return esperar();
   const a = S.ajustes;
   a.precio = Number($('#aPrecio').value) || 0;
   a.vendedores = $('#aVend').value;
-  S.ocupado = true; render();
-  try {
-    const vendedores = a.vendedores.split('\n').map(v => v.trim()).filter(Boolean);
-    setDatos(await escribir('guardarAjustes', [{ precio: a.precio, sabores: a.sabores, vendedores }], d =>
-      d.ajustes.precio === a.precio && JSON.stringify(d.ajustes.vendedores) === JSON.stringify(vendedores)));
-    S.ajustes = null;
-    if (!S.form.id) S.form.precio = S.data.ajustes.precio;
-    toast('Ajustes guardados ✓');
-  } catch (e) { toast(errMsg(e), true); }
-  S.ocupado = false; render();
+  const vendedores = a.vendedores.split('\n').map(v => v.trim()).filter(Boolean);
+  encolar('guardarAjustes', [{ precio: a.precio, sabores: a.sabores, vendedores }]);
+  S.ajustes = null;
+  if (!S.form.id) S.form.precio = S.data.ajustes.precio;
+  toast('Ajustes guardados ✓');
+  render();
 }
 
-async function guardarGastoForm() {
+function guardarGastoForm() {
+  if (rebote()) return;
   const g = S.gasto;
   if (!g.detalle.trim()) return toast('Falta qué se compró', true);
   if (!(Number(g.monto) > 0)) return toast('Poné el monto', true);
   if (g.plata === 'Bolsillo' && !g.pago) return toast('Elegí quién puso la plata', true);
-  S.ocupado = true; render();
-  try {
-    const nuevo = !g.id;
-    const antes = idsDe(S.data.gastos), monto = Number(g.monto), detalle = g.detalle.trim();
-    setDatos(await escribir('guardarGasto', [{ ...g, monto }], d =>
-      d.gastos.some(x => (nuevo ? !antes.has(x.id) : x.id === g.id) && x.detalle === detalle && x.monto === monto)));
-    S.gasto = null;
-    toast(nuevo ? 'Gasto cargado ✓' : 'Cambios guardados');
-  } catch (e) { toast(errMsg(e), true); }
-  S.ocupado = false; render();
+  if (g.id && !S.fresco) return esperar();
+  const nuevo = !g.id;
+  const gasto = {
+    id: nuevo ? 'c' + nuevoId() : g.id, finde: g.finde, detalle: g.detalle.trim(), monto: Number(g.monto),
+    pago: g.pago, plata: g.plata, devuelto: g.plata === 'Bolsillo' && !!g.devuelto, notas: g.notas,
+  };
+  if (nuevo) gasto.nuevo = true;
+  encolar('guardarGasto', [gasto]);
+  S.ultimo = Date.now();
+  S.gasto = null;
+  toast(nuevo ? 'Gasto cargado ✓' : 'Cambios guardados');
+  render();
 }
 
 /* ---------- Eventos ---------- */
@@ -961,7 +1146,9 @@ document.addEventListener('click', ev => {
   const act = t.dataset.act;
   if (act === 'pagado' || act === 'entregado') toggle(t.dataset.id, act);
   else if (act === 'editar') {
+    if (!S.fresco) return esperar();
     const e = S.data.encargos.find(x => x.id === t.dataset.id);
+    if (!e) return;
     S.form = JSON.parse(JSON.stringify(e)); S.tab = 'nuevo'; render(); window.scrollTo(0, 0);
   }
   else if (act === 'cancelar') { S.form = formNuevo(); S.tab = 'lista'; render(); }
@@ -970,20 +1157,23 @@ document.addEventListener('click', ev => {
     S.gasto = { id: null, detalle: '', monto: '', finde: S.finde, plata: 'Caja', pago: store.get('vendedor') || '', devuelto: false, notas: '' };
     render();
   }
-  else if (act === 'editarGasto') { S.gasto = { ...S.data.gastos.find(x => x.id === t.dataset.id) }; render(); }
+  else if (act === 'editarGasto') {
+    if (!S.fresco) return esperar();
+    const g = S.data.gastos.find(x => x.id === t.dataset.id);
+    if (!g) return;
+    S.gasto = { ...g }; render();
+  }
   else if (act === 'cancelarGasto') { S.gasto = null; render(); }
   else if (act === 'borrarGasto') {
+    if (!S.fresco) return esperar();
     if (!confirm('¿Eliminar el gasto "' + S.gasto.detalle + '"?')) return;
-    const id = S.gasto.id;
-    escribir('borrarGasto', [id], d => !d.gastos.some(x => x.id === id))
-      .then(d => { S.gasto = null; setDatos(d); render(); toast('Gasto eliminado'); })
-      .catch(e => toast(errMsg(e), true));
+    encolar('borrarGasto', [S.gasto.id]);
+    S.gasto = null; render(); toast('Gasto eliminado');
   }
   else if (act === 'devuelto') {
-    const id = t.dataset.id;
-    escribir('marcarDevuelto', [id, true], d => d.gastos.some(x => x.id === id && x.devuelto))
-      .then(d => { setDatos(d); toast('Marcado como devuelto ✓'); })
-      .catch(e => toast(errMsg(e), true));
+    if (!S.fresco) return esperar();
+    encolar('marcarDevuelto', [t.dataset.id, true]);
+    render(); toast('Marcado como devuelto ✓');
   }
   else if (act === 'cmpMas' || act === 'cmpMenos') {
     S.compras = Math.max(0, budinesCompras() + (act === 'cmpMas' ? 1 : -1)); render();
@@ -995,7 +1185,7 @@ document.addEventListener('click', ev => {
     if (navigator.share) navigator.share({ text: txt }).catch(() => {});
     else if (navigator.clipboard) navigator.clipboard.writeText(txt).then(() => toast('Lista copiada ✓'), () => toast('No se pudo copiar', true));
   }
-  else if (act === 'recargar') { cargar().then(() => toast('Datos actualizados')); }
+  else if (act === 'recargar') { enviar(); cargar().then(ok => toast(ok ? 'Datos actualizados' : 'Sin conexión, probá de nuevo en un rato')); }
   else if (act === 'addSabor') {
     const inp = $('#nuevoSabor'), n = inp.value.trim();
     if (!n) return;
@@ -1045,14 +1235,23 @@ document.addEventListener('submit', ev => {
   if (ev.target.id === 'formGasto') guardarGastoForm();
 });
 
-// Trae lo que cargaron los demás cada 45 s (y al volver a la pestaña).
-setInterval(() => { if (document.visibilityState === 'visible' && !S.ocupado) cargar(true); }, 45000);
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') cargar(true); });
+// Trae lo que cargaron los demás cada 45 s (y al volver a la pestaña); no mientras se está enviando.
+setInterval(() => { if (document.visibilityState === 'visible' && !S.enviando) cargar(true); }, 45000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') { enviar(); if (!S.enviando) cargar(true); }
+  else enviarAlSalir();
+});
+window.addEventListener('online', () => { enviar(); if (!S.fresco) cargar(true); });
+window.addEventListener('beforeunload', ev => {
+  if (S.pend.length) { ev.preventDefault(); ev.returnValue = ''; }
+});
+// Tocar el aviso de estado fuerza un reintento ahora.
+$('#sync').addEventListener('click', () => { enviar(); if (!S.enviando) cargar(true); });
 
 /* ---------- Datos de prueba (solo fuera de Apps Script) ---------- */
 const MOCK = (() => {
   const sab = sabadoDe(new Date());
-  const db = {
+  let db = {
     ajustes: {
       precio: 8000,
       sabores: ['Limón', 'Chips', 'Chocolate', 'Naranja'].map(nombre => ({ nombre, activo: true })),
@@ -1060,49 +1259,37 @@ const MOCK = (() => {
       urlPlanilla: '#', urlExcel: '#',
     },
     encargos: [
-      { id: 'a1', finde: sab, dia: 'Sábado', vendedor: 'Alejo', cliente: 'Laura Pérez', telefono: '11 5555-1234', cantidades: { 'Limón': 2, 'Chocolate': 1 }, precio: 8000, pagado: true, medio: 'Transferencia', entregado: false, hace: 'Martina', notas: '' },
-      { id: 'a2', finde: sab, dia: 'Domingo', vendedor: 'Juli', cliente: 'Abuela de Tomi', telefono: '', cantidades: { 'Naranja': 1, 'A definir': 1 }, precio: 8000, pagado: false, medio: '', entregado: false, hace: '', notas: 'Pasa a buscar después de las 17' },
-      { id: 'a3', finde: sab, dia: 'Sábado', vendedor: 'Martina', cliente: 'Club de running', telefono: '11 4444-9876', cantidades: { 'Chips': 3, 'Limón': 1 }, precio: 7500, pagado: false, medio: '', entregado: false, hace: 'Alejo', notas: 'Precio especial por cantidad' },
+      { id: 'a1', creado: new Date().toISOString(), finde: sab, dia: 'Sábado', vendedor: 'Alejo', cliente: 'Laura Pérez', telefono: '11 5555-1234', cantidades: { 'Limón': 2, 'Chocolate': 1 }, precio: 8000, pagado: true, medio: 'Transferencia', entregado: false, hace: 'Martina', notas: '' },
+      { id: 'a2', creado: new Date().toISOString(), finde: sab, dia: 'Domingo', vendedor: 'Juli', cliente: 'Abuela de Tomi', telefono: '', cantidades: { 'Naranja': 1, 'A definir': 1 }, precio: 8000, pagado: false, medio: '', entregado: false, hace: '', notas: 'Pasa a buscar después de las 17' },
+      { id: 'a3', creado: new Date().toISOString(), finde: sab, dia: 'Sábado', vendedor: 'Martina', cliente: 'Club de running', telefono: '11 4444-9876', cantidades: { 'Chips': 3, 'Limón': 1 }, precio: 7500, pagado: false, medio: '', entregado: false, hace: 'Alejo', notas: 'Precio especial por cantidad' },
     ],
     gastos: [
       { id: 'g1', fecha: new Date().toISOString(), finde: sab, detalle: 'Harina, azúcar y huevos', monto: 18500, pago: 'Alejo', plata: 'Bolsillo', devuelto: false, notas: '' },
       { id: 'g2', fecha: new Date().toISOString(), finde: sab, detalle: 'Limones y naranjas', monto: 4200, pago: 'Martina', plata: 'Caja', devuelto: false, notas: '' },
     ],
   };
-  const calc = e => { e.unidades = Object.values(e.cantidades).reduce((a, b) => a + b, 0); e.total = e.unidades * e.precio; return e; };
-  db.encargos.forEach(calc);
+  db.encargos.forEach(e => { e.unidades = Object.values(e.cantidades).reduce((a, b) => a + b, 0); e.total = e.unidades * e.precio; });
   const copia = () => JSON.parse(JSON.stringify(db));
   return {
     obtenerDatos: copia,
-    guardarEncargo(e) {
-      const n = calc(JSON.parse(JSON.stringify(e)));
-      if (n.id) db.encargos[db.encargos.findIndex(x => x.id === n.id)] = n;
-      else { n.id = Math.random().toString(36).slice(2, 10); db.encargos.push(n); }
-      return copia();
+    // Mismo contrato que el servidor: cada operación se aplica por separado y sus errores no frenan a las demás.
+    lote(ops) {
+      const resultados = ops.map(op => {
+        try { db = aplicarOp(db, op); return { opId: op.opId, ok: true }; }
+        catch (e) { return { opId: op.opId, ok: false, error: e.message }; }
+      });
+      return { resultados, datos: copia() };
     },
-    actualizarCampo(id, campo, valor) { db.encargos.find(x => x.id === id)[campo] = valor; return copia(); },
-    borrarEncargo(id) { db.encargos = db.encargos.filter(x => x.id !== id); return copia(); },
-    guardarGasto(g) {
-      const n = JSON.parse(JSON.stringify(g));
-      if (n.plata !== 'Bolsillo') n.devuelto = false;
-      if (n.id) db.gastos[db.gastos.findIndex(x => x.id === n.id)] = n;
-      else { n.id = Math.random().toString(36).slice(2, 10); n.fecha = new Date().toISOString(); db.gastos.push(n); }
-      return copia();
-    },
-    marcarDevuelto(id, v) { db.gastos.find(x => x.id === id).devuelto = v; return copia(); },
-    borrarGasto(id) { db.gastos = db.gastos.filter(x => x.id !== id); return copia(); },
     actualizarResumen() {},
-    guardarAjustes(a) {
-      db.ajustes.precio = a.precio; db.ajustes.sabores = a.sabores;
-      db.ajustes.vendedores = a.vendedores.map(v => v.trim()).filter(Boolean); return copia();
-    },
   };
 })();
 
-// Muestra al instante lo último que se vio mientras Google responde (tarda unos segundos).
-try { const c = JSON.parse(store.get('datos')); if (c && c.ajustes) { S.data = c; S.form = formNuevo(); renderFindes(); } } catch (e) {}
+// Muestra al instante lo último que se vio (y lo que quedó sin enviar) mientras Google responde.
+try { const p = JSON.parse(store.get('pendientes')); if (Array.isArray(p)) S.pend = p; } catch (e) {}
+try { const c = JSON.parse(store.get('datos')); if (c && c.ajustes) { S.base = c; recalcular(); S.form = formNuevo(); renderFindes(); } } catch (e) {}
+estado();
 render();
-cargar();
+if (S.pend.length) enviar(); else cargar();
 </script>
 </body>
 </html>
