@@ -197,6 +197,9 @@
   .cant { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .cant .step button { width: 46px; height: 46px; font-size: 22px; }
   .cant input { width: 84px; text-align: center; font-family: var(--display); font-size: 30px; font-weight: 800; padding: 4px; min-height: 52px; letter-spacing: -.02em; }
+  .compras-sabor { flex-wrap: wrap; }
+  .compras-sabor .n { min-width: 80px; overflow-wrap: anywhere; }
+  .compras-sabor .step input { width: 64px; min-height: 44px; padding: 6px; text-align: center; font-weight: 700; }
   .fuente { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
   .item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--line); cursor: pointer; }
   .item:last-child { border-bottom: 0; }
@@ -512,7 +515,7 @@ const S = {
   ajustes: null,
   gasto: null,
   alcance: 'finde',
-  compras: null, // cantidad elegida a mano; null = la de los encargos del finde
+  compras: null, // cantidades por sabor elegidas a mano; null = las de los encargos del finde
 };
 
 function formNuevo() {
@@ -845,28 +848,28 @@ function vistaResumen() {
 }
 
 /* ---------- Lista de compras ---------- */
-// Receta base: 12 budines con la masa dividida en 4 partes (3 de cada sabor).
+// Compra base: 40 budines de 500 g, 10 de cada sabor.
 // Lo común (masa, moldes) escala por el total; lo de cada sabor, por los budines de ese sabor.
-const RECETA_BASE = 12, POR_SABOR = 3;
+const RECETA_BASE = 40, POR_SABOR = 10;
 const RECETA = [
   { grupo: 'Almacén y secos', items: [
-    { n: 'Harina leudante', q: 1000, u: 'g' },
-    { n: 'Azúcar común', q: 500, u: 'g' },
-    { n: 'Azúcar impalpable', q: [250, 500], u: 'g', d: 'Para los glaseados y espolvorear' },
-    { n: 'Aceite neutro', q: 400, u: 'ml', d: 'Girasol o maíz' },
-    { n: 'Esencia de vainilla', q: 45, u: 'ml', paso: 5 }, // 3 cucharadas soperas ≈ 45 ml
-    { n: 'Cacao amargo en polvo', q: [14, 21], u: 'g', paso: 5, sabor: 'Chocolate' }, // 2 a 3 cucharadas ≈ 7 g c/u
-    { n: 'Chips de chocolate', q: [150, 200], u: 'g', d: 'Relleno y un puñadito para arriba', sabor: 'Chips' },
+    { n: 'Harina leudante', q: 5000, u: 'g' },
+    { n: 'Azúcar común', q: 3000, u: 'g' },
+    { n: 'Azúcar impalpable', q: 1000, u: 'g', d: 'Para los glaseados y espolvorear' },
+    { n: 'Aceite neutro', q: 3000, u: 'ml', d: 'Girasol o maíz' },
+    { n: 'Esencia de vainilla', q: 1000, u: 'ml' },
+    { n: 'Cacao amargo en polvo', q: 200, u: 'g', paso: 5, sabor: 'Chocolate' },
+    { n: 'Chips de chocolate', q: 1000, u: 'g', sabor: 'Chips' },
   ] },
   { grupo: 'Frescos y lácteos', items: [
-    { n: 'Huevos', q: 6, u: 'u' },
-    { n: 'Leche', q: 1000, u: 'ml', d: 'Masa y un chorrito para el cacao' },
-    { n: 'Limones', q: 4, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Limón' },
-    { n: 'Naranjas', q: 4, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Naranja' },
+    { n: 'Huevos', q: 34, u: 'u' },
+    { n: 'Leche', q: 4000, u: 'ml' },
+    { n: 'Limones', q: 20, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Limón' },
+    { n: 'Naranjas', q: 20, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Naranja' },
   ] },
   { grupo: 'Descartables', items: [
-    { n: 'Moldes descartables para budín', q: 12, u: 'u', d: 'Tamaño 250 g' },
-    { n: 'Bolsitas', q: 12, u: 'u', d: 'Una por budín' },
+    { n: 'Moldes descartables para budín', q: 40, u: 'u', d: 'Tamaño 500 g' },
+    { n: 'Bolsitas', q: 40, u: 'u', d: 'Una por budín' },
   ] },
 ];
 const fmtNum = n => String(Math.round(n * 100) / 100).replace('.', ',');
@@ -876,19 +879,28 @@ function cantidad(q, u, factor, paso = 50) {
   if (u === 'ml') { const ml = Math.ceil(x / paso) * paso; return ml >= 1000 ? { v: ml / 1000, u: 'L' } : { v: ml, u: 'ml' }; }
   return { v: Math.ceil(x), u };
 }
-// Cuántos budines de cada sabor: los de los encargos, o repartidos en partes iguales si se eligió a mano.
+// Cuántos budines de cada sabor: los de los encargos o el reparto elegido a mano.
 const norm = x => x.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function porSabor() {
-  if (S.compras != null) return null;
+  if (S.compras != null) return S.compras;
   const c = {};
   encargosFinde().forEach(e => Object.entries(e.cantidades).forEach(([s, q]) => (c[norm(s)] = (c[norm(s)] || 0) + q)));
   return c;
+}
+function saboresCompras() {
+  const c = porSabor(), vistos = new Set();
+  return ['Limón', 'Naranja', 'Chocolate', 'Chips', ...saboresOrden(), ...(c['a definir'] ? ['A definir'] : [])]
+    .filter(s => { const k = norm(s); if (vistos.has(k)) return false; vistos.add(k); return true; });
+}
+function elegirCantidadCompra(sabor, valor) {
+  const n = Number(valor);
+  S.compras = { ...porSabor(), [sabor]: Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0 };
 }
 function factorItem(it) {
   const n = budinesCompras();
   if (!it.sabor) return n / RECETA_BASE;
   const c = porSabor();
-  return (c ? c[norm(it.sabor)] || 0 : n / 4) / POR_SABOR;
+  return (c[norm(it.sabor)] || 0) / POR_SABOR;
 }
 function textoCantidad(it) {
   const f = factorItem(it);
@@ -903,33 +915,53 @@ function textoCantidad(it) {
   return fmtNum(c.v) + unidad(c);
 }
 const budinesFinde = () => encargosFinde().reduce((a, e) => a + e.unidades, 0);
-const budinesCompras = () => (S.compras == null ? budinesFinde() : S.compras);
+const budinesCompras = () => Object.values(porSabor()).reduce((a, q) => a + q, 0);
 function tildados() { try { return JSON.parse(store.get('compras.ok')) || {}; } catch (e) { return {}; } }
+const fuenteCompras = () => S.compras == null
+  ? `Según los encargos del ${etiquetaFinde(S.finde).replace('Finde ', 'finde ')}`
+  : `Cantidades elegidas a mano · Los encargos del finde suman ${budinesFinde()}`;
+function avisoCompras() {
+  const tbd = porSabor()['a definir'] || 0;
+  return tbd ? `${tbd === 1 ? 'Hay 1 budín' : 'Hay ' + tbd + ' budines'} con sabor a definir: está${tbd === 1 ? '' : 'n'} sumado${tbd === 1 ? '' : 's'} en la masa y los moldes, pero no en los ingredientes de sabor.` : '';
+}
+function actualizarCompras() {
+  $('#cmpTotal').textContent = budinesCompras();
+  $('#cmpFuente').textContent = fuenteCompras();
+  $('[data-act="cmpAuto"]').disabled = S.compras == null;
+  $('#cmpAviso').innerHTML = avisoCompras();
+  $('#cmpAviso').hidden = !avisoCompras();
+  document.querySelectorAll('[data-compra-sabor]').forEach(el => el.classList.toggle('on', (porSabor()[el.dataset.compraSabor] || 0) > 0));
+  document.querySelectorAll('.item').forEach((el, i) => {
+    const it = RECETA.flatMap(g => g.items)[i]; el.querySelector('.q').textContent = textoCantidad(it);
+  });
+}
 
 function vistaCompras() {
-  const n = budinesCompras(), auto = budinesFinde(), ok = tildados();
+  const n = budinesCompras(), ok = tildados();
   const c = porSabor();
-  const tbd = c ? c['a definir'] || 0 : 0;
-  const reparto = c
-    ? `<div class="pills" style="margin:12px 0 0">${saboresOrden().filter(x => c[norm(x)]).map(x => `<span class="pill">${dot(x)}<b>${c[norm(x)]}</b> ${esc(x)}</span>`).join('')}</div>`
-    : '<p class="hint" style="margin:12px 0 0">Repartidos en partes iguales entre los 4 sabores.</p>';
   return `
   <h2>Lista de compras</h2>
   <div class="card pad">
-    <span class="lbl">¿Para cuántos budines?</span>
-    <div class="cant">
-      <div class="step"><button type="button" data-act="cmpMenos" aria-label="Uno menos">−</button></div>
-      <input type="number" inputmode="numeric" min="0" step="1" id="cmpN" value="${n}" aria-label="Cantidad de budines">
-      <div class="step"><button type="button" class="mas" data-act="cmpMas" aria-label="Uno más">+</button></div>
-    </div>
+    <span class="lbl">¿Cuántos budines de cada sabor?</span>
+    <div class="sabores">${saboresCompras().map(s => {
+      const k = norm(s), q = c[k] || 0;
+      return `<div class="sabor compras-sabor ${q ? 'on' : ''}" data-compra-sabor="${esc(k)}">
+        <span class="n">${dot(s)}${esc(s)}</span>
+        <div class="step">
+          <button type="button" data-act="cmpSaborMenos" data-cmp-sabor="${esc(k)}" aria-label="Uno menos de ${esc(s)}">−</button>
+          <input type="number" inputmode="numeric" min="0" step="1" data-cmp-sabor="${esc(k)}" value="${q}" aria-label="Cantidad de ${esc(s)}">
+          <button type="button" class="mas" data-act="cmpSaborMas" data-cmp-sabor="${esc(k)}" aria-label="Uno más de ${esc(s)}">+</button>
+        </div>
+      </div>`;
+    }).join('')}</div>
+    <div class="total"><span>Total de budines de 500 g</span><b id="cmpTotal">${n}</b></div>
     <div class="fuente">
-      <span>${S.compras == null ? `Según los encargos del ${etiquetaFinde(S.finde).replace('Finde ', 'finde ')}` : `Los encargos del finde suman ${auto}`}</span>
-      ${S.compras == null ? '' : `<button type="button" class="tog" data-act="cmpAuto">Usar ${auto}</button>`}
+      <span id="cmpFuente">${fuenteCompras()}</span>
+      <button type="button" class="tog" data-act="cmpAuto" ${S.compras == null ? 'disabled' : ''}>Usar encargos</button>
     </div>
-    ${reparto}
   </div>
-  ${tbd ? `<div class="aviso" style="margin-top:12px">${tbd === 1 ? 'Hay 1 budín' : 'Hay ' + tbd + ' budines'} con sabor a definir: está${tbd === 1 ? '' : 'n'} sumado${tbd === 1 ? '' : 's'} en la masa y los moldes, pero no en los ingredientes de sabor.</div>` : ''}
-  <p class="hint" style="margin:10px 2px 0">Masa para ${RECETA_BASE} budines dividida en 4 sabores (receta de Gota de Azúcar), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
+  <div id="cmpAviso" class="aviso" style="margin-top:12px" ${avisoCompras() ? '' : 'hidden'}>${avisoCompras()}</div>
+  <p class="hint" style="margin:10px 2px 0">Basado en la compra para ${RECETA_BASE} budines de 500 g (${POR_SABOR} de cada sabor), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
   ${RECETA.map(g => `<h3>${g.grupo}</h3><div class="card">${g.items.map(it => `
     <label class="item ${ok[it.n] ? 'ok' : ''}">
       <input type="checkbox" data-chk="${esc(it.n)}" ${ok[it.n] ? 'checked' : ''}>
@@ -943,7 +975,9 @@ function vistaCompras() {
 }
 function textoLista() {
   const n = budinesCompras();
-  return `🛒 Lista de compras para ${n} budines\n` + RECETA.map(g =>
+  const c = porSabor();
+  const reparto = saboresCompras().filter(s => c[norm(s)]).map(s => `• ${s}: ${c[norm(s)]}`).join('\n');
+  return `🛒 Lista de compras para ${n} budines de 500 g\n${reparto ? '\n*Budines por sabor*\n' + reparto + '\n' : ''}` + RECETA.map(g =>
     `\n*${g.grupo}*\n` + g.items.map(it => `• ${it.n}: ${textoCantidad(it)}`).join('\n')).join('\n');
 }
 
@@ -1204,8 +1238,9 @@ document.addEventListener('click', ev => {
     encolar('marcarDevuelto', [t.dataset.id, true]);
     render(); toast('Marcado como devuelto ✓');
   }
-  else if (act === 'cmpMas' || act === 'cmpMenos') {
-    S.compras = Math.max(0, budinesCompras() + (act === 'cmpMas' ? 1 : -1)); render();
+  else if (act === 'cmpSaborMas' || act === 'cmpSaborMenos') {
+    const sabor = t.dataset.cmpSabor;
+    elegirCantidadCompra(sabor, (porSabor()[sabor] || 0) + (act === 'cmpSaborMas' ? 1 : -1)); render();
   }
   else if (act === 'cmpAuto') { S.compras = null; render(); }
   else if (act === 'desmarcar') { store.set('compras.ok', '{}'); render(); }
@@ -1239,11 +1274,9 @@ document.addEventListener('input', ev => {
     const ok = tildados(); if (t.checked) ok[t.dataset.chk] = true; else delete ok[t.dataset.chk];
     store.set('compras.ok', JSON.stringify(ok)); t.closest('.item').classList.toggle('ok', t.checked); return;
   }
-  if (t.id === 'cmpN') {
-    S.compras = Math.max(0, Math.floor(Number(t.value) || 0));
-    document.querySelectorAll('.item').forEach((el, i) => {
-      const it = RECETA.flatMap(g => g.items)[i]; el.querySelector('.q').textContent = textoCantidad(it);
-    });
+  if (t.dataset.cmpSabor != null) {
+    elegirCantidadCompra(t.dataset.cmpSabor, t.value);
+    actualizarCompras();
     return;
   }
   if (t.dataset.sab != null) { S.ajustes.sabores[t.dataset.sab].activo = t.checked; return; }
@@ -1253,7 +1286,7 @@ document.addEventListener('input', ev => {
   }
 });
 document.addEventListener('change', ev => {
-  if (ev.target.id === 'cmpN') render();
+  if (ev.target.dataset.cmpSabor != null) ev.target.value = porSabor()[ev.target.dataset.cmpSabor] || 0;
   if (ev.target.id === 'fVend') { S.fVend = ev.target.value; render(); }
   if (ev.target.id === 'selFinde') { S.finde = ev.target.value; if (!S.form.id) S.form.finde = S.finde; render(); }
 });
