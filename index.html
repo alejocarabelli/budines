@@ -848,24 +848,24 @@ function vistaResumen() {
 }
 
 /* ---------- Lista de compras ---------- */
-// Compra base: 40 budines de 500 g, 10 de cada sabor.
+// Compra base: 40 budines de 500 g, 10 de cada sabor (8 tandas de 5, receta Budines 2.0).
 // Lo común (masa, moldes) escala por el total; lo de cada sabor, por los budines de ese sabor.
 const RECETA_BASE = 40, POR_SABOR = 10;
 const RECETA = [
   { grupo: 'Almacén y secos', items: [
-    { n: 'Harina leudante', q: 5000, u: 'g' },
-    { n: 'Azúcar común', q: 3000, u: 'g' },
-    { n: 'Azúcar impalpable', q: 1000, u: 'g', d: 'Para los glaseados y espolvorear' },
-    { n: 'Aceite neutro', q: 3000, u: 'ml', d: 'Girasol o maíz' },
-    { n: 'Esencia de vainilla', q: 1000, u: 'ml' },
-    { n: 'Cacao amargo en polvo', q: 200, u: 'g', paso: 5, sabor: 'Chocolate' },
-    { n: 'Chips de chocolate', q: 1000, u: 'g', sabor: 'Chips' },
+    { n: 'Harina leudante', q: 4320, u: 'g', d: '4½ tazas por tanda de 5 (4 en la de chocolate). Sin polvo de hornear extra' },
+    { n: 'Azúcar común', q: 3200, u: 'g', d: '2 tazas por tanda de 5' },
+    { n: 'Azúcar impalpable', q: 600, u: 'g', d: 'Glaseado opcional de limón y naranja: 1¼ tazas por 5' },
+    { n: 'Aceite neutro', q: 2560, u: 'ml', d: 'Girasol o maíz · 320 ml por tanda de 5' },
+    { n: 'Esencia de vainilla', q: 80, u: 'ml', d: '2 cucharaditas por tanda de 5' },
+    { n: 'Cacao amargo en polvo', q: 150, u: 'g', paso: 5, sabor: 'Chocolate', d: '¾ taza por tanda de 5' },
+    { n: 'Chips de chocolate', q: 500, u: 'g', sabor: 'Chips', d: '1½ tazas por tanda de 5 (reservar ¼ para decorar)' },
   ] },
   { grupo: 'Frescos y lácteos', items: [
-    { n: 'Huevos', q: 34, u: 'u' },
-    { n: 'Leche', q: 4000, u: 'ml' },
-    { n: 'Limones', q: 20, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Limón' },
-    { n: 'Naranjas', q: 20, u: 'u', d: 'Masa, glaseado y ralladura', sabor: 'Naranja' },
+    { n: 'Huevos', q: 40, u: 'u', d: '5 por tanda de 5' },
+    { n: 'Leche', q: 3360, u: 'ml', d: 'El jugo cítrico reemplaza parte de la leche (total de líquido: 480 ml por 5)' },
+    { n: 'Limones', q: 8, u: 'u', d: 'Ralladura (3-4 por 5) y 100 ml de jugo por 5, más el glaseado', sabor: 'Limón' },
+    { n: 'Naranjas', q: 8, u: 'u', d: 'Ralladura (3-4 por 5) y 140 ml de jugo por 5, más el glaseado', sabor: 'Naranja' },
   ] },
   { grupo: 'Descartables', items: [
     { n: 'Moldes descartables para budín', q: 40, u: 'u', d: 'Tamaño 500 g' },
