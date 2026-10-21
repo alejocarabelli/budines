@@ -848,12 +848,12 @@ function vistaResumen() {
 }
 
 /* ---------- Lista de compras ---------- */
-// Compra base: 40 budines de 500 g, 10 de cada sabor (8 tandas de 5, receta Budines 2.0).
+// Compra base: 40 budines de 500 g, 10 de cada sabor (8 tandas de 5, receta Budines 2.1).
 // Lo común (masa, moldes) escala por el total; lo de cada sabor, por los budines de ese sabor.
 const RECETA_BASE = 40, POR_SABOR = 10;
 const RECETA = [
   { grupo: 'Almacén y secos', items: [
-    { n: 'Harina leudante', q: 4320, u: 'g', d: '4½ tazas por tanda de 5 (4 en la de chocolate). Sin polvo de hornear extra' },
+    { n: 'Harina leudante', q: 5400, u: 'g', d: '5¾ tazas por tanda de 5 (5¼ en la de chocolate). Sin polvo de hornear extra' },
     { n: 'Azúcar común', q: 3200, u: 'g', d: '2 tazas por tanda de 5' },
     { n: 'Azúcar impalpable', q: 600, u: 'g', d: 'Glaseado opcional de limón y naranja: 1¼ tazas por 5' },
     { n: 'Aceite neutro', q: 2560, u: 'ml', d: 'Girasol o maíz · 320 ml por tanda de 5' },
@@ -962,6 +962,7 @@ function vistaCompras() {
   </div>
   <div id="cmpAviso" class="aviso" style="margin-top:12px" ${avisoCompras() ? '' : 'hidden'}>${avisoCompras()}</div>
   <p class="hint" style="margin:10px 2px 0">Basado en la compra para ${RECETA_BASE} budines de 500 g (${POR_SABOR} de cada sabor), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
+  <div class="acciones"><a class="btn" href="recetario-budines-2-1.pdf" target="_blank" rel="noopener">📄 Ver recetario Budines 2.1 (PDF)</a></div>
   ${RECETA.map(g => `<h3>${g.grupo}</h3><div class="card">${g.items.map(it => `
     <label class="item ${ok[it.n] ? 'ok' : ''}">
       <input type="checkbox" data-chk="${esc(it.n)}" ${ok[it.n] ? 'checked' : ''}>
