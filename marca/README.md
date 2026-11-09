@@ -36,7 +36,7 @@ Las dos son gratuitas y están en Google Fonts, Canva e Instagram.
 
 ## Publicaciones (`publicaciones/`)
 
-- `01-budines/`: carrusel de 5 placas (1080×1350) para presentar los budines, con el texto listo en `texto.md`.
+- `01-budines/`: cinco historias verticales (1080×1920) con foto y logo para presentar los budines, y un texto sugerido en `texto.md`.
 
 ## Bio sugerida
 

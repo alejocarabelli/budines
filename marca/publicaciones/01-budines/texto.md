@@ -1,8 +1,9 @@
-# Carrusel 01 · Budines
+# Historias 01 · Budines
 
-Subir las placas en orden: `budines-1.png` a `budines-5.png`.
+Cinco historias verticales (1080×1920), solo foto y logo: `historia-1.png` a `historia-5.png`.
+Se pueden subir todas seguidas o usar una como portada de reel.
 
-## Texto de la publicación
+## Texto sugerido (por si se publican en el feed)
 
 Recién salidos del horno 🤎
 
