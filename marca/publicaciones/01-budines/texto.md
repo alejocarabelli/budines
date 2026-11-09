@@ -8,7 +8,7 @@ Recién salidos del horno 🤎
 
 Budines caseros, hechos en casa y con mucho amor. Elegí tu sabor:
 🍫 Chips de chocolate
-🍊 Naranja glaseado
+🍊 Naranja glaseada
 🍋 Limón glaseado
 🤎 Chocolate
 
