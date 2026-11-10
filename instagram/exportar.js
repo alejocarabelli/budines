@@ -7,7 +7,7 @@ const path = require('path');
   await p.goto('file://' + path.join(__dirname, 'piezas.html'));
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(500);
-  const nombres = { perfil: 'foto-de-perfil', 'd-sabores': 'destacada-sabores', 'd-encargos': 'destacada-encargos',
+  const nombres = { perfil: 'foto-de-perfil-logo', 'perfil-foto': 'foto-de-perfil', 'd-sabores': 'destacada-sabores', 'd-encargos': 'destacada-encargos',
     'd-envios': 'destacada-envios', 'd-pagos': 'destacada-pagos', 'd-clientes': 'destacada-clientes',
     'p-hola': 'post-1-presentacion', 'p-sabores': 'post-2-sabores', 'o-foto': 'post-3-como-encargar' };
   for (const [id, n] of Object.entries(nombres))
