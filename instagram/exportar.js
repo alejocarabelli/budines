@@ -1,0 +1,17 @@
+// Exporta cada pieza de piezas.html a PNG en export/.  Uso: node exportar.js
+const { chromium } = require('playwright');
+const path = require('path');
+(async () => {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport: { width: 1200, height: 2000 } });
+  await p.goto('file://' + path.join(__dirname, 'piezas.html'));
+  await p.evaluate(() => document.fonts.ready);
+  await p.waitForTimeout(500);
+  const nombres = { perfil: 'foto-de-perfil', 'd-sabores': 'destacada-sabores', 'd-encargos': 'destacada-encargos',
+    'd-envios': 'destacada-envios', 'd-pagos': 'destacada-pagos', 'd-clientes': 'destacada-clientes',
+    'p-hola': 'post-1-presentacion', 'p-sabores': 'post-2-sabores', 'p-pasos': 'post-3-como-encargar' };
+  for (const [id, n] of Object.entries(nombres))
+    await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', n + '.png') });
+  console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));
+  await b.close();
+})();

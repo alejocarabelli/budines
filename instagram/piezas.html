@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Miguitas · piezas de Instagram</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+/* Fuente de todas las piezas. Se exportan a PNG con exportar.js */
+:root{--mandarina:#e8673c;--cacao:#2b1d16;--crema:#faf3e8;--limon:#f4cf4a;--chips:#ecd9b8;--choco:#4a2c20;
+  --display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-family:var(--texto)}
+.pieza{position:relative;overflow:hidden;flex:none}
+.marca{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:1}
+.miga{position:absolute;border-radius:46% 54% 50% 50%/55% 45% 55% 45%}
+
+/* Foto de perfil */
+#perfil{width:1080px;height:1080px;background:var(--mandarina);color:var(--crema);display:grid;place-items:center}
+#perfil .marca{font-size:212px;transform:translateY(-6px)}
+
+/* Portadas de destacadas */
+.portada{width:1080px;height:1920px;display:grid;place-items:center}
+.portada svg{width:400px;height:400px;fill:none;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Publicaciones 4:5 */
+.post{width:1080px;height:1350px;padding:96px 88px;display:flex;flex-direction:column}
+.post .marca.chica{font-size:56px}
+.post .pie{margin-top:auto;font-size:34px;font-weight:500;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+#p-hola{background:var(--mandarina);color:var(--crema)}
+#p-hola h1{font-family:var(--display);font-weight:800;font-size:158px;line-height:.94;letter-spacing:-.045em;margin-top:150px}
+#p-hola h1 em{font-style:normal;color:var(--cacao)}
+#p-sabores{background:var(--crema);color:var(--cacao)}
+#p-sabores h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1;margin:56px 0 48px}
+.sabor{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 44px;height:176px;border-radius:28px;margin-bottom:20px}
+.sabor b{font-family:var(--display);font-weight:800;font-size:76px;letter-spacing:-.035em}
+.sabor span{font-size:31px;font-weight:500;text-align:right;line-height:1.2;max-width:400px}
+#p-pasos{background:var(--cacao);color:var(--crema)}
+#p-pasos h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1;margin:56px 0 64px}
+#p-pasos h1 em{font-style:normal;color:var(--mandarina)}
+.paso{display:flex;gap:40px;align-items:flex-start;margin-bottom:54px}
+.paso i{font-style:normal;font-family:var(--display);font-weight:800;font-size:64px;width:108px;height:108px;border-radius:50%;background:var(--mandarina);color:var(--crema);display:grid;place-items:center;flex:none}
+.paso b{font-family:var(--display);font-weight:700;font-size:56px;letter-spacing:-.03em;display:block;line-height:1.05;margin-bottom:10px}
+.paso span{font-size:34px;line-height:1.3;opacity:.82}
+</style></head><body>
+
+<div class="pieza" id="perfil">
+  <span class="miga" style="width:58px;height:54px;background:var(--crema);left:742px;top:318px"></span>
+  <span class="miga" style="width:30px;height:32px;background:var(--crema);left:826px;top:372px"></span>
+  <span class="miga" style="width:40px;height:36px;background:var(--cacao);left:690px;top:268px"></span>
+  <span class="miga" style="width:22px;height:22px;background:var(--cacao);left:800px;top:292px"></span>
+  <span class="miga" style="width:34px;height:32px;background:var(--cacao);left:262px;top:700px"></span>
+  <span class="miga" style="width:20px;height:20px;background:var(--crema);left:214px;top:662px"></span>
+  <div class="marca">miguitas</div>
+</div>
+
+<div class="pieza portada" id="d-sabores" style="background:var(--mandarina)"><svg viewBox="0 0 100 100" stroke="#faf3e8">
+  <path d="M18 74V48c0-26 64-26 64 0v26z"/><path d="M38 40l6 8M50 37l6 8M62 40l6 8"/></svg></div>
+<div class="pieza portada" id="d-encargos" style="background:var(--cacao)"><svg viewBox="0 0 100 100" stroke="#faf3e8">
+  <path d="M20 26h60a6 6 0 0 1 6 6v32a6 6 0 0 1-6 6H46L30 82V70H20a6 6 0 0 1-6-6V32a6 6 0 0 1 6-6z"/><path d="M34 42h32M34 54h20"/></svg></div>
+<div class="pieza portada" id="d-envios" style="background:var(--limon)"><svg viewBox="0 0 100 100" stroke="#2b1d16">
+  <path d="M50 86S24 60 24 42a26 26 0 0 1 52 0c0 18-26 44-26 44z"/><circle cx="50" cy="42" r="9"/></svg></div>
+<div class="pieza portada" id="d-pagos" style="background:var(--chips)"><svg viewBox="0 0 100 100" stroke="#2b1d16">
+  <rect x="14" y="28" width="72" height="46" rx="7"/><path d="M14 42h72M26 60h16"/></svg></div>
+<div class="pieza portada" id="d-clientes" style="background:var(--crema)"><svg viewBox="0 0 100 100" stroke="#e8673c">
+  <path d="M50 80S18 60 18 40a16 16 0 0 1 32-4 16 16 0 0 1 32 4c0 20-32 40-32 40z"/></svg></div>
+
+<div class="pieza post" id="p-hola">
+  <span class="miga" style="width:64px;height:60px;background:var(--crema);right:120px;top:120px"></span>
+  <span class="miga" style="width:34px;height:34px;background:var(--cacao);right:214px;top:186px"></span>
+  <span class="miga" style="width:26px;height:24px;background:var(--crema);right:96px;top:226px"></span>
+  <div class="marca chica">miguitas</div>
+  <h1>Budines caseros, <em>recién horneados.</em></h1>
+  <div class="pie"><span>San Martín, Mendoza</span><span>Encargos por WhatsApp</span></div>
+</div>
+
+<div class="pieza post" id="p-sabores">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>Nuestros sabores</h1>
+  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>con ralladura fresca</span></div>
+  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>con jugo y ralladura</span></div>
+  <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>bien de cacao</span></div>
+  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>vainilla con chips de chocolate</span></div>
+  <div class="pie"><span>Todo casero</span><span>Pedí el tuyo por WhatsApp</span></div>
+</div>
+
+<div class="pieza post" id="p-pasos">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>¿Cómo <em>encargo?</em></h1>
+  <div class="paso"><i>1</i><div><b>Escribinos por WhatsApp</b><span>El link está en el perfil.</span></div></div>
+  <div class="paso"><i>2</i><div><b>Elegí sabor y cantidad</b><span>Limón, naranja, chocolate o chips.</span></div></div>
+  <div class="paso"><i>3</i><div><b>Coordinamos la entrega</b><span>Te avisamos día y horario.</span></div></div>
+  <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
+</div>
+</body></html>
