@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <title>Miguitas · piezas de Instagram</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Caveat:wght@600;700&display=swap">
 <style>
 /* Fuente de todas las piezas. Se exportan a PNG con exportar.js */
 :root{--mandarina:#e8673c;--cacao:#2b1d16;--crema:#faf3e8;--limon:#f4cf4a;--chips:#ecd9b8;--choco:#4a2c20;
@@ -75,6 +75,28 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #f-todos::before{background:linear-gradient(180deg,rgba(43,29,22,.8) 0%,rgba(43,29,22,.5) 14%,rgba(43,29,22,0) 30%,rgba(43,29,22,0) 84%,rgba(43,29,22,.65) 100%)}
 #f-todos h1{font-size:108px}
 #f-todos p{font-size:38px;font-weight:500;margin-top:14px}
+
+/* Opciones para "¿Cómo encargo?" */
+#o-chat{background:var(--crema);color:var(--cacao)}
+#o-chat h1{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:.95;margin:40px 0 56px}
+.msj{font-size:42px;font-weight:500;line-height:1.25;padding:28px 38px;border-radius:40px;max-width:700px;margin-bottom:22px}
+.msj.yo{align-self:flex-end;background:var(--mandarina);color:var(--crema);border-bottom-right-radius:8px}
+.msj.ellos{align-self:flex-start;background:#fff;border-bottom-left-radius:8px;box-shadow:0 2px 0 rgba(43,29,22,.08)}
+.msj small{display:block;font-size:24px;font-weight:700;letter-spacing:.04em;color:var(--mandarina);margin-bottom:4px}
+#o-foto{background:url(fotos/chips-de-arriba.jpg) 50% 40%/cover;color:var(--crema)}
+#o-foto::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.72)}
+#o-foto>*{position:relative}
+#o-foto h1{font-family:var(--display);font-weight:800;font-size:128px;letter-spacing:-.045em;line-height:.92;margin:120px 0 70px}
+#o-foto li{list-style:none;font-family:var(--display);font-weight:700;font-size:60px;letter-spacing:-.03em;padding:34px 0;border-top:3px solid rgba(250,243,232,.55)}
+#o-foto ul{padding:0;border-bottom:3px solid rgba(250,243,232,.55)}
+#o-ticket{background:var(--mandarina);color:var(--crema)}
+#o-ticket h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:.95;margin:40px 0 50px}
+.papel{background:var(--crema);color:var(--cacao);padding:50px 56px 44px;transform:rotate(-2.5deg);box-shadow:0 18px 0 rgba(43,29,22,.18);border-top:10px dashed var(--mandarina)}
+.papel .t{font-weight:700;font-size:26px;letter-spacing:.16em;margin-bottom:8px}
+.papel .r{display:flex;align-items:baseline;gap:18px;border-bottom:3px solid rgba(43,29,22,.25);padding:20px 0 6px}
+.papel .r span{font-size:32px;font-weight:600;width:210px;flex:none}
+.papel .r em{font-family:"Caveat",cursive;font-style:normal;font-weight:700;font-size:74px;line-height:1;color:#1f4fa3}
+.papel .f{font-size:32px;font-weight:600;margin-top:30px}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -159,5 +181,35 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   <h1>Todo casero.</h1>
   <p>Horneados en casa, para tu encargo.</p>
   <div class="pie"><span>@_miguitass</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="o-chat">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>Encargar es así de fácil.</h1>
+  <div class="msj yo">¡Hola! Quiero encargar budines</div>
+  <div class="msj ellos"><small>MIGUITAS</small>¡Hola! ¿Qué sabor y cuántos?</div>
+  <div class="msj yo">2 de limón y 1 de chips</div>
+  <div class="msj ellos"><small>MIGUITAS</small>¡Listo! Coordinamos día y horario.</div>
+  <div class="pie"><span>Por WhatsApp · link en el perfil</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="o-foto">
+  <div class="marca chica">miguitas</div>
+  <h1>¿Cómo encargo?</h1>
+  <ul><li>Escribinos por WhatsApp.</li><li>Elegí sabor y cantidad.</li><li>Coordinamos la entrega.</li></ul>
+  <div class="pie"><span>Link en el perfil</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="o-ticket">
+  <div class="marca chica">miguitas</div>
+  <h1>¿Cómo encargo?</h1>
+  <div class="papel">
+    <div class="t">TU PEDIDO</div>
+    <div class="r"><span>Sabor</span><em>limón y chips</em></div>
+    <div class="r"><span>Cantidad</span><em>3 budines</em></div>
+    <div class="r"><span>Entrega</span><em>sábado a la tarde</em></div>
+    <div class="f">Mandanos estos tres datos por WhatsApp y listo.</div>
+  </div>
+  <div class="pie"><span>Link en el perfil</span><span>@_miguitass</span></div>
 </div>
 </body></html>
