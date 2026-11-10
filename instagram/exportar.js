@@ -16,6 +16,9 @@ const path = require('path');
   const carrusel = ['f-portada', 'f-todos', 'p-sabores', 'o-foto', 'c-cierre'];
   for (const [i, id] of carrusel.entries())
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'primer-post', (i + 1) + '.png') });
+  // Historias para las destacadas
+  for (const [id, n] of [['h-pagos', 'medios-de-pago']])
+    await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'destacadas', n + '.png') });
   console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));
   await b.close();
 })();
