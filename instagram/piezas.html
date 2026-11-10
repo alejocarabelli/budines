@@ -27,11 +27,17 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #p-hola{background:var(--mandarina);color:var(--crema)}
 #p-hola h1{font-family:var(--display);font-weight:800;font-size:158px;line-height:.94;letter-spacing:-.045em;margin-top:150px}
 #p-hola h1 em{font-style:normal;color:var(--cacao)}
-#p-sabores{background:var(--crema);color:var(--cacao)}
-#p-sabores h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1;margin:56px 0 48px}
-.sabor{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 44px;height:176px;border-radius:28px;margin-bottom:20px}
-.sabor b{font-family:var(--display);font-weight:800;font-size:76px;letter-spacing:-.035em}
-.sabor span{font-size:31px;font-weight:500;text-align:right;line-height:1.2;max-width:400px}
+#p-sabores{background:var(--crema);color:var(--cacao);padding:0}
+#p-sabores .cab{padding:84px 88px 44px;display:flex;justify-content:space-between;align-items:flex-end}
+#p-sabores h1{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:.95;margin-top:26px}
+#p-sabores .peso{font-family:var(--display);font-weight:800;font-size:44px;letter-spacing:-.02em;background:var(--cacao);color:var(--crema);border-radius:50%;width:170px;height:170px;display:grid;place-items:center;text-align:center;line-height:1;transform:rotate(-8deg);flex:none}
+#p-sabores .peso small{display:block;font:500 22px var(--texto);letter-spacing:.02em;margin-top:6px}
+.sabor{position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 88px}
+.sabor b{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:1}
+.sabor span{font-size:34px;font-weight:500;margin-top:8px}
+.sabor svg{position:absolute;right:-70px;top:50%;width:360px;height:360px;transform:translateY(-50%) rotate(-12deg)}
+.sabor svg.chica{right:40px;width:300px;height:300px}
+#p-sabores .pie{margin:0;padding:34px 88px 44px}
 #p-pasos{background:var(--cacao);color:var(--crema)}
 #p-pasos h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1;margin:56px 0 64px}
 #p-pasos h1 em{font-style:normal;color:var(--mandarina)}
@@ -89,13 +95,12 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 </div>
 
 <div class="pieza post" id="p-sabores">
-  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
-  <h1>Nuestros sabores</h1>
-  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>glaseado, con ralladura</span></div>
-  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada, con ralladura</span></div>
-  <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>bien de cacao</span></div>
-  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>con chips de chocolate</span></div>
-  <div class="pie"><span>Budines de 500 g</span><span>Pedí el tuyo por WhatsApp</span></div>
+  <div class="cab"><div><div class="marca chica" style="color:var(--mandarina)">miguitas</div><h1>Nuestros<br>sabores</h1></div><div class="peso"><div>500 g<small>cada uno</small></div></div></div>
+  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>glaseado, con ralladura</span><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#e3b62b"/><circle cx="50" cy="50" r="43" fill="#fff6d6"/><path d="M56.5 52.7L85.9 53.1A36 36 0 0 1 77.6 73.1Z" fill="#f8de6a"/><path d="M52.7 56.5L73.1 77.6A36 36 0 0 1 53.1 85.9Z" fill="#f8de6a"/><path d="M47.3 56.5L46.9 85.9A36 36 0 0 1 26.9 77.6Z" fill="#f8de6a"/><path d="M43.5 52.7L22.4 73.1A36 36 0 0 1 14.1 53.1Z" fill="#f8de6a"/><path d="M43.5 47.3L14.1 46.9A36 36 0 0 1 22.4 26.9Z" fill="#f8de6a"/><path d="M47.3 43.5L26.9 22.4A36 36 0 0 1 46.9 14.1Z" fill="#f8de6a"/><path d="M52.7 43.5L53.1 14.1A36 36 0 0 1 73.1 22.4Z" fill="#f8de6a"/><path d="M56.5 47.3L77.6 26.9A36 36 0 0 1 85.9 46.9Z" fill="#f8de6a"/></svg></div>
+  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada, con ralladura</span><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#c94f27"/><circle cx="50" cy="50" r="43" fill="#ffe9cf"/><path d="M56.5 52.7L85.9 53.1A36 36 0 0 1 77.6 73.1Z" fill="#f7a155"/><path d="M52.7 56.5L73.1 77.6A36 36 0 0 1 53.1 85.9Z" fill="#f7a155"/><path d="M47.3 56.5L46.9 85.9A36 36 0 0 1 26.9 77.6Z" fill="#f7a155"/><path d="M43.5 52.7L22.4 73.1A36 36 0 0 1 14.1 53.1Z" fill="#f7a155"/><path d="M43.5 47.3L14.1 46.9A36 36 0 0 1 22.4 26.9Z" fill="#f7a155"/><path d="M47.3 43.5L26.9 22.4A36 36 0 0 1 46.9 14.1Z" fill="#f7a155"/><path d="M52.7 43.5L53.1 14.1A36 36 0 0 1 73.1 22.4Z" fill="#f7a155"/><path d="M56.5 47.3L77.6 26.9A36 36 0 0 1 85.9 46.9Z" fill="#f7a155"/></svg></div>
+  <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>bien de cacao</span><svg class="chica" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><rect x="0" y="0" width="98" height="98" rx="9" fill="#5a3628"/><rect x="6" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="6" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="6" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="70" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="70" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="70" width="18" height="18" rx="3" fill="#7d5140"/></g></svg></div>
+  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>con chips de chocolate</span><svg class="chica" viewBox="0 0 100 100"><circle cx="18" cy="30" r="11" fill="#2b1d16"/><circle cx="15.2" cy="27.2" r="3.5" fill="#5a3628"/><circle cx="46" cy="16" r="8" fill="#2b1d16"/><circle cx="44.0" cy="14.0" r="2.6" fill="#5a3628"/><circle cx="52" cy="52" r="13" fill="#2b1d16"/><circle cx="48.8" cy="48.8" r="4.2" fill="#5a3628"/><circle cx="80" cy="30" r="10" fill="#2b1d16"/><circle cx="77.5" cy="27.5" r="3.2" fill="#5a3628"/><circle cx="24" cy="72" r="9" fill="#2b1d16"/><circle cx="21.8" cy="69.8" r="2.9" fill="#5a3628"/><circle cx="82" cy="74" r="12" fill="#2b1d16"/><circle cx="79.0" cy="71.0" r="3.8" fill="#5a3628"/><circle cx="60" cy="88" r="7" fill="#2b1d16"/><circle cx="58.2" cy="86.2" r="2.2" fill="#5a3628"/></svg></div>
+  <div class="pie"><span>Todo casero</span><span>Pedí el tuyo por WhatsApp</span></div>
 </div>
 
 <div class="pieza post" id="p-pasos">
