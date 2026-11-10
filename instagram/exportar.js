@@ -12,6 +12,10 @@ const path = require('path');
     'p-hola': 'post-1-presentacion', 'p-sabores': 'post-2-sabores', 'p-pasos': 'post-3-como-encargar' };
   for (const [id, n] of Object.entries(nombres))
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', n + '.png') });
+  // Primer post: carrusel de 5 placas, en el orden en que se suben
+  const carrusel = ['c-portada', 'c-casero', 'p-sabores', 'p-pasos', 'c-cierre'];
+  for (const [i, id] of carrusel.entries())
+    await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'primer-post', (i + 1) + '.png') });
   console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));
   await b.close();
 })();

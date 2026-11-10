@@ -39,6 +39,21 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 .paso i{font-style:normal;font-family:var(--display);font-weight:800;font-size:64px;width:108px;height:108px;border-radius:50%;background:var(--mandarina);color:var(--crema);display:grid;place-items:center;flex:none}
 .paso b{font-family:var(--display);font-weight:700;font-size:56px;letter-spacing:-.03em;display:block;line-height:1.05;margin-bottom:10px}
 .paso span{font-size:34px;line-height:1.3;opacity:.82}
+
+/* Primer post: carrusel de 5 */
+#c-portada{background:var(--mandarina);color:var(--crema)}
+#c-portada h1{font-family:var(--display);font-weight:800;font-size:176px;line-height:.92;letter-spacing:-.045em;margin-top:130px}
+#c-portada h1 em{font-style:normal;color:var(--cacao)}
+#c-portada p{font-size:46px;font-weight:500;line-height:1.25;margin-top:44px;max-width:760px}
+#c-casero{background:var(--crema);color:var(--cacao)}
+#c-casero h1{font-family:var(--display);font-weight:800;font-size:136px;line-height:.95;letter-spacing:-.045em;margin:90px 0 70px}
+#c-casero h1 em{font-style:normal;color:var(--mandarina)}
+#c-casero li{font-size:46px;font-weight:500;line-height:1.2;padding:30px 0;border-top:3px solid var(--cacao);list-style:none}
+#c-casero ul{padding:0;border-bottom:3px solid var(--cacao)}
+#c-cierre{background:var(--limon);color:var(--cacao)}
+#c-cierre h1{font-family:var(--display);font-weight:800;font-size:190px;line-height:.9;letter-spacing:-.05em;margin-top:150px}
+#c-cierre p{font-size:50px;font-weight:500;line-height:1.25;margin-top:48px}
+#c-cierre .btn{align-self:flex-start;margin-top:56px;background:var(--cacao);color:var(--crema);font-family:var(--display);font-weight:700;font-size:50px;padding:26px 48px;border-radius:999px}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -87,6 +102,34 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   <div class="paso"><i>1</i><div><b>Escribinos por WhatsApp</b><span>El link está en el perfil.</span></div></div>
   <div class="paso"><i>2</i><div><b>Elegí sabor y cantidad</b><span>Limón, naranja, chocolate o chips.</span></div></div>
   <div class="paso"><i>3</i><div><b>Coordinamos la entrega</b><span>Te avisamos día y horario.</span></div></div>
+  <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="c-portada">
+  <span class="miga" style="width:64px;height:60px;background:var(--crema);right:120px;top:120px"></span>
+  <span class="miga" style="width:34px;height:34px;background:var(--cacao);right:214px;top:186px"></span>
+  <span class="miga" style="width:26px;height:24px;background:var(--crema);right:96px;top:226px"></span>
+  <div class="marca chica">miguitas</div>
+  <h1>Hola, somos <em>Miguitas.</em></h1>
+  <p>Budines caseros, recién horneados, en San Martín, Mendoza.</p>
+  <div class="pie"><span>@_miguitass</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="c-casero">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>Todo <em>casero.</em></h1>
+  <ul><li>Hechos en casa, en tandas chicas.</li><li>Horneados para tu encargo.</li><li>Cuatro sabores para elegir.</li></ul>
+  <div class="pie"><span>San Martín, Mendoza</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="c-cierre">
+  <span class="miga" style="width:64px;height:60px;background:var(--cacao);right:130px;top:130px"></span>
+  <span class="miga" style="width:34px;height:34px;background:var(--mandarina);right:224px;top:196px"></span>
+  <span class="miga" style="width:26px;height:24px;background:var(--cacao);right:104px;top:236px"></span>
+  <div class="marca chica">miguitas</div>
+  <h1>Encargá el tuyo.</h1>
+  <p>Escribinos por WhatsApp y coordinamos.</p>
+  <div class="btn">Link en el perfil</div>
   <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
 </div>
 </body></html>
