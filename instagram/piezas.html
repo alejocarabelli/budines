@@ -122,16 +122,16 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 .historia{width:1080px;height:1920px;padding:300px 96px 320px;display:flex;flex-direction:column}
 .historia h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.045em;line-height:.92}
 .historia .marca.chica{font-size:48px;margin-bottom:44px}
-#h-pagos,#h-envios,#h-encargos{background:url(fotos/fondo-historia-chips.jpg) center/cover;color:var(--crema)}
-#h-pagos::before,#h-envios::before,#h-encargos::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.62)}
-#h-pagos>*,#h-envios>*,#h-encargos>*{position:relative}
-#h-pagos .medios,#h-envios .medios,#h-encargos .medios{display:flex;flex-direction:column;gap:24px;margin-top:70px}
-#h-pagos .medio,#h-envios .medio,#h-encargos .medio{background:rgba(250,243,232,.14);border:3px solid rgba(250,243,232,.35);border-radius:30px;padding:36px 44px;display:flex;align-items:center;gap:34px}
+#h-pagos,#h-envios,#h-encargos,#h-sabores{background:url(fotos/fondo-historia-chips.jpg) center/cover;color:var(--crema)}
+#h-pagos::before,#h-envios::before,#h-encargos::before,#h-sabores::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.62)}
+#h-pagos>*,#h-envios>*,#h-encargos>*,#h-sabores>*{position:relative}
+#h-pagos .medios,#h-envios .medios,#h-encargos .medios,#h-sabores .medios{display:flex;flex-direction:column;gap:24px;margin-top:70px}
+#h-pagos .medio,#h-envios .medio,#h-encargos .medio,#h-sabores .medio{background:rgba(250,243,232,.14);border:3px solid rgba(250,243,232,.35);border-radius:30px;padding:36px 44px;display:flex;align-items:center;gap:34px}
 #h-pagos .medio svg,#h-envios .medio svg,#h-encargos .medio svg{width:92px;height:92px;flex:none;fill:none;stroke:var(--crema);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
-#h-pagos .medio b,#h-envios .medio b,#h-encargos .medio b{font-family:var(--display);font-weight:800;font-size:62px;letter-spacing:-.035em;line-height:1}
-#h-pagos .nota,#h-envios .nota,#h-encargos .nota{margin-top:auto;display:flex;flex-direction:column;gap:34px}
-#h-pagos .nota p,#h-envios .nota p,#h-encargos .nota p{font-size:38px;font-weight:500;line-height:1.3;border-top:3px solid rgba(250,243,232,.4);padding-top:34px}
-#h-pagos .nota strong,#h-envios .nota strong,#h-encargos .nota strong{font-weight:700}
+#h-pagos .medio b,#h-envios .medio b,#h-encargos .medio b,#h-sabores .medio b{font-family:var(--display);font-weight:800;font-size:62px;letter-spacing:-.035em;line-height:1}
+#h-pagos .nota,#h-envios .nota,#h-encargos .nota,#h-sabores .nota{margin-top:auto;display:flex;flex-direction:column;gap:34px}
+#h-pagos .nota p,#h-envios .nota p,#h-encargos .nota p,#h-sabores .nota p{font-size:38px;font-weight:500;line-height:1.3;border-top:3px solid rgba(250,243,232,.4);padding-top:34px}
+#h-pagos .nota strong,#h-envios .nota strong,#h-encargos .nota strong,#h-sabores .nota strong{font-weight:700}
 
 /* Historias de producto: foto completa, texto abajo */
 .h-prod{width:1080px;height:1920px;padding:300px 96px 330px;display:flex;flex-direction:column;color:var(--crema);background-size:cover;background-position:center}
@@ -146,8 +146,13 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #h-limon{background-image:url(fotos/limon-en-mano-patio.jpg);background-position:50% 30%}
 #h-limon::before{background:linear-gradient(180deg,rgba(43,29,22,.55) 0%,rgba(43,29,22,0) 18%,rgba(43,29,22,0) 42%,rgba(43,29,22,.9) 72%)}
 #h-envios{background-image:url(fotos/fondo-historia-limon.jpg)}
-#h-envios .medio small,#h-encargos .medio small{display:block;font-size:34px;font-weight:500;margin-top:8px;opacity:.85}
+#h-envios .medio small,#h-encargos .medio small,#h-sabores .medio small{display:block;font-size:34px;font-weight:500;margin-top:8px;opacity:.85}
 #h-encargos{background-image:url(fotos/fondo-historia-cocina.jpg)}
+#h-sabores{background-image:url(fotos/fondo-historia-mantel.jpg)}
+#h-sabores .medio{padding:26px 40px}
+#h-sabores .medios{margin-top:56px;gap:20px}
+#h-sabores .nota{padding-top:40px}
+#h-sabores .punto{width:72px;height:72px;border-radius:50%;flex:none;border:4px solid rgba(250,243,232,.8)}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -319,6 +324,20 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   <div class="nota">
     <p><strong>Budines de 500 g.</strong> Horneados para tu encargo.</p>
     <p>Sin seña: pagás al recibir o antes de la entrega.</p>
+  </div>
+</div>
+
+<div class="pieza historia" id="h-sabores">
+  <div class="marca chica">miguitas</div>
+  <h1>Nuestros<br>sabores</h1>
+  <div class="medios">
+    <div class="medio"><span class="punto" style="background:var(--limon)"></span><div><b>Limón</b><small>Glaseado, con ralladura</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--choco)"></span><div><b>Chocolate</b><small>De cacao, con chips de chocolate</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--mandarina)"></span><div><b>Naranja</b><small>Glaseada, con ralladura</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--chips)"></span><div><b>Chips</b><small>De vainilla, con chips de chocolate</small></div></div>
+  </div>
+  <div class="nota">
+    <p><strong>Todos de 500 g.</strong> Caseros y horneados para tu encargo.</p>
   </div>
 </div>
 </body></html>
