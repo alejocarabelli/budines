@@ -50,23 +50,12 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #c-casero h1 em{font-style:normal;color:var(--mandarina)}
 #c-casero li{font-size:46px;font-weight:500;line-height:1.2;padding:30px 0;border-top:3px solid var(--cacao);list-style:none}
 #c-casero ul{padding:0;border-bottom:3px solid var(--cacao)}
-#c-cierre{background:var(--limon);color:var(--cacao)}
+#c-cierre{background:url(fotos/chips-cortado.jpg) 62% 50%/cover;color:var(--crema)}
+#c-cierre::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,29,22,.72) 0%,rgba(43,29,22,.58) 55%,rgba(43,29,22,.72) 100%)}
+#c-cierre>*{position:relative}
 #c-cierre h1{font-family:var(--display);font-weight:800;font-size:190px;line-height:.9;letter-spacing:-.05em;margin-top:150px}
 #c-cierre p{font-size:50px;font-weight:500;line-height:1.25;margin-top:48px}
-#c-cierre .btn{align-self:flex-start;margin-top:56px;background:var(--cacao);color:var(--crema);font-family:var(--display);font-weight:700;font-size:50px;padding:26px 48px;border-radius:999px}
-
-/* Placas con foto a pantalla completa */
-.confoto{color:var(--crema);background-size:cover}
-.confoto::before{content:"";position:absolute;inset:0}
-.confoto>*{position:relative}
-.confoto h1{font-family:var(--display);font-weight:800;letter-spacing:-.045em;line-height:.92}
-#f-portada{background-image:url(fotos/limon-rodajas.jpg);background-position:50% 30%}
-#f-portada::before{background:linear-gradient(180deg,rgba(43,29,22,.78) 0%,rgba(43,29,22,.5) 22%,rgba(43,29,22,0) 40%,rgba(43,29,22,0) 82%,rgba(43,29,22,.6) 100%)}
-#f-portada h1{font-size:108px;margin-top:36px;max-width:700px}
-#f-todos{background-image:url(fotos/chips-de-arriba.jpg);background-position:50% 0%;padding-top:70px}
-#f-todos::before{background:linear-gradient(180deg,rgba(43,29,22,.8) 0%,rgba(43,29,22,.5) 14%,rgba(43,29,22,0) 30%,rgba(43,29,22,0) 84%,rgba(43,29,22,.65) 100%)}
-#f-todos h1{font-size:108px}
-#f-todos p{font-size:38px;font-weight:500;margin-top:14px}
+#c-cierre .btn{align-self:flex-start;margin-top:56px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:50px;padding:26px 48px;border-radius:999px}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -103,10 +92,10 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
   <h1>Nuestros sabores</h1>
   <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>glaseado, con ralladura</span></div>
-  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada</span></div>
+  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada, con ralladura</span></div>
   <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>bien de cacao</span></div>
   <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>con chips de chocolate</span></div>
-  <div class="pie"><span>Todo casero</span><span>Pedí el tuyo por WhatsApp</span></div>
+  <div class="pie"><span>Budines de 500 g</span><span>Pedí el tuyo por WhatsApp</span></div>
 </div>
 
 <div class="pieza post" id="p-pasos">
@@ -136,9 +125,6 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 </div>
 
 <div class="pieza post" id="c-cierre">
-  <span class="miga" style="width:64px;height:60px;background:var(--cacao);right:130px;top:130px"></span>
-  <span class="miga" style="width:34px;height:34px;background:var(--mandarina);right:224px;top:196px"></span>
-  <span class="miga" style="width:26px;height:24px;background:var(--cacao);right:104px;top:236px"></span>
   <div class="marca chica">miguitas</div>
   <h1>Encargá el tuyo.</h1>
   <p>Escribinos por WhatsApp y coordinamos.</p>
