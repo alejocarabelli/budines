@@ -9,11 +9,11 @@ const path = require('path');
   await p.waitForTimeout(500);
   const nombres = { perfil: 'foto-de-perfil', 'd-sabores': 'destacada-sabores', 'd-encargos': 'destacada-encargos',
     'd-envios': 'destacada-envios', 'd-pagos': 'destacada-pagos', 'd-clientes': 'destacada-clientes',
-    'p-hola': 'post-1-presentacion', 'p-sabores': 'post-2-sabores', 'p-pasos': 'post-3-como-encargar' };
+    'p-hola': 'post-1-presentacion', 'p-sabores': 'post-2-sabores', 'o-foto': 'post-3-como-encargar' };
   for (const [id, n] of Object.entries(nombres))
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', n + '.png') });
   // Primer post: carrusel de 5 placas, en el orden en que se suben
-  const carrusel = ['f-portada', 'f-todos', 'p-sabores', 'p-pasos', 'c-cierre'];
+  const carrusel = ['f-portada', 'f-todos', 'p-sabores', 'o-foto', 'c-cierre'];
   for (const [i, id] of carrusel.entries())
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'primer-post', (i + 1) + '.png') });
   console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));
