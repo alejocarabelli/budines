@@ -13,7 +13,7 @@ const path = require('path');
   for (const [id, n] of Object.entries(nombres))
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', n + '.png') });
   // Primer post: carrusel de 5 placas, en el orden en que se suben
-  const carrusel = ['c-portada', 'c-casero', 'p-sabores', 'p-pasos', 'c-cierre'];
+  const carrusel = ['f-portada', 'f-todos', 'p-sabores', 'p-pasos', 'c-cierre'];
   for (const [i, id] of carrusel.entries())
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'primer-post', (i + 1) + '.png') });
   console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));

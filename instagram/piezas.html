@@ -54,6 +54,20 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #c-cierre h1{font-family:var(--display);font-weight:800;font-size:190px;line-height:.9;letter-spacing:-.05em;margin-top:150px}
 #c-cierre p{font-size:50px;font-weight:500;line-height:1.25;margin-top:48px}
 #c-cierre .btn{align-self:flex-start;margin-top:56px;background:var(--cacao);color:var(--crema);font-family:var(--display);font-weight:700;font-size:50px;padding:26px 48px;border-radius:999px}
+
+/* Placas con foto a pantalla completa */
+.confoto{color:var(--crema);background-size:cover}
+.confoto::before{content:"";position:absolute;inset:0}
+.confoto>*{position:relative}
+.confoto h1{font-family:var(--display);font-weight:800;letter-spacing:-.045em;line-height:.92}
+#f-portada{background-image:url(fotos/limon-rodajas.jpg);background-position:50% 30%}
+#f-portada::before{background:linear-gradient(180deg,rgba(43,29,22,.78) 0%,rgba(43,29,22,.5) 22%,rgba(43,29,22,0) 40%,rgba(43,29,22,0) 82%,rgba(43,29,22,.6) 100%)}
+#f-portada h1{font-size:108px;margin-top:36px;max-width:700px}
+#f-todos{background-image:url(fotos/todos-los-sabores.jpg);background-position:50% 50%}
+#f-todos::before{background:linear-gradient(180deg,rgba(43,29,22,0) 45%,rgba(43,29,22,.88) 100%)}
+#f-todos h1{font-size:128px;margin-top:auto}
+#f-todos p{font-size:42px;font-weight:500;margin:22px 0 40px}
+#f-todos .pie{margin-top:0}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -89,10 +103,10 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 <div class="pieza post" id="p-sabores">
   <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
   <h1>Nuestros sabores</h1>
-  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>con ralladura fresca</span></div>
-  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>con jugo y ralladura</span></div>
+  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>glaseado, con ralladura</span></div>
+  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada</span></div>
   <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>bien de cacao</span></div>
-  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>vainilla con chips de chocolate</span></div>
+  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>con chips de chocolate</span></div>
   <div class="pie"><span>Todo casero</span><span>Pedí el tuyo por WhatsApp</span></div>
 </div>
 
@@ -131,5 +145,17 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   <p>Escribinos por WhatsApp y coordinamos.</p>
   <div class="btn">Link en el perfil</div>
   <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post confoto" id="f-portada">
+  <div class="marca chica">miguitas</div>
+  <h1>Hola, somos Miguitas.</h1>
+  <div class="pie"><span>Budines caseros · San Martín, Mendoza</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post confoto" id="f-todos">
+  <h1>Todo casero.</h1>
+  <p>Horneados en casa, para tu encargo.</p>
+  <div class="pie"><span>@_miguitass</span><span>Deslizá →</span></div>
 </div>
 </body></html>
