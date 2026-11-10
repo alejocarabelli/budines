@@ -109,6 +109,14 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #perfil-foto::after{content:"";position:absolute;inset:18px;border:14px solid #fff;border-radius:50%}
 #perfil-foto span{display:flex;align-items:center;gap:22px;justify-content:center;font-weight:700;font-size:40px;letter-spacing:.2em;margin-top:26px}
 #perfil-foto span::before,#perfil-foto span::after{content:"";height:3px;width:120px;background:#fff;opacity:.85}
+
+/* Foto de perfil, versión alineada con las placas */
+#perfil-marca{width:1080px;height:1080px;background:url(fotos/perfil-fondo.jpg) center/cover;color:var(--crema);display:grid;place-items:center;text-align:center}
+#perfil-marca::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.5)}
+#perfil-marca::after{content:"";position:absolute;inset:18px;border:14px solid var(--crema);border-radius:50%}
+#perfil-marca>div{position:relative}
+#perfil-marca b{display:block;font-family:var(--display);font-weight:800;font-size:212px;letter-spacing:-.04em;line-height:1}
+#perfil-marca span{display:block;font-weight:500;font-size:52px;margin-top:14px}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -231,4 +239,6 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 </div>
 
 <div class="pieza" id="perfil-foto"><div><b>miguitas</b><span>TODO CASERO</span></div></div>
+
+<div class="pieza" id="perfil-marca"><div><b>miguitas</b><span>todo casero</span></div></div>
 </body></html>
