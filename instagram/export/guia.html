@@ -1,0 +1,304 @@
+<title>Miguitas en Instagram</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+/* Layout: una columna angosta pensada para leer en el celular; el perfil "después" abre la página */
+:root{
+  --bg:#faf3e8; --surface:#fffaf2; --ink:#2b1d16; --muted:#7d6f65; --line:#e6dccb;
+  --mandarina:#e8673c; --mandarina-ink:#a3401c; --limon:#f4cf4a; --chips:#ecd9b8; --choco:#4a2c20; --cacao:#2b1d16; --crema:#faf3e8;
+  --display:"Bricolage Grotesque","DM Sans",system-ui,sans-serif; --text:"DM Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1c130f; --surface:#271b15; --ink:#f6ecdd; --muted:#b3a497; --line:#3d2d24; --mandarina-ink:#f08a63; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#1c130f; --surface:#271b15; --ink:#f6ecdd; --muted:#b3a497; --line:#3d2d24; --mandarina-ink:#f08a63; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.55}
+.wrap{max-width:640px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.03em;line-height:1.05;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,11vw,60px);font-weight:800}
+h1 em{font-style:normal;color:var(--mandarina)}
+h2{font-size:28px;font-weight:800}
+h3{font-size:18px;font-weight:700;letter-spacing:-.015em}
+p{margin:0}
+section{display:flex;flex-direction:column;gap:16px}
+.lead{font-size:18px;color:var(--muted)}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--mandarina-ink)}
+.note{font-size:14px;color:var(--muted)}
+
+/* Maqueta del perfil */
+.perfil{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.perfil-top{display:flex;align-items:center;gap:18px}
+.perfil-top img{width:84px;height:84px;border-radius:50%;flex:none}
+.stats{display:flex;gap:18px;font-size:13px;color:var(--muted);flex-wrap:wrap}
+.stats b{display:block;color:var(--ink);font-size:16px}
+.bio{font-size:14.5px;line-height:1.45}
+.bio b{font-weight:700}
+.bio .link{color:var(--mandarina-ink);font-weight:600}
+.dest{display:flex;gap:14px;overflow-x:auto;padding-bottom:2px}
+.dest figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;flex:none}
+.dest img{width:60px;height:60px;border-radius:50%;object-fit:cover;outline:1px solid var(--line);outline-offset:3px;margin:4px}
+
+/* Lista de cambios */
+.cambios{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.cambios li{padding:14px 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.cambios li:last-child{border-bottom:1px solid var(--line)}
+.cambios .hoy{font-size:14px;color:var(--muted)}
+
+/* Bloques para copiar */
+.copy{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.copy pre{margin:0;font-family:var(--text);font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;user-select:all;-webkit-user-select:all}
+.copy-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+button.cp{font:600 13px var(--text);color:var(--crema);background:var(--mandarina-ink);border:0;border-radius:999px;padding:7px 14px;cursor:pointer}
+:root[data-theme="dark"] button.cp{color:var(--cacao)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.cp{color:var(--cacao)}}
+button.cp:focus-visible{outline:3px solid var(--limon);outline-offset:2px}
+
+/* Paleta */
+.paleta{display:grid;grid-template-columns:repeat(5,1fr);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.paleta div{aspect-ratio:1/1.25;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;font-size:10.5px;font-weight:600;line-height:1.25;min-width:0}
+.paleta span{font-weight:400;opacity:.85;font-variant-numeric:tabular-nums}
+.tipos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tipos>div{border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.tipos .muestra{font-size:34px;line-height:1;margin-bottom:8px}
+
+/* Piezas */
+.piezas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.piezas img{width:100%;display:block;border-radius:8px}
+.covers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.covers img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:50%;display:block}
+
+.carrusel{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
+.carrusel img{width:62%;max-width:300px;flex:none;border-radius:10px;scroll-snap-align:start}
+
+/* Grilla de 9 */
+.grilla{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:12px;overflow:hidden}
+.grilla div{aspect-ratio:4/5;padding:8px;font-size:12px;font-weight:600;line-height:1.25;display:flex;flex-direction:column;justify-content:space-between;min-width:0;color:var(--cacao)}
+.grilla small{font-weight:700;font-size:11px;opacity:.7}
+.grilla .foto{background:var(--chips)}
+.grilla .g1{background:var(--cacao);color:var(--crema)}
+.grilla .g2{background:var(--limon)}
+.grilla .g3{background:var(--mandarina);color:var(--crema)}
+
+ol.reglas{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:10px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+td,th{text-align:left;padding:10px 8px 10px 0;border-top:1px solid var(--line);vertical-align:top}
+th{font-weight:700;white-space:nowrap;width:1%;padding-right:16px}
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:14px">
+    <span class="eyebrow">Guía de marca · @_miguitass</span>
+    <h1>Miguitas, con <em>identidad propia.</em></h1>
+    <p class="lead">Qué cambiar en el perfil, cómo se ve la marca y las primeras piezas ya listas para subir.</p>
+  </header>
+
+  <section>
+    <h2>Así quedaría el perfil</h2>
+    <div class="perfil">
+      <div class="perfil-top">
+        <img src="foto-de-perfil.png" alt="Foto de perfil nueva: la palabra miguitas en crema sobre fondo mandarina">
+        <div class="stats"><div><b>9</b>publicaciones</div><div><b>14</b>seguidores</div><div><b>6</b>seguidos</div></div>
+      </div>
+      <div class="bio">
+        <b>Miguitas | Budines caseros</b><br>
+        Budines caseros recién horneados 🍋🍊🍫<br>
+        Limón · Naranja · Chocolate · Chips<br>
+        📍 San Martín, Mendoza<br>
+        👇 Encargá por WhatsApp<br>
+        <span class="link">wa.me/5492634369364</span>
+      </div>
+      <div class="dest">
+        <figure><img src="destacada-sabores.png" alt="">Sabores</figure>
+        <figure><img src="destacada-encargos.png" alt="">Encargos</figure>
+        <figure><img src="destacada-envios.png" alt="">Envíos</figure>
+        <figure><img src="destacada-pagos.png" alt="">Pagos</figure>
+        <figure><img src="destacada-clientes.png" alt="">Clientes</figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Seis cambios, en este orden</h2>
+    <ul class="cambios">
+      <li><h3>Foto de perfil</h3><span class="hoy">Hoy: una foto con el texto encima, que en el círculo chico no se llega a leer.</span>
+        <span>Usá el logo nuevo: una sola palabra, fondo liso. Se reconoce incluso en el tamaño de las historias.</span></li>
+      <li><h3>Nombre</h3><span class="hoy">Hoy: “Miguitas”.</span>
+        <span>Poné “Miguitas | Budines caseros”. Ese campo es el que usa el buscador de Instagram, así aparecés cuando alguien busca “budines”.</span></li>
+      <li><h3>Biografía</h3><span class="hoy">Hoy: dice qué vendés y dónde, pero no qué sabores ni cómo pedir.</span>
+        <span>La de abajo suma sabores y una acción clara. Entra en el límite de 150 caracteres.</span></li>
+      <li><h3>Link de WhatsApp</h3><span class="hoy">Hoy: api.whatsapp.com/send?phone=… queda largo y cortado.</span>
+        <span>Cambialo por el formato corto <b>wa.me/549 + tu número</b>, con el mensaje ya escrito. Mejor todavía: pasá la cuenta a profesional (categoría Panadería) y activá el botón “WhatsApp” del perfil.</span></li>
+      <li><h3>Destacadas</h3><span class="hoy">Hoy: las cuatro tienen la misma foto de portada.</span>
+        <span>Una portada distinta por tema, con ícono y color. Orden: Sabores, Encargos, Envíos, Pagos y, cuando tengas las primeras, Clientes.</span></li>
+      <li><h3>Publicaciones</h3><span class="hoy">Hoy: 0. Un perfil vacío no genera confianza para encargar.</span>
+        <span>Subí las primeras 9 antes de salir a buscar seguidores. El plan está más abajo.</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Textos para copiar</h2>
+    <div class="copy"><div class="copy-head"><h3>Nombre</h3><button class="cp" id="cp-nombre" data-t="t-nombre">Copiar</button></div>
+      <pre id="t-nombre">Miguitas | Budines caseros</pre></div>
+    <div class="copy"><div class="copy-head"><h3>Biografía</h3><button class="cp" id="cp-bio" data-t="t-bio">Copiar</button></div>
+      <pre id="t-bio">Budines caseros recién horneados 🍋🍊🍫
+Limón · Naranja · Chocolate · Chips
+📍 San Martín, Mendoza
+👇 Encargá por WhatsApp</pre></div>
+    <div class="copy"><div class="copy-head"><h3>Link</h3><button class="cp" id="cp-link" data-t="t-link">Copiar</button></div>
+      <pre id="t-link">https://wa.me/5492634369364?text=Hola%20Miguitas!%20Quiero%20encargar%20budines</pre>
+      <span class="note">Ya tiene tu número: 2634 36-9364.</span></div>
+  </section>
+
+  <section>
+    <h2>La identidad</h2>
+    <p>Miguitas son las migas que quedan cuando el budín estuvo rico. Ese es el recurso de la marca: el nombre en minúscula, redondeado, con unas migas sueltas alrededor. Y cada sabor tiene su color, así una persona reconoce el de limón antes de leer.</p>
+    <div class="paleta">
+      <div style="background:#e8673c;color:#faf3e8">Mandarina<span>#E8673C</span></div>
+      <div style="background:#2b1d16;color:#faf3e8">Cacao<span>#2B1D16</span></div>
+      <div style="background:#faf3e8;color:#2b1d16">Crema<span>#FAF3E8</span></div>
+      <div style="background:#f4cf4a;color:#2b1d16">Limón<span>#F4CF4A</span></div>
+      <div style="background:#ecd9b8;color:#2b1d16">Chips<span>#ECD9B8</span></div>
+    </div>
+    <p class="note">Mandarina es el color de la marca y del sabor naranja. Son los mismos colores y letras que ya usa tu app de pedidos, así todo se ve de la misma casa.</p>
+    <div class="tipos">
+      <div><div class="muestra" style="font-family:var(--display);font-weight:800;letter-spacing:-.04em">miguitas</div><h3>Bricolage Grotesque</h3><span class="note">Títulos y logo. Gratis en Canva y Google Fonts.</span></div>
+      <div><div class="muestra" style="font-weight:500">Recién horneado</div><h3>DM Sans</h3><span class="note">Textos chicos y precios.</span></div>
+    </div>
+    <h3>Cómo habla la marca</h3>
+    <p>De vos, cercana y corta, como le escribirías a una vecina. Una idea por publicación. Un emoji o dos, no una fila. Siempre cerrá con cómo pedir.</p>
+  </section>
+
+  <section>
+    <h2>Qué tomar de las referencias</h2>
+    <p>Las tres cuentas que elegiste tienen algo en común: la grilla es casi toda foto y video del producto. Las placas con texto son la excepción.</p>
+    <ul class="cambios">
+      <li><h3>alba.crumble: la más prolija</h3>
+        <span>Todas las fotos con la misma luz dorada de la tarde, los mismos moldes de papel marrón y tomas de arriba con los budines en fila. El logo y las destacadas ilustradas son del mismo estilo.</span>
+        <span class="hoy">Dónde le ganás: su bio no dice nada concreto (“Hechos con amor”), solo toma pedidos por mensaje y no tiene videos.</span></li>
+      <li><h3>_budine: la que más llega</h3>
+        <span>Casi todo son reels cortos del producto con una frase encima en primera persona (“mi lenguaje del amor”). Tiene fijada arriba una foto de abundancia con todos los sabores juntos.</span>
+        <span class="hoy">Dónde le ganás: sus destacadas mezclan portadas distintas y la bio no dice qué vende.</span></li>
+      <li><h3>maby.cake: la abundancia</h3>
+        <span>Bandejas llenas y primeros planos que dan hambre.</span>
+        <span class="hoy">Dónde le ganás: logo que no se lee, sin destacadas y stickers distintos en cada foto.</span></li>
+    </ul>
+    <h3>La fórmula para Miguitas</h3>
+    <ol class="reglas">
+      <li><b>Foto y video primero.</b> Cuatro de cada cinco publicaciones son el budín. Las placas de color quedan para sabores, cómo encargar y avisos.</li>
+      <li><b>Una sola luz y un solo fondo</b>, como alba.crumble. Elegí un horario y una superficie y no los cambies.</li>
+      <li><b>Un reel por semana con frase encima</b>, como _budine, escrita con la letra de la marca.</li>
+      <li><b>Una foto de abundancia fijada arriba:</b> los cuatro sabores juntos, de arriba.</li>
+      <li><b>Pedir es un toque:</b> WhatsApp directo desde el perfil. Ninguna de las tres lo tiene tan claro.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>El primer post</h2>
+    <p>Un carrusel de 5 placas que presenta la marca de punta a punta: quiénes son, qué hacen, los sabores, cómo encargar y el cierre. Las dos primeras placas son fotos tuyas con el título encima.</p>
+    <div class="carrusel">
+      <img src="primer-post/1.png" alt="Placa 1: Hola, somos Miguitas"><img src="primer-post/2.png" alt="Placa 2: Todo casero"><img src="primer-post/3.png" alt="Placa 3: Nuestros sabores"><img src="primer-post/4.png" alt="Placa 4: Cómo encargo"><img src="primer-post/5.png" alt="Placa 5: Encargá el tuyo">
+    </div>
+    <div class="copy"><div class="copy-head"><h3>Texto del primer post</h3><button class="cp" id="cp-c0" data-t="t-c0">Copiar</button></div>
+      <pre id="t-c0">Somos Miguitas 👋
+Hacemos budines caseros en San Martín, Mendoza, y los horneamos por encargo para que te lleguen frescos.
+
+Vienen de 500 g, en limón, naranja, chocolate y chips.
+Deslizá para conocer los sabores y ver cómo pedir el tuyo 👉
+
+¿Cuál probarías primero? Contanos en los comentarios.
+Encargos por WhatsApp, link en el perfil.
+
+#budinescaseros #sanmartinmendoza #mendoza #budines #meriendas</pre></div>
+    <p class="note">Para subirlo: tocá +, elegí Publicación, activá la selección múltiple y marcá las 5 placas en orden. Dejá el recorte en 4:5 (el ícono de las dos flechas abajo a la izquierda).</p>
+  </section>
+
+  <section>
+    <h2>Piezas listas</h2>
+    <p class="note">Están en tamaño real en la carpeta <b>instagram/export</b> del repositorio, y te las mandé como archivos en el chat para guardarlas en el celular.</p>
+    <h3>Portadas de destacadas</h3>
+    <div class="covers">
+      <img src="destacada-sabores.png" alt="Portada Sabores"><img src="destacada-encargos.png" alt="Portada Encargos"><img src="destacada-envios.png" alt="Portada Envíos"><img src="destacada-pagos.png" alt="Portada Pagos"><img src="destacada-clientes.png" alt="Portada Clientes">
+    </div>
+    <h3>Publicaciones</h3>
+    <div class="piezas">
+      <img src="post-1-presentacion.png" alt="Publicación de presentación"><img src="post-2-sabores.png" alt="Publicación de sabores"><img src="post-3-como-encargar.png" alt="Publicación de cómo encargar">
+    </div>
+    <p class="note">Revisá que las descripciones de cada sabor coincidan con tu receta antes de subir la de sabores.</p>
+  </section>
+
+  <section>
+    <h2>Las primeras 9</h2>
+    <p>Así se vería la grilla. El carrusel de presentación abre la cuenta, y después las piezas de color van en la columna del medio con fotos a los costados. Si seguís con una pieza cada tres publicaciones, quedan siempre alineadas en una misma columna.</p>
+    <div class="grilla">
+      <div class="foto"><small>9 · FOTO</small>Budín de limón entero, de arriba</div>
+      <div class="g1"><small>8 · PIEZA</small>¿Cómo encargo?</div>
+      <div class="foto"><small>7 · FOTO</small>Rodaja cortada, se ve la miga</div>
+      <div class="foto"><small>6 · FOTO</small>Budín de naranja con media naranja al lado</div>
+      <div class="g2"><small>5 · PIEZA</small>Nuestros sabores</div>
+      <div class="foto"><small>4 · FOTO</small>Budín de chocolate</div>
+      <div class="foto"><small>3 · FOTO</small>Budines embolsados, listos para entregar</div>
+      <div class="foto"><small>2 · FOTO</small>Recién salidos del horno, en el molde</div>
+      <div class="g3"><small>1 · CARRUSEL</small>Primer post</div>
+    </div>
+    <p class="note">El número es el orden en que se suben: el carrusel va primero y, con las 9 subidas, queda abajo a la derecha.</p>
+
+    <div class="copy"><div class="copy-head"><h3>Texto · Presentación</h3><button class="cp" id="cp-c1" data-t="t-c1">Copiar</button></div>
+      <pre id="t-c1">Hola, somos Miguitas 👋
+Hacemos budines caseros en San Martín, Mendoza. Los horneamos por encargo, así te llegan frescos.
+
+Limón, naranja, chocolate y chips.
+Escribinos por WhatsApp desde el link del perfil y encargá el tuyo.
+
+#budinescaseros #sanmartinmendoza #mendoza #budines #meriendas</pre></div>
+    <div class="copy"><div class="copy-head"><h3>Texto · Sabores</h3><button class="cp" id="cp-c2" data-t="t-c2">Copiar</button></div>
+      <pre id="t-c2">¿Cuál es el tuyo? 🍋🍊🍫
+Limón, naranja, chocolate o chips. Los cuatro salen del mismo horno y con la misma receta de casa.
+
+Contanos en los comentarios cuál probarías primero.
+Encargos por WhatsApp, link en el perfil.
+
+#budinescaseros #budindelimon #budindenaranja #sanmartinmendoza</pre></div>
+    <div class="copy"><div class="copy-head"><h3>Texto · Cómo encargar</h3><button class="cp" id="cp-c3" data-t="t-c3">Copiar</button></div>
+      <pre id="t-c3">Encargar es fácil:
+1. Escribinos por WhatsApp (link en el perfil).
+2. Elegí sabor y cantidad.
+3. Coordinamos día y horario de entrega.
+
+Guardá esta publicación para tenerla a mano 📌
+
+#budinescaseros #sanmartinmendoza #encargos</pre></div>
+  </section>
+
+  <section>
+    <h2>Fotos que se vean de la misma marca</h2>
+    <ol class="reglas">
+      <li><b>Luz de ventana, de día.</b> Sin flash y sin la luz amarilla de la cocina.</li>
+      <li><b>Siempre el mismo fondo.</b> Una tabla de madera o un mantel liso color crema. Es lo que más unifica la grilla.</li>
+      <li><b>Dos ángulos y nada más.</b> De arriba para el budín entero, de costado para la rodaja.</li>
+      <li><b>Un detalle del sabor.</b> Medio limón, una naranja, unos chips sueltos. Y unas migas en la tabla, que son tu firma.</li>
+      <li><b>Formato vertical 4:5.</b> Es el que más lugar ocupa en pantalla.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Una semana tipo</h2>
+    <table>
+      <tr><th>Lunes</th><td>Historia: “Esta semana horneamos…” con los sabores y hasta cuándo se toman encargos.</td></tr>
+      <tr><th>Miércoles</th><td>Publicación: foto de un sabor.</td></tr>
+      <tr><th>Viernes</th><td>Reel corto: el corte de una rodaja o el budín saliendo del horno. Es lo que más llega a gente nueva.</td></tr>
+      <tr><th>Cada entrega</th><td>Historia con la foto del pedido. Si la persona te etiqueta, compartila y guardala en Clientes.</td></tr>
+    </table>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('button.cp').forEach(function(b){
+  b.addEventListener('click', function(){
+    var el = document.getElementById(b.dataset.t), txt = el.textContent;
+    function ok(){ b.textContent = 'Copiado'; setTimeout(function(){ b.textContent = 'Copiar'; }, 1600); }
+    function sel(){ var r = document.createRange(); r.selectNodeContents(el); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Seleccionado'; }
+    try { navigator.clipboard.writeText(txt).then(ok, sel); } catch(e){ sel(); }
+  });
+});
+</script>

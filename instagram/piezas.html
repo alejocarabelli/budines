@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<title>Miguitas · piezas de Instagram</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Fuente de todas las piezas. Se exportan a PNG con exportar.js */
+:root{--mandarina:#e8673c;--cacao:#2b1d16;--crema:#faf3e8;--limon:#f4cf4a;--chips:#ecd9b8;--choco:#4a2c20;
+  --display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
+*{box-sizing:border-box;margin:0}
+body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-family:var(--texto)}
+.pieza{position:relative;overflow:hidden;flex:none}
+.marca{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:1}
+.miga{position:absolute;border-radius:46% 54% 50% 50%/55% 45% 55% 45%}
+
+/* Foto de perfil */
+#perfil{width:1080px;height:1080px;background:var(--mandarina);color:var(--crema);display:grid;place-items:center}
+#perfil .marca{font-size:212px;transform:translateY(-6px)}
+
+/* Portadas de destacadas */
+.portada{width:1080px;height:1920px;display:grid;place-items:center}
+.portada svg{width:400px;height:400px;fill:none;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+
+/* Publicaciones 4:5 */
+.post{width:1080px;height:1350px;padding:96px 88px;display:flex;flex-direction:column}
+.post .marca.chica{font-size:56px}
+.post .pie{margin-top:auto;font-size:34px;font-weight:500;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+#p-hola{background:var(--mandarina);color:var(--crema)}
+#p-hola h1{font-family:var(--display);font-weight:800;font-size:158px;line-height:.94;letter-spacing:-.045em;margin-top:150px}
+#p-hola h1 em{font-style:normal;color:var(--cacao)}
+#p-sabores{background:var(--crema);color:var(--cacao);padding:0}
+#p-sabores .cab{padding:84px 88px 44px;display:flex;justify-content:space-between;align-items:flex-end}
+#p-sabores h1{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:.95;margin-top:26px}
+#p-sabores .peso{font-family:var(--display);font-weight:800;font-size:44px;letter-spacing:-.02em;background:var(--cacao);color:var(--crema);border-radius:50%;width:170px;height:170px;display:grid;place-items:center;text-align:center;line-height:1;transform:rotate(-8deg);flex:none}
+#p-sabores .peso small{display:block;font:500 22px var(--texto);letter-spacing:.02em;margin-top:6px}
+.sabor{position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 88px}
+.sabor b{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:1}
+.sabor span{font-size:34px;font-weight:500;margin-top:8px}
+.sabor svg{position:absolute;right:-70px;top:50%;width:360px;height:360px;transform:translateY(-50%) rotate(-12deg)}
+.sabor svg.chica{right:40px;width:300px;height:300px}
+#p-sabores .pie{margin:0;padding:34px 88px 44px}
+#p-pasos{background:var(--cacao);color:var(--crema)}
+#p-pasos h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:1;margin:56px 0 64px}
+#p-pasos h1 em{font-style:normal;color:var(--mandarina)}
+.paso{display:flex;gap:40px;align-items:flex-start;margin-bottom:54px}
+.paso i{font-style:normal;font-family:var(--display);font-weight:800;font-size:64px;width:108px;height:108px;border-radius:50%;background:var(--mandarina);color:var(--crema);display:grid;place-items:center;flex:none}
+.paso b{font-family:var(--display);font-weight:700;font-size:56px;letter-spacing:-.03em;display:block;line-height:1.05;margin-bottom:10px}
+.paso span{font-size:34px;line-height:1.3;opacity:.82}
+
+/* Primer post: carrusel de 5 */
+#c-portada{background:var(--mandarina);color:var(--crema)}
+#c-portada h1{font-family:var(--display);font-weight:800;font-size:176px;line-height:.92;letter-spacing:-.045em;margin-top:130px}
+#c-portada h1 em{font-style:normal;color:var(--cacao)}
+#c-portada p{font-size:46px;font-weight:500;line-height:1.25;margin-top:44px;max-width:760px}
+#c-casero{background:var(--crema);color:var(--cacao)}
+#c-casero h1{font-family:var(--display);font-weight:800;font-size:136px;line-height:.95;letter-spacing:-.045em;margin:90px 0 70px}
+#c-casero h1 em{font-style:normal;color:var(--mandarina)}
+#c-casero li{font-size:46px;font-weight:500;line-height:1.2;padding:30px 0;border-top:3px solid var(--cacao);list-style:none}
+#c-casero ul{padding:0;border-bottom:3px solid var(--cacao)}
+#c-cierre{background:url(fotos/chips-cortado.jpg) 62% 50%/cover;color:var(--crema)}
+#c-cierre::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,29,22,.72) 0%,rgba(43,29,22,.58) 55%,rgba(43,29,22,.72) 100%)}
+#c-cierre>*{position:relative}
+#c-cierre h1{font-family:var(--display);font-weight:800;font-size:190px;line-height:.9;letter-spacing:-.05em;margin-top:150px}
+#c-cierre p{font-size:50px;font-weight:500;line-height:1.25;margin-top:48px}
+#c-cierre .btn{align-self:flex-start;margin-top:56px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:50px;padding:26px 48px;border-radius:999px}
+
+/* Placas con foto a pantalla completa */
+.confoto{color:var(--crema);background-size:cover}
+.confoto::before{content:"";position:absolute;inset:0}
+.confoto>*{position:relative}
+.confoto h1{font-family:var(--display);font-weight:800;letter-spacing:-.045em;line-height:.92}
+#f-portada{background-image:url(fotos/limon-rodajas.jpg);background-position:50% 30%}
+#f-portada::before{background:linear-gradient(180deg,rgba(43,29,22,.78) 0%,rgba(43,29,22,.5) 22%,rgba(43,29,22,0) 40%,rgba(43,29,22,0) 82%,rgba(43,29,22,.6) 100%)}
+#f-portada h1{font-size:108px;margin-top:0;max-width:700px}
+#f-todos{background-image:url(fotos/chips-de-arriba.jpg);background-position:50% 0%;padding-top:70px}
+#f-todos::before{background:linear-gradient(180deg,rgba(43,29,22,.8) 0%,rgba(43,29,22,.5) 14%,rgba(43,29,22,0) 30%,rgba(43,29,22,0) 84%,rgba(43,29,22,.65) 100%)}
+#f-todos h1{font-size:108px}
+#f-todos p{font-size:38px;font-weight:500;margin-top:14px}
+
+/* Opciones para "¿Cómo encargo?" */
+#o-chat{background:var(--crema);color:var(--cacao)}
+#o-chat h1{font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.04em;line-height:.95;margin:40px 0 56px}
+.msj{font-size:42px;font-weight:500;line-height:1.25;padding:28px 38px;border-radius:40px;max-width:700px;margin-bottom:22px}
+.msj.yo{align-self:flex-end;background:var(--mandarina);color:var(--crema);border-bottom-right-radius:8px}
+.msj.ellos{align-self:flex-start;background:#fff;border-bottom-left-radius:8px;box-shadow:0 2px 0 rgba(43,29,22,.08)}
+.msj small{display:block;font-size:24px;font-weight:700;letter-spacing:.04em;color:var(--mandarina);margin-bottom:4px}
+#o-foto{background:url(fotos/limon-en-mano.jpg) 50% 48%/cover;color:var(--crema)}
+#o-foto::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.76)}
+#o-foto>*{position:relative}
+#o-foto h1{font-family:var(--display);font-weight:800;font-size:128px;letter-spacing:-.045em;line-height:.92;margin:120px 0 70px}
+#o-foto li{list-style:none;font-family:var(--display);font-weight:700;font-size:60px;letter-spacing:-.03em;padding:34px 0;border-top:3px solid rgba(250,243,232,.55)}
+#o-foto ul{padding:0;border-bottom:3px solid rgba(250,243,232,.55)}
+#o-ticket{background:var(--mandarina);color:var(--crema)}
+#o-ticket h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.04em;line-height:.95;margin:40px 0 50px}
+.papel{background:var(--crema);color:var(--cacao);padding:50px 56px 44px;transform:rotate(-2.5deg);box-shadow:0 18px 0 rgba(43,29,22,.18);border-top:10px dashed var(--mandarina)}
+.papel .t{font-weight:700;font-size:26px;letter-spacing:.16em;margin-bottom:8px}
+.papel .r{display:flex;align-items:baseline;gap:18px;border-bottom:3px solid rgba(43,29,22,.25);padding:20px 0 6px}
+.papel .r span{font-size:32px;font-weight:600;width:210px;flex:none}
+.papel .r em{font-family:"Caveat",cursive;font-style:normal;font-weight:700;font-size:74px;line-height:1;color:#1f4fa3}
+.papel .f{font-size:32px;font-weight:600;margin-top:30px}
+#f-portada-b{background-image:url(fotos/limon-en-mano.jpg);background-position:50% 42%}
+#f-portada-b::before{background:linear-gradient(180deg,rgba(43,29,22,.82) 0%,rgba(43,29,22,.55) 18%,rgba(43,29,22,0) 36%,rgba(43,29,22,0) 80%,rgba(43,29,22,.7) 100%)}
+#f-portada-b h1{font-size:108px}
+
+/* Foto de perfil con foto */
+#perfil-foto{width:1080px;height:1080px;background:url(fotos/perfil-fondo.jpg) center/cover;color:#fff;display:grid;place-items:center;text-align:center}
+#perfil-foto::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(43,29,22,.5) 0%,rgba(43,29,22,.32) 45%,rgba(43,29,22,.18) 100%)}
+#perfil-foto>div{position:relative;text-shadow:0 4px 24px rgba(43,29,22,.55)}
+#perfil-foto b{display:block;font-family:var(--display);font-weight:800;font-size:196px;letter-spacing:-.04em;line-height:1}
+#perfil-foto::after{content:"";position:absolute;inset:18px;border:14px solid #fff;border-radius:50%}
+#perfil-foto span{display:flex;align-items:center;gap:22px;justify-content:center;font-weight:700;font-size:40px;letter-spacing:.2em;margin-top:26px}
+#perfil-foto span::before,#perfil-foto span::after{content:"";height:3px;width:120px;background:#fff;opacity:.85}
+
+/* Foto de perfil, versión alineada con las placas */
+#perfil-marca{width:1080px;height:1080px;background:url(fotos/perfil-fondo.jpg) center/cover;color:var(--crema);display:grid;place-items:center;text-align:center}
+#perfil-marca::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.41)}
+#perfil-marca::after{content:"";position:absolute;inset:18px;border:14px solid var(--crema);border-radius:50%}
+#perfil-marca>div{position:relative}
+#perfil-marca b{display:block;font-family:var(--display);font-weight:800;font-size:212px;letter-spacing:-.04em;line-height:1}
+#perfil-marca span{display:block;font-weight:500;font-size:52px;margin-top:14px}
+
+/* Historias para destacadas (1080x1920, deja libres arriba y abajo para la interfaz) */
+.historia{width:1080px;height:1920px;padding:300px 96px 320px;display:flex;flex-direction:column}
+.historia h1{font-family:var(--display);font-weight:800;font-size:112px;letter-spacing:-.045em;line-height:.92}
+.historia .marca.chica{font-size:48px;margin-bottom:44px}
+#h-pagos,#h-envios,#h-encargos,#h-sabores{background:url(fotos/fondo-historia-chips.jpg) center/cover;color:var(--crema)}
+#h-pagos::before,#h-envios::before,#h-encargos::before,#h-sabores::before{content:"";position:absolute;inset:0;background:rgba(43,29,22,.62)}
+#h-pagos>*,#h-envios>*,#h-encargos>*,#h-sabores>*{position:relative}
+#h-pagos .medios,#h-envios .medios,#h-encargos .medios,#h-sabores .medios{display:flex;flex-direction:column;gap:24px;margin-top:70px}
+#h-pagos .medio,#h-envios .medio,#h-encargos .medio,#h-sabores .medio{background:rgba(250,243,232,.14);border:3px solid rgba(250,243,232,.35);border-radius:30px;padding:36px 44px;display:flex;align-items:center;gap:34px}
+#h-pagos .medio svg,#h-envios .medio svg,#h-encargos .medio svg{width:92px;height:92px;flex:none;fill:none;stroke:var(--crema);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+#h-pagos .medio b,#h-envios .medio b,#h-encargos .medio b,#h-sabores .medio b{font-family:var(--display);font-weight:800;font-size:62px;letter-spacing:-.035em;line-height:1}
+#h-pagos .nota,#h-envios .nota,#h-encargos .nota,#h-sabores .nota{margin-top:auto;display:flex;flex-direction:column;gap:34px}
+#h-pagos .nota p,#h-envios .nota p,#h-encargos .nota p,#h-sabores .nota p{font-size:38px;font-weight:500;line-height:1.3;border-top:3px solid rgba(250,243,232,.4);padding-top:34px}
+#h-pagos .nota strong,#h-envios .nota strong,#h-encargos .nota strong,#h-sabores .nota strong{font-weight:700}
+
+/* Historias de producto: foto completa, texto abajo */
+.h-prod{width:1080px;height:1920px;padding:300px 96px 330px;display:flex;flex-direction:column;color:var(--crema);background-size:cover;background-position:center}
+.h-prod::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,29,22,.55) 0%,rgba(43,29,22,0) 20%,rgba(43,29,22,0) 50%,rgba(43,29,22,.88) 84%)}
+.h-prod>*{position:relative}
+.h-prod .marca.chica{font-size:48px}
+.h-prod .abajo{margin-top:auto}
+.h-prod h1{font-family:var(--display);font-weight:800;font-size:118px;letter-spacing:-.045em;line-height:.9}
+.h-prod p{font-size:40px;font-weight:500;margin-top:16px}
+.h-prod .chip{display:inline-block;margin-top:34px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:36px;padding:12px 30px;border-radius:999px}
+#h-chips{background-image:url(fotos/chips-mantel.jpg)}
+#h-limon{background-image:url(fotos/limon-en-mano-patio.jpg);background-position:50% 30%}
+#h-limon::before{background:linear-gradient(180deg,rgba(43,29,22,.55) 0%,rgba(43,29,22,0) 18%,rgba(43,29,22,0) 42%,rgba(43,29,22,.9) 72%)}
+#h-envios{background-image:url(fotos/fondo-historia-limon.jpg)}
+#h-envios .medio small,#h-encargos .medio small,#h-sabores .medio small{display:block;font-size:34px;font-weight:500;margin-top:8px;opacity:.85}
+#h-encargos{background-image:url(fotos/fondo-historia-cocina.jpg)}
+#h-sabores{background-image:url(fotos/fondo-historia-mantel.jpg)}
+#h-sabores .medio{padding:26px 40px}
+#h-sabores .medios{margin-top:56px;gap:20px}
+#h-sabores .nota{padding-top:40px}
+#h-sabores .punto{width:72px;height:72px;border-radius:50%;flex:none;border:4px solid rgba(250,243,232,.8)}
+
+/* Historia: encargos para el finde */
+#h-finde{background-image:url(fotos/limon-rodajas.jpg);background-position:42% 50%}
+#h-finde::before{background:linear-gradient(180deg,rgba(43,29,22,.75) 0%,rgba(43,29,22,.35) 26%,rgba(43,29,22,0) 42%,rgba(43,29,22,0) 54%,rgba(43,29,22,.9) 82%)}
+#h-finde .fecha{display:inline-block;align-self:flex-start;margin-top:40px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:38px;padding:12px 30px;border-radius:999px}
+#h-finde h1{margin-top:24px;font-size:112px}
+#h-finde .sabores{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+#h-finde .sabores span{font-size:34px;font-weight:600;padding:10px 24px;border-radius:999px;border:3px solid rgba(250,243,232,.6)}
+#h-finde p{font-size:40px;font-weight:500;margin-top:0}
+#h-finde p b{font-weight:700}
+#h-finde .tel{display:flex;align-items:center;gap:22px;font-family:var(--display);font-weight:800;font-size:92px;letter-spacing:-.03em;line-height:1;margin:12px 0 18px}
+#h-finde .tel svg{width:84px;height:84px;color:var(--crema);flex:none}
+#h-finde p.chico{font-size:34px;opacity:.9}
+</style></head><body>
+
+<div class="pieza" id="perfil">
+  <span class="miga" style="width:58px;height:54px;background:var(--crema);left:742px;top:318px"></span>
+  <span class="miga" style="width:30px;height:32px;background:var(--crema);left:826px;top:372px"></span>
+  <span class="miga" style="width:40px;height:36px;background:var(--cacao);left:690px;top:268px"></span>
+  <span class="miga" style="width:22px;height:22px;background:var(--cacao);left:800px;top:292px"></span>
+  <span class="miga" style="width:34px;height:32px;background:var(--cacao);left:262px;top:700px"></span>
+  <span class="miga" style="width:20px;height:20px;background:var(--crema);left:214px;top:662px"></span>
+  <div class="marca">miguitas</div>
+</div>
+
+<div class="pieza portada" id="d-sabores" style="background:var(--mandarina)"><svg viewBox="0 0 100 100" stroke="#faf3e8">
+  <path d="M18 74V48c0-26 64-26 64 0v26z"/><path d="M38 40l6 8M50 37l6 8M62 40l6 8"/></svg></div>
+<div class="pieza portada" id="d-encargos" style="background:var(--cacao)"><svg viewBox="0 0 100 100" stroke="#faf3e8">
+  <path d="M20 26h60a6 6 0 0 1 6 6v32a6 6 0 0 1-6 6H46L30 82V70H20a6 6 0 0 1-6-6V32a6 6 0 0 1 6-6z"/><path d="M34 42h32M34 54h20"/></svg></div>
+<div class="pieza portada" id="d-envios" style="background:var(--limon)"><svg viewBox="0 0 100 100" stroke="#2b1d16">
+  <path d="M50 86S24 60 24 42a26 26 0 0 1 52 0c0 18-26 44-26 44z"/><circle cx="50" cy="42" r="9"/></svg></div>
+<div class="pieza portada" id="d-pagos" style="background:var(--chips)"><svg viewBox="0 0 100 100" stroke="#2b1d16">
+  <rect x="14" y="28" width="72" height="46" rx="7"/><path d="M14 42h72M26 60h16"/></svg></div>
+<div class="pieza portada" id="d-clientes" style="background:var(--crema)"><svg viewBox="0 0 100 100" stroke="#e8673c">
+  <path d="M50 80S18 60 18 40a16 16 0 0 1 32-4 16 16 0 0 1 32 4c0 20-32 40-32 40z"/></svg></div>
+
+<div class="pieza post" id="p-hola">
+  <span class="miga" style="width:64px;height:60px;background:var(--crema);right:120px;top:120px"></span>
+  <span class="miga" style="width:34px;height:34px;background:var(--cacao);right:214px;top:186px"></span>
+  <span class="miga" style="width:26px;height:24px;background:var(--crema);right:96px;top:226px"></span>
+  <div class="marca chica">miguitas</div>
+  <h1>Budines caseros, <em>recién horneados.</em></h1>
+  <div class="pie"><span>San Martín, Mendoza</span><span>Encargos por WhatsApp</span></div>
+</div>
+
+<div class="pieza post" id="p-sabores">
+  <div class="cab"><div><div class="marca chica" style="color:var(--mandarina)">miguitas</div><h1>Nuestros<br>sabores</h1></div><div class="peso"><div>500 g<small>cada uno</small></div></div></div>
+  <div class="sabor" style="background:var(--limon)"><b>Limón</b><span>glaseado, con ralladura</span><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#e3b62b"/><circle cx="50" cy="50" r="43" fill="#fff6d6"/><path d="M56.5 52.7L85.9 53.1A36 36 0 0 1 77.6 73.1Z" fill="#f8de6a"/><path d="M52.7 56.5L73.1 77.6A36 36 0 0 1 53.1 85.9Z" fill="#f8de6a"/><path d="M47.3 56.5L46.9 85.9A36 36 0 0 1 26.9 77.6Z" fill="#f8de6a"/><path d="M43.5 52.7L22.4 73.1A36 36 0 0 1 14.1 53.1Z" fill="#f8de6a"/><path d="M43.5 47.3L14.1 46.9A36 36 0 0 1 22.4 26.9Z" fill="#f8de6a"/><path d="M47.3 43.5L26.9 22.4A36 36 0 0 1 46.9 14.1Z" fill="#f8de6a"/><path d="M52.7 43.5L53.1 14.1A36 36 0 0 1 73.1 22.4Z" fill="#f8de6a"/><path d="M56.5 47.3L77.6 26.9A36 36 0 0 1 85.9 46.9Z" fill="#f8de6a"/></svg></div>
+  <div class="sabor" style="background:var(--choco);color:var(--crema)"><b>Chocolate</b><span>de cacao, con chips de chocolate</span><svg class="chica" viewBox="0 0 100 100"><g transform="rotate(14 50 50)"><rect x="0" y="0" width="98" height="98" rx="9" fill="#5a3628"/><rect x="6" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="6" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="10" width="18" height="18" rx="3" fill="#7d5140"/><rect x="6" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="36" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="40" width="18" height="18" rx="3" fill="#7d5140"/><rect x="6" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="10" y="70" width="18" height="18" rx="3" fill="#7d5140"/><rect x="36" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="40" y="70" width="18" height="18" rx="3" fill="#7d5140"/><rect x="66" y="66" width="26" height="26" rx="5" fill="#6b4232"/><rect x="70" y="70" width="18" height="18" rx="3" fill="#7d5140"/></g></svg></div>
+  <div class="sabor" style="background:var(--mandarina);color:var(--crema)"><b>Naranja</b><span>glaseada, con ralladura</span><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="49" fill="#c94f27"/><circle cx="50" cy="50" r="43" fill="#ffe9cf"/><path d="M56.5 52.7L85.9 53.1A36 36 0 0 1 77.6 73.1Z" fill="#f7a155"/><path d="M52.7 56.5L73.1 77.6A36 36 0 0 1 53.1 85.9Z" fill="#f7a155"/><path d="M47.3 56.5L46.9 85.9A36 36 0 0 1 26.9 77.6Z" fill="#f7a155"/><path d="M43.5 52.7L22.4 73.1A36 36 0 0 1 14.1 53.1Z" fill="#f7a155"/><path d="M43.5 47.3L14.1 46.9A36 36 0 0 1 22.4 26.9Z" fill="#f7a155"/><path d="M47.3 43.5L26.9 22.4A36 36 0 0 1 46.9 14.1Z" fill="#f7a155"/><path d="M52.7 43.5L53.1 14.1A36 36 0 0 1 73.1 22.4Z" fill="#f7a155"/><path d="M56.5 47.3L77.6 26.9A36 36 0 0 1 85.9 46.9Z" fill="#f7a155"/></svg></div>
+  <div class="sabor" style="background:var(--chips)"><b>Chips</b><span>de vainilla, con chips de chocolate</span><svg class="chica" viewBox="0 0 100 100"><circle cx="18" cy="30" r="11" fill="#2b1d16"/><circle cx="15.2" cy="27.2" r="3.5" fill="#5a3628"/><circle cx="46" cy="16" r="8" fill="#2b1d16"/><circle cx="44.0" cy="14.0" r="2.6" fill="#5a3628"/><circle cx="52" cy="52" r="13" fill="#2b1d16"/><circle cx="48.8" cy="48.8" r="4.2" fill="#5a3628"/><circle cx="80" cy="30" r="10" fill="#2b1d16"/><circle cx="77.5" cy="27.5" r="3.2" fill="#5a3628"/><circle cx="24" cy="72" r="9" fill="#2b1d16"/><circle cx="21.8" cy="69.8" r="2.9" fill="#5a3628"/><circle cx="82" cy="74" r="12" fill="#2b1d16"/><circle cx="79.0" cy="71.0" r="3.8" fill="#5a3628"/><circle cx="60" cy="88" r="7" fill="#2b1d16"/><circle cx="58.2" cy="86.2" r="2.2" fill="#5a3628"/></svg></div>
+  <div class="pie"><span>Todo casero</span><span>Pedí el tuyo por WhatsApp</span></div>
+</div>
+
+<div class="pieza post" id="p-pasos">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>¿Cómo <em>encargo?</em></h1>
+  <div class="paso"><i>1</i><div><b>Escribinos por WhatsApp</b><span>El link está en el perfil.</span></div></div>
+  <div class="paso"><i>2</i><div><b>Elegí sabor y cantidad</b><span>Limón, naranja, chocolate o chips.</span></div></div>
+  <div class="paso"><i>3</i><div><b>Coordinamos la entrega</b><span>Te avisamos día y horario.</span></div></div>
+  <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="c-portada">
+  <span class="miga" style="width:64px;height:60px;background:var(--crema);right:120px;top:120px"></span>
+  <span class="miga" style="width:34px;height:34px;background:var(--cacao);right:214px;top:186px"></span>
+  <span class="miga" style="width:26px;height:24px;background:var(--crema);right:96px;top:226px"></span>
+  <div class="marca chica">miguitas</div>
+  <h1>Hola, somos <em>Miguitas.</em></h1>
+  <p>Budines caseros, recién horneados, en San Martín, Mendoza.</p>
+  <div class="pie"><span>@_miguitass</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="c-casero">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>Todo <em>casero.</em></h1>
+  <ul><li>Hechos en casa, en tandas chicas.</li><li>Horneados para tu encargo.</li><li>Cuatro sabores para elegir.</li></ul>
+  <div class="pie"><span>San Martín, Mendoza</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="c-cierre">
+  <div class="marca chica">miguitas</div>
+  <h1>Encargá el tuyo.</h1>
+  <p>Escribinos por WhatsApp y coordinamos.</p>
+  <div class="btn">Link en el perfil</div>
+  <div class="pie"><span>San Martín, Mendoza</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post confoto" id="f-portada">
+  <h1>Somos<br>Miguitas.</h1>
+  <div class="pie"><span>Budines caseros · San Martín, Mendoza</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post confoto" id="f-todos">
+  <h1>Todo casero.</h1>
+  <p>Horneados en casa, para tu encargo.</p>
+  <div class="pie"><span>@_miguitass</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza post" id="o-chat">
+  <div class="marca chica" style="color:var(--mandarina)">miguitas</div>
+  <h1>Encargar es así de fácil.</h1>
+  <div class="msj yo">¡Hola! Quiero encargar budines</div>
+  <div class="msj ellos"><small>MIGUITAS</small>¡Hola! ¿Qué sabor y cuántos?</div>
+  <div class="msj yo">2 de limón y 1 de chips</div>
+  <div class="msj ellos"><small>MIGUITAS</small>¡Listo! Coordinamos día y horario.</div>
+  <div class="pie"><span>Por WhatsApp · link en el perfil</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="o-foto">
+  <div class="marca chica">miguitas</div>
+  <h1>¿Cómo encargo?</h1>
+  <ul><li>Escribinos por WhatsApp.</li><li>Elegí sabor y cantidad.</li><li>Coordinamos la entrega.</li></ul>
+  <div class="pie"><span>Link en el perfil</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post" id="o-ticket">
+  <div class="marca chica">miguitas</div>
+  <h1>¿Cómo encargo?</h1>
+  <div class="papel">
+    <div class="t">TU PEDIDO</div>
+    <div class="r"><span>Sabor</span><em>limón y chips</em></div>
+    <div class="r"><span>Cantidad</span><em>3 budines</em></div>
+    <div class="r"><span>Entrega</span><em>sábado a la tarde</em></div>
+    <div class="f">Mandanos estos tres datos por WhatsApp y listo.</div>
+  </div>
+  <div class="pie"><span>Link en el perfil</span><span>@_miguitass</span></div>
+</div>
+
+<div class="pieza post confoto" id="f-portada-b">
+  <h1>Somos<br>Miguitas.</h1>
+  <div class="pie"><span>Budines caseros · San Martín, Mendoza</span><span>Deslizá →</span></div>
+</div>
+
+<div class="pieza" id="perfil-foto"><div><b>miguitas</b><span>TODO CASERO</span></div></div>
+
+<div class="pieza" id="perfil-marca"><div><b>miguitas</b><span>todo casero</span></div></div>
+
+<div class="pieza historia" id="h-pagos">
+  <div class="marca chica">miguitas</div>
+  <h1>Medios<br>de pago</h1>
+  <div class="medios">
+    <div class="medio"><svg viewBox="0 0 100 100"><rect x="10" y="26" width="80" height="48" rx="8"/><circle cx="50" cy="50" r="11"/><path d="M22 38v0M78 62v0"/></svg><b>Efectivo</b></div>
+    <div class="medio"><svg viewBox="0 0 100 100"><path d="M16 36h62l-14-14M84 64H22l14 14"/></svg><b>Transferencia</b></div>
+  </div>
+  <div class="nota">
+    <p><strong>Sin seña.</strong> Pagás al recibir tu pedido o antes de la entrega.</p>
+    <p>El alias te lo pasamos por WhatsApp.</p>
+  </div>
+</div>
+
+<div class="pieza h-prod" id="h-chips">
+  <div class="marca chica">miguitas</div>
+  <div class="abajo"><h1>Chips</h1><p>De vainilla, con chips de chocolate.</p><span class="chip">500 g</span></div>
+</div>
+<div class="pieza h-prod" id="h-limon">
+  <div class="marca chica">miguitas</div>
+  <div class="abajo"><h1>Limón</h1><p>Glaseado, con ralladura.</p><span class="chip">500 g</span></div>
+</div>
+
+<div class="pieza historia" id="h-envios">
+  <div class="marca chica">miguitas</div>
+  <h1>Entregas</h1>
+  <div class="medios">
+    <div class="medio"><svg viewBox="0 0 100 100"><rect x="14" y="20" width="72" height="66" rx="8"/><path d="M14 40h72M32 12v16M68 12v16"/></svg><div><b>Fines de semana</b><small>Sábado y domingo</small></div></div>
+    <div class="medio"><svg viewBox="0 0 100 100"><path d="M50 88S24 62 24 44a26 26 0 0 1 52 0c0 18-26 44-26 44z"/><circle cx="50" cy="44" r="9"/></svg><div><b>San Martín</b><small>Mendoza</small></div></div>
+  </div>
+  <div class="nota">
+    <p><strong>Encargá durante la semana</strong> y coordinamos día y horario.</p>
+    <p>Escribinos por WhatsApp, link en el perfil.</p>
+  </div>
+</div>
+
+<div class="pieza historia" id="h-encargos">
+  <div class="marca chica">miguitas</div>
+  <h1>Encargos</h1>
+  <div class="medios">
+    <div class="medio"><svg viewBox="0 0 100 100"><path d="M20 22h60a6 6 0 0 1 6 6v34a6 6 0 0 1-6 6H46L30 82V68H20a6 6 0 0 1-6-6V28a6 6 0 0 1 6-6z"/></svg><div><b>Escribinos</b><small>Por WhatsApp, link en el perfil</small></div></div>
+    <div class="medio"><svg viewBox="0 0 100 100"><path d="M18 76V50c0-26 64-26 64 0v26z"/><path d="M38 42l6 8M50 39l6 8M62 42l6 8"/></svg><div><b>Elegí sabor y cantidad</b><small>Limón, chocolate, naranja o chips</small></div></div>
+    <div class="medio"><svg viewBox="0 0 100 100"><rect x="14" y="20" width="72" height="66" rx="8"/><path d="M14 40h72M32 12v16M68 12v16"/></svg><div><b>Lo recibís el finde</b><small>Coordinamos día y horario</small></div></div>
+  </div>
+  <div class="nota">
+    <p><strong>Budines de 500 g.</strong> Horneados para tu encargo.</p>
+    <p>Sin seña: pagás al recibir o antes de la entrega.</p>
+  </div>
+</div>
+
+<div class="pieza historia" id="h-sabores">
+  <div class="marca chica">miguitas</div>
+  <h1>Budines</h1>
+  <div class="medios">
+    <div class="medio"><span class="punto" style="background:var(--limon)"></span><div><b>Limón</b><small>Glaseado, con ralladura</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--choco)"></span><div><b>Chocolate</b><small>De cacao, con chips de chocolate</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--mandarina)"></span><div><b>Naranja</b><small>Glaseada, con ralladura</small></div></div>
+    <div class="medio"><span class="punto" style="background:var(--chips)"></span><div><b>Chips</b><small>De vainilla, con chips de chocolate</small></div></div>
+  </div>
+  <div class="nota">
+    <p><strong>Todos de 500 g.</strong> Caseros y horneados para tu encargo.</p>
+  </div>
+</div>
+
+<div class="pieza h-prod" id="h-finde">
+  <div class="marca chica">miguitas</div>
+  <span class="fecha">Sábado 14 y domingo 15</span>
+  <h1>Este finde<br>hay budines.</h1>
+  <div class="abajo">
+    <div class="sabores"><span>Limón</span><span>Chocolate</span><span>Naranja</span><span>Chips</span></div>
+    <p>Encargá el tuyo por WhatsApp</p>
+    <div class="tel"><svg viewBox="0 0 32 32"><path fill="currentColor" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8 1 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.3z"/></svg>2634 36-9364</div>
+    <p class="chico">Budines de 500 g, horneados para vos.</p>
+  </div>
+</div>
+</body></html>
