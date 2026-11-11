@@ -28,6 +28,7 @@ Cuenta: **@_miguitass** · Budines caseros · San Martín, Mendoza.
 - Todos de **500 g**.
 - **Pagos:** efectivo o transferencia. **Sin seña**: se paga al entregar o antes. El alias se pasa por WhatsApp.
 - **Entregas:** los fines de semana. Encargos por WhatsApp (link en el perfil).
+- **WhatsApp:** 2634 36-9364 · link: `https://wa.me/5492634369364`
 - Más adelante quizás sume cookies. Por eso la historia de productos se titula "Budines".
 
 ## Qué está listo (en `instagram/export/`)
@@ -73,7 +74,7 @@ Encargos por WhatsApp, link en el perfil.
 
 - Publicar el primer post.
 - Fotos de **naranja** y **chocolate**, para sumar sus historias a Productos.
-- Cambiar el nombre del perfil a "Miguitas | Budines caseros", la bio y el link a `wa.me/549…`
+- Cambiar el nombre del perfil a "Miguitas | Budines caseros", la bio y el link a `https://wa.me/5492634369364?text=Hola%20Miguitas!%20Quiero%20encargar%20budines`
   (están propuestos en la guía; en la última captura seguían sin cambiar).
 - Confirmar qué días exactos se entrega (la historia dice sábado y domingo), las zonas y si el envío tiene costo.
 - Destacada "Clientes": cuando haya historias de pedidos entregados.
