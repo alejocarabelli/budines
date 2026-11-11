@@ -41,6 +41,7 @@ Cuenta: **@_miguitass** · Budines caseros · San Martín, Mendoza.
 | Historia Envíos | `destacadas/envios.png` | Lista (título "Entregas") |
 | Historia Encargos | `destacadas/encargos.png` | Lista |
 | Historias Productos | `destacadas/productos-budines.png`, `productos-chips.png`, `productos-limon.png` | Listas, subir en ese orden |
+| Historia "Este finde hay budines" (14 y 15/11) | `historias/encargos-finde-14-15-nov.png` | Lista. Agregarle el sticker de link a WhatsApp al subirla |
 | Guía de marca | `guia.html` (publicada en https://claude.ai/artifact/5tr1MbokDAvhRK6Z3uziQC) | Al día salvo esta tabla |
 
 Primer post, placa por placa:

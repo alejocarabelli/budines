@@ -17,7 +17,7 @@ const path = require('path');
   for (const [i, id] of carrusel.entries())
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'primer-post', (i + 1) + '.png') });
   // Historias para las destacadas
-  for (const [id, n] of [['h-pagos', 'medios-de-pago'], ['h-envios', 'envios'], ['h-encargos', 'encargos'], ['h-sabores', 'productos-budines'], ['h-chips', 'productos-chips'], ['h-limon', 'productos-limon']])
+  for (const [id, n] of [['h-pagos', 'medios-de-pago'], ['h-envios', 'envios'], ['h-encargos', 'encargos'], ['h-sabores', 'productos-budines'], ['h-finde', '../historias/encargos-finde-14-15-nov'], ['h-chips', 'productos-chips'], ['h-limon', 'productos-limon']])
     await p.locator('#' + id).screenshot({ path: path.join(__dirname, 'export', 'destacadas', n + '.png') });
   console.log('fuentes:', await p.evaluate(() => [...document.fonts].filter(f => f.status === 'loaded').length));
   await b.close();

@@ -153,6 +153,16 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
 #h-sabores .medios{margin-top:56px;gap:20px}
 #h-sabores .nota{padding-top:40px}
 #h-sabores .punto{width:72px;height:72px;border-radius:50%;flex:none;border:4px solid rgba(250,243,232,.8)}
+
+/* Historia: encargos para el finde */
+#h-finde{background-image:url(fotos/chips-cortado.jpg);background-position:60% 50%}
+#h-finde::before{background:linear-gradient(180deg,rgba(43,29,22,.75) 0%,rgba(43,29,22,.35) 26%,rgba(43,29,22,0) 42%,rgba(43,29,22,0) 54%,rgba(43,29,22,.9) 82%)}
+#h-finde .fecha{display:inline-block;align-self:flex-start;margin-top:40px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:38px;padding:12px 30px;border-radius:999px}
+#h-finde h1{margin-top:24px;font-size:112px}
+#h-finde .sabores{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+#h-finde .sabores span{font-size:34px;font-weight:600;padding:10px 24px;border-radius:999px;border:3px solid rgba(250,243,232,.6)}
+#h-finde p{font-size:40px;font-weight:500;margin-top:0}
+#h-finde p b{font-weight:700}
 </style></head><body>
 
 <div class="pieza" id="perfil">
@@ -338,6 +348,16 @@ body{background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px;font-fami
   </div>
   <div class="nota">
     <p><strong>Todos de 500 g.</strong> Caseros y horneados para tu encargo.</p>
+  </div>
+</div>
+
+<div class="pieza h-prod" id="h-finde">
+  <div class="marca chica">miguitas</div>
+  <span class="fecha">Sábado 14 y domingo 15</span>
+  <h1>Este finde<br>hay budines.</h1>
+  <div class="abajo">
+    <div class="sabores"><span>Limón</span><span>Chocolate</span><span>Naranja</span><span>Chips</span></div>
+    <p><b>Encargá el tuyo por WhatsApp.</b><br>Budines de 500 g, horneados para vos.</p>
   </div>
 </div>
 </body></html>
