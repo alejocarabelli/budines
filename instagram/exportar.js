@@ -1,9 +1,9 @@
-// Exporta cada pieza de piezas.html a PNG en export/.  Uso: node exportar.js
+// Exporta cada pieza de piezas.html a PNG en export/ (a 2x). Después correr: python3 achicar.py
 const { chromium } = require('playwright');
 const path = require('path');
 (async () => {
   const b = await chromium.launch();
-  const p = await b.newPage({ viewport: { width: 1200, height: 2000 } });
+  const p = await b.newPage({ viewport: { width: 1200, height: 2000 }, deviceScaleFactor: 2 });
   await p.goto('file://' + path.join(__dirname, 'piezas.html'));
   await p.evaluate(() => document.fonts.ready);
   await p.waitForTimeout(500);
