@@ -5,31 +5,22 @@
 :root{--mandarina:#e8673c;--cacao:#2b1d16;--crema:#faf3e8;--display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;font-family:var(--texto)}
-.h-prod{position:relative;overflow:hidden;width:1080px;height:1920px;padding:300px 96px 330px;display:flex;flex-direction:column;color:var(--crema);
-  background:url(../fotos/limon-cortado-01.jpg) 62% 50%/cover}
-.h-prod::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(43,29,22,.6) 0%,rgba(43,29,22,.15) 22%,rgba(43,29,22,0) 30%,rgba(43,29,22,0) 66%,rgba(43,29,22,.75) 88%)}
-.h-prod>*{position:relative}
-.marca{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:1;font-size:48px}
-.fecha{display:inline-block;align-self:flex-start;margin-top:40px;background:var(--mandarina);color:var(--crema);font-family:var(--display);font-weight:700;font-size:38px;padding:12px 30px;border-radius:999px}
-h1{margin-top:24px;font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.045em;line-height:.9}
-.abajo{margin-top:auto}
-.sabores{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:22px}
-.sabores span{font-size:34px;font-weight:600;padding:10px 24px;border-radius:999px;border:3px solid rgba(250,243,232,.7)}
-ul{list-style:none;border-bottom:3px solid rgba(250,243,232,.45);margin-bottom:40px}
-li{display:flex;justify-content:space-between;align-items:baseline;padding:20px 0;border-top:3px solid rgba(250,243,232,.45);font-family:var(--display);font-weight:700;font-size:58px;letter-spacing:-.03em;line-height:1}
-li span{font-family:var(--texto);font-weight:500;font-size:36px;letter-spacing:0;opacity:.92}
-li span b{font-family:var(--display);font-weight:800;font-size:58px;letter-spacing:-.03em;margin-right:12px;opacity:1}
-p{font-size:40px;font-weight:500}
-.tel{display:flex;align-items:center;gap:22px;font-family:var(--display);font-weight:800;font-size:92px;letter-spacing:-.03em;line-height:1;margin-top:12px}
-.tel svg{width:84px;height:84px;flex:none}
+.h{width:1080px;height:1920px;background:var(--cacao);color:var(--crema);display:flex;flex-direction:column}
+.foto{width:1080px;height:1440px;background:url(../fotos/limon-cortado-01.jpg) center/cover;flex:none}
+.texto{padding:56px 96px 0}
+.fila{display:flex;align-items:center;justify-content:space-between}
+.marca{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:1;font-size:44px}
+.fecha{background:var(--mandarina);font-family:var(--display);font-weight:700;font-size:34px;padding:10px 26px;border-radius:999px}
+h1{margin-top:26px;font-family:var(--display);font-weight:800;font-size:104px;letter-spacing:-.045em;line-height:.9}
+.sabores{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.sabores span{font-size:32px;font-weight:600;padding:8px 22px;border-radius:999px;border:3px solid rgba(250,243,232,.6)}
 </style></head><body>
-<div class="h-prod">
-  <div class="marca">miguitas</div>
-  <span class="fecha">Disponibles hoy</span>
-  <h1>Hay budines.</h1>
-  <div class="abajo">
+<div class="h">
+  <div class="foto"></div>
+  <div class="texto">
+    <div class="fila"><span class="fecha">Disponibles hoy</span><span class="marca">miguitas</span></div>
+    <h1>Hay budines.</h1>
     <div class="sabores"><span>Limón</span><span>Chocolate</span><span>Naranja</span><span>Chips</span></div>
-    <p>Reservá el tuyo por WhatsApp</p>
   </div>
 </div>
 </body></html>
