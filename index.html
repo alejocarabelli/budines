@@ -848,28 +848,30 @@ function vistaResumen() {
 }
 
 /* ---------- Lista de compras ---------- */
-// Compra base: 40 budines de 500 g, 10 de cada sabor (8 tandas de 5, receta Budines 2.1).
+// Compra base: 16 budines de 500 g, 4 de cada sabor (4 tandas de 4, receta Budines 2.2).
 // Lo común (masa, moldes) escala por el total; lo de cada sabor, por los budines de ese sabor.
-const RECETA_BASE = 40, POR_SABOR = 10;
+const RECETA_BASE = 16, POR_SABOR = 4;
 const RECETA = [
   { grupo: 'Almacén y secos', items: [
-    { n: 'Harina leudante', q: 5400, u: 'g', d: '5¾ tazas por tanda de 5 (5¼ en la de chocolate). Sin polvo de hornear extra' },
-    { n: 'Azúcar común', q: 3200, u: 'g', d: '2 tazas por tanda de 5' },
-    { n: 'Azúcar impalpable', q: 600, u: 'g', d: 'Glaseado opcional de limón y naranja: 1¼ tazas por 5' },
-    { n: 'Aceite neutro', q: 2560, u: 'ml', d: 'Girasol o maíz · 320 ml por tanda de 5' },
-    { n: 'Esencia de vainilla', q: 80, u: 'ml', d: '2 cucharaditas por tanda de 5' },
-    { n: 'Cacao amargo en polvo', q: 150, u: 'g', paso: 5, sabor: 'Chocolate', d: '¾ taza por tanda de 5' },
-    { n: 'Chips de chocolate', q: 500, u: 'g', sabor: 'Chips', d: '1½ tazas por tanda de 5 (reservar ¼ para decorar)' },
+    { n: 'Harina leudante', porSabor: { 'Chocolate': 540 }, otroSabor: 600, u: 'g', d: '600 g (5 tazas) por tanda de 4 · 540 g en Chocolate' },
+    { n: 'Azúcar común', q: 1360, u: 'g', d: '340 g por tanda de 4 (en cítricos se frota con la ralladura)' },
+    { n: 'Azúcar impalpable', porSabor: { 'Limón': 120, 'Naranja': 120 }, u: 'g', d: 'Glaseado opcional de limón y naranja: 120 g (1 taza) por 4' },
+    { n: 'Aceite neutro', q: 1020, u: 'ml', d: 'Girasol o maíz · 255 ml por tanda de 4' },
+    { n: 'Esencia de vainilla', q: 32, u: 'ml', d: '1½ cucharaditas (8 ml) por tanda de 4' },
+    { n: 'Polvo de hornear', q: 12, u: 'g', paso: 5, d: '½ cucharadita (2–3 g) por tanda de 4 para más altura' },
+    { n: 'Sal fina', q: 8, u: 'g', paso: 5, d: '1 pizca generosa (¼ a ½ cdta) por tanda de 4' },
+    { n: 'Cacao amargo en polvo', q: 60, u: 'g', paso: 5, sabor: 'Chocolate', d: '60 g por tanda de 4 (reemplaza 60 g de harina)' },
+    { n: 'Chips de chocolate', porSabor: { 'Chips': 200, 'Chocolate': 50 }, u: 'g', d: '200 g por 4 en Chips (reservar ¼ para arriba) · 50 g por 4 en Chocolate (solo por arriba)' },
   ] },
   { grupo: 'Frescos y lácteos', items: [
-    { n: 'Huevos', q: 40, u: 'u', d: '5 por tanda de 5' },
-    { n: 'Leche', q: 3360, u: 'ml', d: 'El jugo cítrico reemplaza parte de la leche (total de líquido: 480 ml por 5)' },
-    { n: 'Limones', q: 8, u: 'u', d: 'Ralladura (3-4 por 5) y 100 ml de jugo por 5, más el glaseado', sabor: 'Limón' },
-    { n: 'Naranjas', q: 8, u: 'u', d: 'Ralladura (3-4 por 5) y 140 ml de jugo por 5, más el glaseado', sabor: 'Naranja' },
+    { n: 'Huevos', q: 16, u: 'u', d: '4 por tanda de 4 (a temperatura ambiente)' },
+    { n: 'Leche', porSabor: { 'Limón': 270, 'Naranja': 240, 'Chocolate': 380, 'Chips': 350 }, otroSabor: 350, u: 'ml', d: '270 ml Limón · 240 ml Naranja (cortada con el jugo) · 350 ml Chips · 380 ml Chocolate' },
+    { n: 'Limones', q: 3, u: 'u', d: '15–20 g de ralladura (~3 limones) y 80 ml de jugo por 4, más glaseado', sabor: 'Limón' },
+    { n: 'Naranjas', q: 3, u: 'u', d: '22–28 g de ralladura (~3 naranjas) y 110 ml de jugo por 4, más glaseado', sabor: 'Naranja' },
   ] },
   { grupo: 'Descartables', items: [
-    { n: 'Moldes descartables para budín', q: 40, u: 'u', d: 'Tamaño 500 g' },
-    { n: 'Bolsitas', q: 40, u: 'u', d: 'Una por budín' },
+    { n: 'Moldes descartables para budín', q: 16, u: 'u', d: 'Tamaño 500 g' },
+    { n: 'Bolsitas', q: 16, u: 'u', d: 'Una por budín' },
   ] },
 ];
 const fmtNum = n => String(Math.round(n * 100) / 100).replace('.', ',');
@@ -896,22 +898,29 @@ function elegirCantidadCompra(sabor, valor) {
   const n = Number(valor);
   S.compras = { ...porSabor(), [sabor]: Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0 };
 }
-function factorItem(it) {
-  const n = budinesCompras();
-  if (!it.sabor) return n / RECETA_BASE;
-  const c = porSabor();
-  return (c[norm(it.sabor)] || 0) / POR_SABOR;
+function cantidadCruda(it) {
+  if (it.porSabor) {
+    const c = porSabor();
+    const mapa = Object.fromEntries(Object.entries(it.porSabor).map(([s, q]) => [norm(s), q]));
+    return Object.entries(c).reduce((tot, [k, n]) => {
+      const q = mapa[k] ?? it.otroSabor ?? 0;
+      return tot + (n / POR_SABOR) * q;
+    }, 0);
+  }
+  const f = it.sabor ? (porSabor()[norm(it.sabor)] || 0) / POR_SABOR : budinesCompras() / RECETA_BASE;
+  return Array.isArray(it.q) ? it.q.map(v => v * f) : it.q * f;
 }
 function textoCantidad(it) {
-  const f = factorItem(it);
+  const x = cantidadCruda(it);
   const unidad = (c) => c.u === 'u' ? '' : ' ' + c.u;
-  if (!f) return '—';
-  if (Array.isArray(it.q)) {
-    const a = cantidad(it.q[0], it.u, f, it.paso), b = cantidad(it.q[1], it.u, f, it.paso);
+  if (Array.isArray(x)) {
+    if (!x[0] && !x[1]) return '—';
+    const a = cantidad(x[0], it.u, 1, it.paso), b = cantidad(x[1], it.u, 1, it.paso);
     if (a.u === b.u) return a.v === b.v ? fmtNum(a.v) + unidad(a) : fmtNum(a.v) + ' a ' + fmtNum(b.v) + unidad(b);
     return fmtNum(a.v) + unidad(a) + ' a ' + fmtNum(b.v) + unidad(b);
   }
-  const c = cantidad(it.q, it.u, f, it.paso);
+  if (!x) return '—';
+  const c = cantidad(x, it.u, 1, it.paso);
   return fmtNum(c.v) + unidad(c);
 }
 const budinesFinde = () => encargosFinde().reduce((a, e) => a + e.unidades, 0);
@@ -961,8 +970,8 @@ function vistaCompras() {
     </div>
   </div>
   <div id="cmpAviso" class="aviso" style="margin-top:12px" ${avisoCompras() ? '' : 'hidden'}>${avisoCompras()}</div>
-  <p class="hint" style="margin:10px 2px 0">Basado en la compra para ${RECETA_BASE} budines de 500 g (${POR_SABOR} de cada sabor), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
-  <div class="acciones"><a class="btn" href="recetario-budines-2-1.pdf" target="_blank" rel="noopener">📄 Ver recetario Budines 2.1 (PDF)</a></div>
+  <p class="hint" style="margin:10px 2px 0">Basado en la compra para ${RECETA_BASE} budines de 500 g (${POR_SABOR} de cada sabor, tandas de 4), redondeado para arriba. Tocá cada ingrediente para tildarlo.</p>
+  <div class="acciones"><a class="btn" href="recetario-budines-2-2.pdf" target="_blank" rel="noopener">📄 Ver recetario Budines 2.2 (PDF)</a></div>
   ${RECETA.map(g => `<h3>${g.grupo}</h3><div class="card">${g.items.map(it => `
     <label class="item ${ok[it.n] ? 'ok' : ''}">
       <input type="checkbox" data-chk="${esc(it.n)}" ${ok[it.n] ? 'checked' : ''}>
