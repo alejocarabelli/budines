@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,500;9..40,600;9..40,700&display=swap">
+<style>
+:root{--crema:#fff8ee;--cacao:#4b2e22;--coral:#f08a6c;--display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;font-family:var(--texto)}
+.h{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--crema);
+  background:radial-gradient(120% 70% at 70% 62%,#6a4232 0%,#4b2e22 55%,#33201a 100%)}
+.chip{position:absolute;width:26px;height:26px;background:#2a1a13;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:.55}
+.top{position:absolute;top:220px;left:96px;right:96px}
+.marca{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em}
+h1{margin-top:14px;font-family:var(--display);font-weight:800;font-size:210px;letter-spacing:-.055em;line-height:.85}
+.card{position:absolute;left:300px;top:640px;width:570px;height:1042px;border-radius:30px;
+  background:url(chocolate-molde.jpg) center/cover;transform:rotate(-7deg);
+  box-shadow:0 40px 80px rgba(20,10,6,.55),0 8px 20px rgba(20,10,6,.35)}
+.sello{position:absolute;left:110px;top:1290px;transform:rotate(-10deg);width:280px;height:280px;border-radius:50%;
+  background:var(--coral);color:var(--cacao);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--display);font-weight:800;line-height:.95;box-shadow:0 18px 40px rgba(20,10,6,.4)}
+.sello b{font-size:32px;letter-spacing:.06em;margin-bottom:6px}
+.sello span{font-size:50px;letter-spacing:-.04em}
+.sub{margin-top:26px;font-size:42px;font-weight:500;opacity:.92}
+</style></head><body>
+<div class="h">
+  <i class="chip" style="left:860px;top:300px;transform:rotate(20deg)"></i>
+  <i class="chip" style="left:940px;top:410px;transform:rotate(-30deg) scale(.8)"></i>
+  <i class="chip" style="left:120px;top:640px;transform:rotate(45deg) scale(.7)"></i>
+  <i class="chip" style="left:960px;top:1500px;transform:rotate(-15deg)"></i>
+  <i class="chip" style="left:180px;top:1600px;transform:rotate(10deg) scale(.9)"></i>
+  <i class="chip" style="left:900px;top:1700px;transform:rotate(60deg) scale(.6)"></i>
+  <div class="top">
+    <div class="marca">miguitas</div>
+    <h1>Tentate.</h1>
+    <div class="sub">Bien húmedo y lleno de chips.</div>
+  </div>
+  <div class="card"></div>
+  <div class="sello"><b>BUDÍN DE</b><span>chocolate</span></div>
+  </div>
+</body></html>
