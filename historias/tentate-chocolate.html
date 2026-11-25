@@ -2,37 +2,67 @@
 <html lang="es"><head><meta charset="utf-8">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,500;9..40,600;9..40,700&display=swap">
 <style>
-:root{--crema:#fff8ee;--cacao:#4b2e22;--coral:#f08a6c;--display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
+:root{--crema:#fff8ee;--cacao:#4b2e22;--coral:#f08a6c;--menta:#bfe3d4;--display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;font-family:var(--texto)}
 .h{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--cacao);
-  background:radial-gradient(110% 70% at 60% 62%,#fffaf2 0%,#fff3e3 60%,#f6e6d0 100%)}
-.chip{position:absolute;width:26px;height:26px;background:#4b2e22;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:.85}
-.top{position:absolute;top:220px;left:96px;right:96px}
+  background:radial-gradient(120% 75% at 55% 60%,#fffaf3 0%,#fff3e3 60%,#f5e4cc 100%)}
+.grano{position:absolute;inset:0;opacity:.11;mix-blend-mode:multiply;pointer-events:none}
+.disco{position:absolute;left:96px;top:760px;width:900px;height:900px;border-radius:50%;background:var(--menta)}
+.anillo{position:absolute;left:66px;top:730px;width:960px;height:960px;border-radius:50%;border:3px dashed rgba(75,46,34,.18)}
+.top{position:absolute;top:190px;left:96px;right:96px}
 .marca{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em}
-h1{margin-top:14px;font-family:var(--display);font-weight:800;font-size:210px;letter-spacing:-.055em;line-height:.85}
-.card{position:absolute;left:290px;top:640px;width:640px;transform:rotate(-6deg);filter:drop-shadow(0 40px 46px rgba(75,46,34,.38)) drop-shadow(0 8px 14px rgba(75,46,34,.3))}
-.card img{display:block;width:100%}
-.sello{position:absolute;left:110px;top:1290px;transform:rotate(-10deg);width:280px;height:280px;border-radius:50%;
-  background:var(--coral);color:var(--cacao);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  font-family:var(--display);font-weight:800;line-height:.95;box-shadow:0 18px 40px rgba(75,46,34,.28)}
-.sello b{font-size:32px;letter-spacing:.06em;margin-bottom:6px}
-.sello span{font-size:54px;letter-spacing:-.04em}
-.sub{margin-top:26px;font-size:42px;font-weight:500;opacity:.92}
+h1{margin-top:10px;font-family:var(--display);font-weight:800;font-size:200px;letter-spacing:-.055em;line-height:.85;white-space:nowrap}
+h1 svg{display:inline-block;width:.25em;height:.25em;margin-left:.04em;vertical-align:baseline}
+.sub{margin-top:24px;font-size:42px;font-weight:500}
+.budin{position:absolute;left:228px;top:604px;width:636px;transform:rotate(-8deg);
+  filter:drop-shadow(0 46px 44px rgba(75,46,34,.34)) drop-shadow(0 10px 14px rgba(75,46,34,.28))}
+.budin img{display:block;width:100%}
+.chip{position:absolute;filter:drop-shadow(0 10px 10px rgba(75,46,34,.28))}
+.sello{position:absolute;left:62px;top:1290px;width:300px;height:300px;transform:rotate(-12deg);
+  filter:drop-shadow(0 18px 26px rgba(75,46,34,.28))}
 </style></head><body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <radialGradient id="gc" cx="35%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#8a5a40"/><stop offset=".45" stop-color="#5a3626"/><stop offset="1" stop-color="#2e1a12"/>
+    </radialGradient>
+    <symbol id="chip" viewBox="0 0 100 100">
+      <path d="M50 6C57 21 69 35 83 50c13 15 9 35-9 41-14 5-34 5-48 0C8 85 4 65 17 50 31 35 43 21 50 6Z" fill="url(#gc)"/>
+      <path d="M44 24c-6 12-15 22-24 33-5 7-6 15-3 21" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="5" stroke-linecap="round"/>
+      <path d="M26 86c14 4 34 4 48 0" fill="none" stroke="#1d0f0a" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+    <filter id="ruido"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .2  0 0 0 0 .15  0 0 0 1.2 -.1"/></filter>
+  </defs>
+</svg>
 <div class="h">
-  <i class="chip" style="left:860px;top:300px;transform:rotate(20deg)"></i>
-  <i class="chip" style="left:940px;top:410px;transform:rotate(-30deg) scale(.8)"></i>
-  <i class="chip" style="left:120px;top:640px;transform:rotate(45deg) scale(.7)"></i>
-  <i class="chip" style="left:960px;top:1500px;transform:rotate(-15deg)"></i>
-  <i class="chip" style="left:180px;top:1600px;transform:rotate(10deg) scale(.9)"></i>
-  <i class="chip" style="left:900px;top:1700px;transform:rotate(60deg) scale(.6)"></i>
+  <div class="anillo"></div>
+  <div class="disco"></div>
+
+  <svg class="chip" style="left:868px;top:286px;width:84px;height:84px;transform:rotate(18deg)"><use href="#chip"/></svg>
+  <svg class="chip" style="left:84px;top:860px;width:64px;height:64px;transform:rotate(-24deg)"><use href="#chip"/></svg>
+  <svg class="chip" style="left:912px;top:720px;width:96px;height:96px;transform:rotate(12deg)"><use href="#chip"/></svg>
+  <svg class="chip" style="left:944px;top:1380px;width:70px;height:70px;transform:rotate(-30deg)"><use href="#chip"/></svg>
+  <svg class="chip" style="left:830px;top:1700px;width:88px;height:88px;transform:rotate(26deg)"><use href="#chip"/></svg>
+  <svg class="chip" style="left:150px;top:1660px;width:58px;height:58px;transform:rotate(-8deg)"><use href="#chip"/></svg>
+
   <div class="top">
     <div class="marca">miguitas</div>
-    <h1>Tentate.</h1>
+    <h1>Tentate<svg viewBox="0 0 100 100"><use href="#chip"/></svg></h1>
     <div class="sub">El budín de chocolate, ahora con chips.</div>
   </div>
-  <div class="card"><img src="chocolate-recorte.png" alt=""></div>
-  <div class="sello"><b>¡AHORA</b><span>con chips!</span></div>
-  </div>
+
+  <div class="budin"><img src="chocolate-molde.png" alt=""></div>
+
+  <svg class="sello" viewBox="0 0 300 300">
+    <defs><path id="aro" d="M150 150m-117 0a117 117 0 1 1 234 0a117 117 0 1 1-234 0"/></defs>
+    <circle cx="150" cy="150" r="148" fill="#f08a6c"/>
+    <circle cx="150" cy="150" r="96" fill="none" stroke="#4b2e22" stroke-opacity=".35" stroke-width="2.5" stroke-dasharray="3 7" stroke-linecap="round"/>
+    <text font-family="DM Sans" font-weight="700" font-size="21" fill="#4b2e22" letter-spacing="3"><textPath href="#aro" textLength="728" lengthAdjust="spacing">BUDÍN DE CHOCOLATE · BUDÍN DE CHOCOLATE ·</textPath></text>
+    <text x="150" y="140" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="34" fill="#4b2e22" letter-spacing="-.5">¡Ahora</text>
+    <text x="150" y="184" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="800" font-size="44" fill="#4b2e22" letter-spacing="-1.5">con chips!</text>
+  </svg>
+
+  <svg class="grano" width="1080" height="1920"><rect width="100%" height="100%" filter="url(#ruido)"/></svg>
+</div>
 </body></html>
