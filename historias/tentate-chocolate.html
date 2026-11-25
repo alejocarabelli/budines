@@ -5,20 +5,19 @@
 :root{--crema:#fff8ee;--cacao:#4b2e22;--coral:#f08a6c;--display:"Bricolage Grotesque","DM Sans",sans-serif;--texto:"DM Sans",sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1080px;height:1920px;font-family:var(--texto)}
-.h{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--crema);
-  background:radial-gradient(120% 70% at 70% 62%,#6a4232 0%,#4b2e22 55%,#33201a 100%)}
-.chip{position:absolute;width:26px;height:26px;background:#2a1a13;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:.55}
+.h{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--cacao);
+  background:radial-gradient(110% 70% at 60% 62%,#fffaf2 0%,#fff3e3 60%,#f6e6d0 100%)}
+.chip{position:absolute;width:26px;height:26px;background:#4b2e22;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:.85}
 .top{position:absolute;top:220px;left:96px;right:96px}
 .marca{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.02em}
 h1{margin-top:14px;font-family:var(--display);font-weight:800;font-size:210px;letter-spacing:-.055em;line-height:.85}
-.card{position:absolute;left:300px;top:640px;width:570px;height:1042px;border-radius:30px;
-  background:url(chocolate-molde.jpg) center/cover;transform:rotate(-7deg);
-  box-shadow:0 40px 80px rgba(20,10,6,.55),0 8px 20px rgba(20,10,6,.35)}
+.card{position:absolute;left:330px;top:640px;width:540px;transform:rotate(-7deg);filter:drop-shadow(0 40px 46px rgba(75,46,34,.38)) drop-shadow(0 8px 14px rgba(75,46,34,.3))}
+.card img{display:block;width:100%}
 .sello{position:absolute;left:110px;top:1290px;transform:rotate(-10deg);width:280px;height:280px;border-radius:50%;
   background:var(--coral);color:var(--cacao);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  font-family:var(--display);font-weight:800;line-height:.95;box-shadow:0 18px 40px rgba(20,10,6,.4)}
+  font-family:var(--display);font-weight:800;line-height:.95;box-shadow:0 18px 40px rgba(75,46,34,.28)}
 .sello b{font-size:32px;letter-spacing:.06em;margin-bottom:6px}
-.sello span{font-size:50px;letter-spacing:-.04em}
+.sello span{font-size:54px;letter-spacing:-.04em}
 .sub{margin-top:26px;font-size:42px;font-weight:500;opacity:.92}
 </style></head><body>
 <div class="h">
@@ -31,9 +30,9 @@ h1{margin-top:14px;font-family:var(--display);font-weight:800;font-size:210px;le
   <div class="top">
     <div class="marca">miguitas</div>
     <h1>Tentate.</h1>
-    <div class="sub">Bien húmedo y lleno de chips.</div>
+    <div class="sub">El budín de chocolate, ahora con chips.</div>
   </div>
-  <div class="card"></div>
-  <div class="sello"><b>BUDÍN DE</b><span>chocolate</span></div>
+  <div class="card"><img src="chocolate-recorte.png" alt=""></div>
+  <div class="sello"><b>¡AHORA</b><span>con chips!</span></div>
   </div>
 </body></html>
